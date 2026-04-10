@@ -1,0 +1,58 @@
+package com.thomas.base.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+/**
+ * Created by thomas on 4/11/2026.
+ */
+
+abstract class BaseViewModel<STATE : UIStateIF>(
+    scope: CoroutineScope? = null
+) : ViewModel(), BaseContract<STATE> {
+
+    private val scope = scope ?: viewModelScope
+
+    private val _uiState = MutableStateFlow(initialState())
+    override val uiState: StateFlow<STATE> = _uiState
+
+    private val _event = MutableSharedFlow<Event>()
+    override val event: SharedFlow<Event> = _event.asSharedFlow()
+
+    protected abstract fun initialState(): STATE
+
+    protected fun updateState(state: STATE) {
+        updateState { state }
+    }
+
+    protected fun updateState(reducer: STATE.() -> STATE) {
+        _uiState.update(reducer)
+    }
+
+    protected fun send(viewEvent: Event) {
+        if (_event.tryEmit(viewEvent)) return
+
+        scope.launch { _event.emit(viewEvent) }
+    }
+
+    override fun back() {
+        send(BackEvent)
+    }
+
+    protected fun sendMessage(message: String) {
+        send(MessageEvent(message))
+    }
+
+    protected fun navigate(route: String) {
+        send(NavigateEvent(route))
+    }
+
+}
