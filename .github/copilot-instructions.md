@@ -41,6 +41,55 @@ interface RepositoryModule {
 
 ```
 
+```kotlin di example
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ZhihuRetrofit
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class WeiboRetrofit
+
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+
+    @Provides
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context
+    ) = OkHttpClient.Builder()
+        .addInterceptor(ApiResponseInterceptor())
+        .addInterceptor(HttpLoggingInterceptor().apply { level = Level.BODY })
+        .build()
+
+    @ZhihuRetrofit
+    @Provides
+    fun provideZhihuRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        getRetrofit(BaseUrl.Zhihu.url, okHttpClient)
+
+    @Provides
+    fun provideZhihuService(@ZhihuRetrofit retrofit: Retrofit): ZhihuService =
+        retrofit.create(ZhihuService::class.java)
+
+    @WeiboRetrofit
+    @Provides
+    fun provideWeiboRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        getRetrofit(BaseUrl.Weibo.url, okHttpClient)
+
+    @Provides
+    fun provideWeiboService(@WeiboRetrofit retrofit: Retrofit): WeiboService =
+        retrofit.create(WeiboService::class.java)
+
+}
+
+private fun getRetrofit(baseUrl: String, okHttpClient: OkHttpClient) = Retrofit.Builder()
+    .baseUrl(baseUrl)
+    .client(okHttpClient)
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+```
+
 
 ### **ViewModels**: Contain business logic, manage UI state, and communicate with Models.
 - Create contracts for each ViewModel to define the expected state and events.
