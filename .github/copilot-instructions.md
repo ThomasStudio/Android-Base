@@ -4,13 +4,26 @@
 
 Always use MVVM (Model-View-ViewModel) architecture for structuring all features in this Android project. This is a hard rule.
 
-- **Models**: Handle data operations, API calls, and database interactions.
-  - Use retrofit2 for API handling.
-- **ViewModels**: Contain business logic, manage UI state, and communicate with Models.
-  - declare contract for every ViewModel, which interface defines the methods that the ViewModel must implement.
-  - expose uiState and event to View
-   
-- **Views**: Pure UI components that observe ViewModel state and trigger user actions.
+### **Models**: Handle data operations, API calls, and database interactions.
+- Use retrofit2 for API handling.
+- Create interface contracts for repositories to abstract data sources.
+- Implement repositories that interact with APIs and databases.
+- Use ApiResponseInterceptor to transform API responses into Response in base module.
+
+### **ViewModels**: Contain business logic, manage UI state, and communicate with Models.
+- Create contracts for each ViewModel to define the expected state and events.
+- All contracts should extend BaseContract in the base module.
+- A new ViewModel should extend BaseViewModel and implement the new contract.
+- All events should extend Event in base module.
+
+### **Views**: Pure UI components that observe ViewModel state and trigger user actions.
+- Use Jetpack Compose for building all UI components. Avoid XML layouts.
+- In Compose, observe ViewModel uiState and event to update UI. Use BaseContract.collectUiState and BaseContract.handleEvents.
+
+### **Navigation**: Use Jetpack Navigation Compose for handling navigation between screens.
+- Use NavHost to set up navigation graph and define composable destinations.
+- Use NavHostController for navigating between composables.
+- Create sealed class Route to define all possible routes in AppRoute.
 
 ## Language
 
