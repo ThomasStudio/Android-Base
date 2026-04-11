@@ -61,6 +61,8 @@ dependencies {
     // retrofit2
     implementation(libs.retrofit)
     implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.retrofit.gson)
 
     // gson
     implementation(libs.gson)
