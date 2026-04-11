@@ -30,7 +30,7 @@ open class ApiResponseInterceptor : Interceptor {
         )
 
         val newBodyJson = gson.toJson(apiResponse)
-        val newBody = newBodyJson.toResponseBody("application/json: charset=utf-8".toMediaType())
+        val newBody = newBodyJson.toResponseBody("application/json".toMediaType())
 
         return originalResponse.newBuilder().body(newBody).build()
     }

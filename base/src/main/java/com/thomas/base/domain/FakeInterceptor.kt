@@ -37,6 +37,6 @@ data class Scenario(
     val httpCode: Int,
     val message: String,
     val body: String,
-    val contentType: String = "application/json: charset=utf-8",
+    val contentType: String = "application/json",
     val throwable: Throwable? = null
 )
