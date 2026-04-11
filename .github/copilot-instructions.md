@@ -24,6 +24,35 @@ Always use MVVM (Model-View-ViewModel) architecture for structuring all features
 - Use NavHost to set up navigation graph and define composable destinations.
 - Use NavHostController for navigating between composables.
 - Create sealed class Route to define all possible routes in AppRoute.
+```kotlin Route example
+sealed class MainRoute(override val path: String) : AppRoute() {
+    object Home : MainRoute("home")
+    object Weibo : MainRoute("weibo")
+    object News : MainRoute("news")
+}
+```
+
+```kotlin NavHost example
+@Composable
+fun MainScreen(navController: NavHostController) {
+    val navigator = navController.asNavigator()
+    NavHost(navController = navController, startDestination = MainRoute.Home.path) {
+        composable(MainRoute.Home.path) {
+            HomeScreen(
+                onWeiboClick = { navController.navigate(MainRoute.Weibo.path) },
+                onNewsClick = { navController.navigate(MainRoute.News.path) },
+                navigator = navigator
+            )
+        }
+        composable(MainRoute.Weibo.path) {
+            WeiboScreen(navigator = navigator)
+        }
+        composable(MainRoute.News.path) {
+            NewsScreen(navigator = navigator)
+        }
+    }
+}
+```
 
 ## Language
 
