@@ -5,8 +5,11 @@
 Always use MVVM (Model-View-ViewModel) architecture for structuring all features in this Android project. This is a hard rule.
 
 - **Models**: Handle data operations, API calls, and database interactions.
+  - Use retrofit2 for API handling.
 - **ViewModels**: Contain business logic, manage UI state, and communicate with Models.
+  - declare contract for every ViewModel, which interface defines the methods that the ViewModel must implement.
   - expose uiState and event to View
+   
 - **Views**: Pure UI components that observe ViewModel state and trigger user actions.
 
 ## Language
@@ -42,5 +45,5 @@ Follow Test-Driven Development (TDD) practices. This is a hard rule.
 - Follow official Kotlin coding conventions.
 - Use meaningful, descriptive names for variables, functions, and classes.
 - Keep functions small and focused on a single responsibility.
-- Use dependency injection (e.g., Hilt or Dagger) for managing dependencies.
+- Use Hilt dependency injection for managing dependencies.
 - Implement proper error handling and logging.

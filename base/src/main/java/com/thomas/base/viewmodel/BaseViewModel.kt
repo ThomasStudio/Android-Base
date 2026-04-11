@@ -2,6 +2,7 @@ package com.thomas.base.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thomas.base.navigation.AppRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,19 +16,22 @@ import kotlinx.coroutines.launch
  * Created by thomas on 4/11/2026.
  */
 
-abstract class BaseViewModel<STATE : UIStateIF>(
-    scope: CoroutineScope? = null
-) : ViewModel(), BaseContract<STATE> {
+abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STATE> {
 
-    private val scope = scope ?: viewModelScope
+    protected open val scope: CoroutineScope
+        get() = viewModelScope
 
     private val _uiState = MutableStateFlow(initialState())
     override val uiState: StateFlow<STATE> = _uiState
 
-    private val _event = MutableSharedFlow<Event>()
+    private val _event = MutableSharedFlow<Event>(extraBufferCapacity = 1)
     override val event: SharedFlow<Event> = _event.asSharedFlow()
 
     protected abstract fun initialState(): STATE
+
+    override fun back() {
+        send(BackEvent)
+    }
 
     protected fun updateState(state: STATE) {
         updateState { state }
@@ -43,16 +47,27 @@ abstract class BaseViewModel<STATE : UIStateIF>(
         scope.launch { _event.emit(viewEvent) }
     }
 
-    override fun back() {
-        send(BackEvent)
-    }
 
     protected fun sendMessage(message: String) {
         send(MessageEvent(message))
     }
 
-    protected fun navigate(route: String) {
-        send(NavigateEvent(route))
+    protected fun navigate(
+        route: String,
+        popUpToRoute: String? = null,
+        inclusive: Boolean = false,
+        launchSingleTop: Boolean = false
+    ) {
+        send(NavigateEvent(route, popUpToRoute, inclusive, launchSingleTop))
+    }
+
+    protected fun navigate(
+        route: AppRoute,
+        popUpToRoute: AppRoute? = null,
+        inclusive: Boolean = false,
+        launchSingleTop: Boolean = false
+    ) {
+        send(NavigateEvent(route.path, popUpToRoute?.path, inclusive, launchSingleTop))
     }
 
 }
