@@ -13,13 +13,97 @@ Always use MVVM (Model-View-ViewModel) architecture for structuring all features
 ### **ViewModels**: Contain business logic, manage UI state, and communicate with Models.
 - Create contracts for each ViewModel to define the expected state and events.
 - All contracts should extend BaseContract in the base module.
+```Kotlin Contract example
+interface HomeContract : BaseContract<UIState<HomeData>> {
+    fun onClickNews()
+    fun onClickWeibo()
+    fun showMessage()
+}
+
+data class HomeData(
+    val content: String = "hello world"
+)
+```
 - A new ViewModel should extend BaseViewModel and implement the new contract.
+```kotlin
+@HiltViewModel
+class HomeViewModel @Inject constructor() : BaseViewModel<UIState<HomeData>>(), HomeContract {
+    override fun initialState() = UIState<HomeData>()
+
+    init {
+        scope.launch {
+            delay(1000)
+            updateState {
+                copy(
+                    status = Status.SUCCESS,
+                    data = HomeData()
+                )
+            }
+        }
+    }
+
+    override fun onClickNews() {
+        navigate(MainRoute.News)
+    }
+
+    override fun onClickWeibo() {
+        navigate(MainRoute.Weibo)
+    }
+
+    override fun showMessage() {
+        send(MessageEvent("Hello from HomeViewModel"))
+    }
+}
+```
 - All events should extend Event in base module.
+
 
 ### **Views**: Pure UI components that observe ViewModel state and trigger user actions.
 - Use Jetpack Compose for building all UI components. Avoid XML layouts.
 - In Compose, observe ViewModel uiState and event to update UI. Use BaseContract.collectUiState and BaseContract.handleEvents.
+```kotlin example
+@Composable
+fun HomeScreen(
+    navigator: Navigator,
+    viewModel: HomeContract = hiltViewModel<HomeViewModel>()
+) {
+    val uiState = viewModel.collectUiState()
+    val context = LocalContext.current
 
+    viewModel.handleEvents(navigator = navigator) {
+        when (it) {
+            is MessageEvent -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (uiState.status) {
+                Status.LOADING -> CircularProgressIndicator(modifier = Modifier.size(50.dp))
+                Status.ERROR -> Text("Error loading data.")
+                Status.SUCCESS -> {
+                    Text("Data loaded successfully! ${uiState.data?.content ?: ""}")
+                    Button(onClick = viewModel::onClickWeibo) {
+                        Text("Weibo")
+                    }
+                    Button(onClick = viewModel::onClickNews) {
+                        Text("News")
+                    }
+                    Button(onClick = viewModel::showMessage) {
+                        Text("Show Message")
+                    }
+                }
+            }
+        }
+    }
+}
+```
 ### **Navigation**: Use Jetpack Navigation Compose for handling navigation between screens.
 - Use NavHost to set up navigation graph and define composable destinations.
 - Use NavHostController for navigating between composables.

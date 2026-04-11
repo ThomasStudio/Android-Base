@@ -56,6 +56,9 @@ fun HomeScreen(
                     Button(onClick = viewModel::onClickNews) {
                         Text("News")
                     }
+                    Button(onClick = viewModel::showMessage) {
+                        Text("Show Message")
+                    }
                 }
             }
         }
