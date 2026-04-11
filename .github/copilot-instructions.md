@@ -9,50 +9,95 @@ Always use MVVM (Model-View-ViewModel) architecture for structuring all features
 - Create interface contracts for repositories to abstract data sources.
 - Implement repositories that interact with APIs and databases.
 - Use ApiResponseInterceptor to transform API responses into Response in base module.
+```kotlin service example
+interface WeiboService {
+    @GET("weibohot")
+    suspend fun getNews(): Response<WeiboHot>
+}
+```
+
+```kotlin
+interface WeiboRepository {
+    suspend fun getWeiboHot(): Result<WeiboHot>
+}
+
+class WeiboRepositoryImpl @Inject constructor(
+    private val weiboService: WeiboService
+) : WeiboRepository, Repository() {
+    override suspend fun getWeiboHot(): Result<WeiboHot> {
+        return runCall { weiboService.getNews() }
+    }
+}
+```
+
+```kotlin repository di example
+@Module
+@InstallIn(SingletonComponent::class)
+interface RepositoryModule {
+    @Binds
+    @Singleton
+    fun bindWeiboRepository(impl: WeiboRepositoryImpl): WeiboRepository
+}
+
+```
+
 
 ### **ViewModels**: Contain business logic, manage UI state, and communicate with Models.
 - Create contracts for each ViewModel to define the expected state and events.
 - All contracts should extend BaseContract in the base module.
 ```Kotlin Contract example
-interface HomeContract : BaseContract<UIState<HomeData>> {
-    fun onClickNews()
-    fun onClickWeibo()
+interface WeiboContract : BaseContract<UIState<WeiboHot>> {
     fun showMessage()
 }
 
-data class HomeData(
-    val content: String = "hello world"
+data class WeiboHot(
+    val code: Int,
+    val msg: String,
+    val data: List<HotItem>
+)
+
+data class HotItem(
+    val hot: String,
+    val index: Int,
+    val title: String,
+    val url: String
 )
 ```
 - A new ViewModel should extend BaseViewModel and implement the new contract.
 ```kotlin
 @HiltViewModel
-class HomeViewModel @Inject constructor() : BaseViewModel<UIState<HomeData>>(), HomeContract {
-    override fun initialState() = UIState<HomeData>()
+class WeiboViewModel @Inject constructor(
+    private val weiboRepository: WeiboRepository
+) : BaseViewModel<UIState<WeiboHot>>(), WeiboContract {
+    override fun initialState() = UIState<WeiboHot>()
 
-    init {
+    override fun showMessage() {
+        send(MessageEvent("Hello from WeiboViewModel"))
+    }
+
+    private fun getWeiboHot() {
         scope.launch {
-            delay(1000)
-            updateState {
-                copy(
-                    status = Status.SUCCESS,
-                    data = HomeData()
-                )
+            when (val result = weiboRepository.getWeiboHot()) {
+                is Result.Success -> {
+                    updateState { copy(status = Status.SUCCESS, data = result.data) }
+                }
+
+                is Result.Error -> {
+                    updateState {
+                        copy(
+                            status = Status.ERROR,
+                            error = Error(code = result.code, message = result.message ?: "")
+                        )
+                    }
+                }
             }
         }
     }
 
-    override fun onClickNews() {
-        navigate(MainRoute.News)
+    override fun viewCreated() {
+        getWeiboHot()
     }
 
-    override fun onClickWeibo() {
-        navigate(MainRoute.Weibo)
-    }
-
-    override fun showMessage() {
-        send(MessageEvent("Hello from HomeViewModel"))
-    }
 }
 ```
 - All events should extend Event in base module.
@@ -63,17 +108,28 @@ class HomeViewModel @Inject constructor() : BaseViewModel<UIState<HomeData>>(), 
 - In Compose, observe ViewModel uiState and event to update UI. Use BaseContract.collectUiState and BaseContract.handleEvents.
 ```kotlin example
 @Composable
-fun HomeScreen(
+fun WeiboScreen(
     navigator: Navigator,
-    viewModel: HomeContract = hiltViewModel<HomeViewModel>()
+    viewModel: WeiboContract = hiltViewModel<WeiboViewModel>()
 ) {
     val uiState = viewModel.collectUiState()
     val context = LocalContext.current
 
     viewModel.handleEvents(navigator = navigator) {
         when (it) {
-            is MessageEvent -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            is MessageEvent -> {
+                android.widget.Toast.makeText(
+                    context,
+                    it.message,
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         }
+    }
+
+    // Call getWeiboHot when the screen is first composed
+    LaunchedEffect(Unit) {
+        viewModel.viewCreated()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -81,23 +137,47 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(text = "Weibo Screen")
+            Button(onClick = viewModel::showMessage) {
+                Text("Show Message")
+            }
+
             when (uiState.status) {
-                Status.LOADING -> CircularProgressIndicator(modifier = Modifier.size(50.dp))
-                Status.ERROR -> Text("Error loading data.")
-                Status.SUCCESS -> {
-                    Text("Data loaded successfully! ${uiState.data?.content ?: ""}")
-                    Button(onClick = viewModel::onClickWeibo) {
-                        Text("Weibo")
+                com.thomas.base.viewmodel.Status.LOADING -> {
+                    LoadingScreen()
+                }
+
+                com.thomas.base.viewmodel.Status.SUCCESS -> {
+                    uiState.data?.let { weiboHot ->
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            items(weiboHot.data) { item ->
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = "${item.index}. ${item.title}",
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(text = item.hot)
+                                }
+                                HorizontalDivider(
+                                    Modifier,
+                                    DividerDefaults.Thickness,
+                                    DividerDefaults.color
+                                )
+                            }
+                        }
                     }
-                    Button(onClick = viewModel::onClickNews) {
-                        Text("News")
-                    }
-                    Button(onClick = viewModel::showMessage) {
-                        Text("Show Message")
-                    }
+                }
+
+                com.thomas.base.viewmodel.Status.ERROR -> {
+                    Text(text = "Error: ${uiState.error?.message}")
                 }
             }
         }

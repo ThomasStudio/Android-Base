@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.thomas.androidbase.ui.components.LoadingScreen
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.collectUiState
 import com.thomas.base.ui.handleEvents
@@ -32,11 +35,6 @@ fun WeiboScreen(
     val uiState = viewModel.collectUiState()
     val context = LocalContext.current
 
-    // Call getWeiboHot when the screen is first composed
-    LaunchedEffect(Unit) {
-        viewModel.getWeiboHot()
-    }
-
     viewModel.handleEvents(navigator = navigator) {
         when (it) {
             is MessageEvent -> {
@@ -47,6 +45,11 @@ fun WeiboScreen(
                 ).show()
             }
         }
+    }
+
+    // Call getWeiboHot when the screen is first composed
+    LaunchedEffect(Unit) {
+        viewModel.viewCreated()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -64,7 +67,7 @@ fun WeiboScreen(
 
             when (uiState.status) {
                 com.thomas.base.viewmodel.Status.LOADING -> {
-                    Text(text = "Loading...")
+                    LoadingScreen()
                 }
 
                 com.thomas.base.viewmodel.Status.SUCCESS -> {
@@ -83,7 +86,11 @@ fun WeiboScreen(
                                     )
                                     Text(text = item.hot)
                                 }
-                                Divider()
+                                HorizontalDivider(
+                                    Modifier,
+                                    DividerDefaults.Thickness,
+                                    DividerDefaults.color
+                                )
                             }
                         }
                     }

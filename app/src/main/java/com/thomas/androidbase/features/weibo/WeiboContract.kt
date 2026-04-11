@@ -6,5 +6,4 @@ import com.thomas.base.viewmodel.UIState
 
 interface WeiboContract : BaseContract<UIState<WeiboHot>> {
     fun showMessage()
-    fun getWeiboHot()
 }

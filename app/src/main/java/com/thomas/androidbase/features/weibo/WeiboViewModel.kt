@@ -1,6 +1,6 @@
 package com.thomas.androidbase.features.weibo
 
- import com.thomas.androidbase.data.WeiboHot
+import com.thomas.androidbase.data.WeiboHot
 import com.thomas.base.viewmodel.BaseViewModel
 import com.thomas.base.viewmodel.MessageEvent
 import com.thomas.base.viewmodel.UIState
@@ -22,16 +22,27 @@ class WeiboViewModel @Inject constructor(
         send(MessageEvent("Hello from WeiboViewModel"))
     }
 
-    override fun getWeiboHot() {
+    private fun getWeiboHot() {
         scope.launch {
             when (val result = weiboRepository.getWeiboHot()) {
                 is Result.Success -> {
                     updateState { copy(status = Status.SUCCESS, data = result.data) }
                 }
+
                 is Result.Error -> {
-                    updateState { copy(status = Status.ERROR, error = Error(code = result.code, message = result.message ?: "")) }
+                    updateState {
+                        copy(
+                            status = Status.ERROR,
+                            error = Error(code = result.code, message = result.message ?: "")
+                        )
+                    }
                 }
             }
         }
     }
+
+    override fun viewCreated() {
+        getWeiboHot()
+    }
+
 }
