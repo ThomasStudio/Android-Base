@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtoolsKsp)
+    kotlin("kapt")
 }
 
 android {
@@ -49,11 +50,19 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
+
+    //hilt
     implementation(libs.hilt.android)
-    implementation(libs.gson)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    //retrofit2
     implementation(libs.retrofit)
     implementation(libs.okhttp)
-    ksp(libs.hilt.compiler)
+
+    //gson
+    implementation(libs.gson)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
