@@ -16,7 +16,7 @@ interface WeiboService {
 }
 ```
 
-```kotlin
+```kotlin WeiboRepository.kt
 interface WeiboRepository {
     suspend fun getWeiboHot(): Result<WeiboHot>
 }
