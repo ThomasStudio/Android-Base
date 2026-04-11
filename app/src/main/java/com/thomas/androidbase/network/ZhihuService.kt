@@ -10,6 +10,6 @@ import retrofit2.http.GET
 
 
 interface ZhihuService {
-    @GET("total?limit=50")
+    @GET("topstory/hot")
     suspend fun getHot(): Response<ZhihuHot>
 }

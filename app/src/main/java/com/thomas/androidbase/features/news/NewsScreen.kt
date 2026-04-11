@@ -79,9 +79,9 @@ fun NewsScreen(
                                         .padding(16.dp),
                                     verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Text(text = item.target.title, fontWeight = FontWeight.Bold)
-                                    Text(text = "Answer Count: ${item.target.answer_count}")
-                                    Text(text = "Follower Count: ${item.target.follower_count}")
+                                    Text(text = item.target.question.title, fontWeight = FontWeight.Bold)
+                                    Text(text = "Answer Count: ${item.target.question.answerCount}")
+                                    Text(text = "Follower Count: ${item.target.question.followerCount}")
                                 }
                                 HorizontalDivider(
                                     Modifier,
