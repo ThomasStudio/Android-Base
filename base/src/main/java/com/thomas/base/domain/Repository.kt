@@ -18,8 +18,6 @@ abstract class Repository {
             } else {
                 errorHandler.toError(response)
             }
-
-
         } catch (e: Exception) {
             errorHandler.toError(e)
         }

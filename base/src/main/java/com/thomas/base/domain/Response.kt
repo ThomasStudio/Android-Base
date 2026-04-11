@@ -11,5 +11,5 @@ open class Response<T>(
     @SerializedName("msg") val message: String?,
     @SerializedName("data") val data: T?
 ) {
-    open fun isSuccess(): Boolean = code == 0
+    open fun isSuccess(): Boolean = code == 200
 }
