@@ -46,7 +46,7 @@ fun <STATE : UIStateIF> BaseContract<STATE>.collectUiState(): STATE {
 }
 
 @Composable
-fun <STATE : UIStateIF> BaseContract<STATE>.handleEvents(
+fun <STATE : UIStateIF> BaseContract<STATE>.HandleEvents(
     navigator: Navigator? = null,
     onEvent: (Event) -> Unit = {},
 ) {
@@ -58,5 +58,12 @@ fun <STATE : UIStateIF> BaseContract<STATE>.handleEvents(
                 handleBaseContractEvent(viewEvent, navigator, onEvent)
             }
         }
+    }
+}
+
+@Composable
+fun <STATE : UIStateIF> BaseContract<STATE>.ViewCreated() {
+    LaunchedEffect(Unit) {
+        viewCreated()
     }
 }

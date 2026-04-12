@@ -13,7 +13,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.ui.components.LoadingScreen
 import com.thomas.base.navigation.Navigator
+import com.thomas.base.ui.ViewCreated
 import com.thomas.base.ui.collectUiState
-import com.thomas.base.ui.handleEvents
+import com.thomas.base.ui.HandleEvents
 import com.thomas.base.viewmodel.MessageEvent
 
 @Composable
@@ -35,11 +35,9 @@ fun NewsScreen(
     val context = LocalContext.current
 
     // Call getZhihuHot when the screen is first composed
-    LaunchedEffect(Unit) {
-        viewModel.viewCreated()
-    }
+    viewModel.ViewCreated()
 
-    viewModel.handleEvents(navigator = navigator) {
+    viewModel.HandleEvents(navigator = navigator) {
         when (it) {
             is MessageEvent -> {
                 android.widget.Toast.makeText(
