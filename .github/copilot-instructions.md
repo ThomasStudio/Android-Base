@@ -457,8 +457,16 @@ data class MessageEvent(val message: String) : Event
 
 - Use Jetpack Compose for building all UI components. Avoid XML layouts.
 - In Compose, observe ViewModel uiState and event to update UI. Use BaseContract.collectUiState and BaseContract.handleEvents.
+- View should not contain any business logic; it should only handle UI rendering and user interactions.
+- View should delegate all business logic to ViewModel, pass events to ViewModel using handleEvents, and observe state changes from ViewModel to update the UI accordingly.
 - Inject ViewModel using hiltViewModel() in composable functions.
 - Inject Navigator for handling navigation events in composables.
+- Flow to add a new screen: 
+    - Create a new ViewModel class that implements BaseContract.
+    - Create a new composable function for the screen.
+    - Inject the corresponding ViewModel using hiltViewModel().
+    - Use collectUiState to observe the ViewModel state and update the UI accordingly.
+    - Use handleEvents to listen for events from the ViewModel and perform actions such as showing messages or navigating to other screens.
 
 - Example of a composable screen observing ViewModel state and handling events:
 ```kotlin
