@@ -15,13 +15,13 @@ Always use MVVM (Model-View-ViewModel) architecture for structuring all features
 - The repository should return a Result wrapper that indicates success or error.
 - Flow to handle API calls and data transformations in repositories.
 
-  - Add service interfaces for API endpoints.
-  - use ApiResponseInterceptor to standardize API responses.
-  - Implement repositories that call these services and handle responses.
-  - Use Result wrapper to represent success or error states in repository methods.
-  - Implement ErrorHandler interface to convert API responses and exceptions into Result.Error. Such as ApiErrorHandler.
-  - Use hilt modules to provide Retrofit instances and repositories.
-  - consume repository methods in ViewModels and update UI state accordingly.
+    - Add service interfaces for API endpoints.
+    - use ApiResponseInterceptor to standardize API responses.
+    - Implement repositories that call these services and handle responses.
+    - Use Result wrapper to represent success or error states in repository methods.
+    - Implement ErrorHandler interface to convert API responses and exceptions into Result.Error. Such as ApiErrorHandler.
+    - Use hilt modules to provide Retrofit instances and repositories.
+    - consume repository methods in ViewModels and update UI state accordingly.
 - Service example
 
 ```kotlin
