@@ -58,6 +58,13 @@ import androidx.compose.material3.Typography
  * @param enabled Whether the combobox is enabled
  * @param maxDropdownHeight Maximum height for the dropdown menu
  * @param showClearButton Whether to show a clear button
+ * @param labelFontSize Font size for the label text
+ * @param placeholderFontSize Font size for the placeholder text
+ * @param selectedItemFontSize Font size for the selected item text
+ * @param dropdownItemFontSize Font size for the dropdown item text
+ * @param horizontalPadding Horizontal padding for the combobox
+ * @param verticalPadding Vertical padding for the combobox
+ * @param cornerRadius Corner radius for the combobox
  * @param itemContent Custom composable for displaying each item
  * @param onLabelSemantics Callback to customize label semantics (content description)
  * @param onPlaceholderSemantics Callback to customize placeholder semantics (content description)
@@ -79,6 +86,13 @@ fun <T> ComboBox(
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = false,
+    labelFontSize: Dp = 14.dp,
+    placeholderFontSize: Dp = 16.dp,
+    selectedItemFontSize: Dp = 16.dp,
+    dropdownItemFontSize: Dp = 14.dp,
+    horizontalPadding: Dp = 16.dp,
+    verticalPadding: Dp = 12.dp,
+    cornerRadius: Dp = 8.dp,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((T) -> String)? = null,
@@ -116,7 +130,7 @@ fun <T> ComboBox(
                 text = labelText,
                 style = typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp
+                    fontSize = labelFontSize.value.sp
                 ),
                 color = colorScheme.onSurfaceVariant,
                 modifier = Modifier
@@ -130,15 +144,15 @@ fun <T> ComboBox(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(cornerRadius))
                 .border(
                     width = 1.dp,
                     color = borderColor,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(cornerRadius)
                 )
                 .background(
                     color = backgroundColor,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(cornerRadius)
                 )
         ) {
             Row(
@@ -150,7 +164,7 @@ fun <T> ComboBox(
                             if (enabled) expanded = !expanded
                         }
                     )
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = horizontalPadding, vertical = verticalPadding),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -161,7 +175,7 @@ fun <T> ComboBox(
                         text = displayText,
                         style = TextStyle(
                             color = textColor,
-                            fontSize = 16.sp
+                            fontSize = if (selectedItem != null) selectedItemFontSize.value.sp else placeholderFontSize.value.sp
                         ),
                         maxLines = 1,
                         modifier = Modifier.semantics {
@@ -258,7 +272,7 @@ fun <T> ComboBox(
                                                     text = item.toString(),
                                                     style = TextStyle(
                                                         color = colorScheme.onSurface,
-                                                        fontSize = 14.sp
+                                                        fontSize = dropdownItemFontSize.value.sp
                                                     ),
                                                     modifier = Modifier.semantics {
                                                         contentDescription = onItemSemantics?.invoke(item) ?: item.toString()
@@ -299,6 +313,13 @@ fun ComboBox(
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = true,
+    labelFontSize: Dp = 14.dp,
+    placeholderFontSize: Dp = 16.dp,
+    selectedItemFontSize: Dp = 16.dp,
+    dropdownItemFontSize: Dp = 14.dp,
+    horizontalPadding: Dp = 16.dp,
+    verticalPadding: Dp = 12.dp,
+    cornerRadius: Dp = 8.dp,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((String) -> String)? = null,
@@ -318,6 +339,13 @@ fun ComboBox(
         enabled = enabled,
         maxDropdownHeight = maxDropdownHeight,
         showClearButton = showClearButton,
+        labelFontSize = labelFontSize,
+        placeholderFontSize = placeholderFontSize,
+        selectedItemFontSize = selectedItemFontSize,
+        dropdownItemFontSize = dropdownItemFontSize,
+        horizontalPadding = horizontalPadding,
+        verticalPadding = verticalPadding,
+        cornerRadius = cornerRadius,
         onLabelSemantics = onLabelSemantics,
         onPlaceholderSemantics = onPlaceholderSemantics,
         onItemSemantics = onItemSemantics,

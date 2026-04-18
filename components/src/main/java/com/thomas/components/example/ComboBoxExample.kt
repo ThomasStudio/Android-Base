@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.thomas.components.ComboBox
 
 /**
@@ -80,7 +81,14 @@ fun ComboBoxExample() {
             onPlaceholderSemantics = { "Country selection placeholder $it" },
             onSelectedItemSemantics = { "Selected country: $it" },
             onDropdownArrowSemantics = { "Dropdown arrow button" },
-            onClearButtonSemantics = { "Clear selected country" }
+            onClearButtonSemantics = { "Clear selected country" },
+            labelFontSize = 12.dp,
+            placeholderFontSize = 10.dp,
+            selectedItemFontSize = 16.dp,
+            dropdownItemFontSize = 20.dp,
+            horizontalPadding = 22.dp,
+            verticalPadding = 33.dp,
+            cornerRadius = 0.dp,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -93,6 +101,18 @@ fun ComboBoxExample() {
         ComboBox(
             selectedItem = selectedLanguage,
             items = programmingLanguages,
+            onItemSelected = { selectedLanguage = it },
+            label = "Programming Language",
+            placeholder = "Select a programming language",
+            modifier = Modifier.fillMaxWidth(),
+            showClearButton = false
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ComboBox(
+            selectedItem = selectedLanguage,
+            items = emptyList(),
             onItemSelected = { selectedLanguage = it },
             label = "Programming Language",
             placeholder = "Select a programming language",
