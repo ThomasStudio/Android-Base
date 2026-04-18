@@ -56,11 +56,12 @@ fun HomeScreen(
                     Button(onClick = viewModel::onClickNews) {
                         Text("News")
                     }
+                    Button(onClick = viewModel::onClickComponents) {
+                        Text("Components")
+                    }
                     Button(onClick = viewModel::showMessage) {
                         Text("Show Message")
                     }
-
-                    ComboBoxExample()
                 }
             }
         }

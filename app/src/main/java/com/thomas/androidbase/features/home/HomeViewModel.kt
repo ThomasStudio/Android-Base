@@ -36,6 +36,10 @@ class HomeViewModel @Inject constructor() : BaseViewModel<UIState<HomeData>>(), 
         navigate(MainRoute.Weibo)
     }
 
+    override fun onClickComponents() {
+        navigate(MainRoute.Components)
+    }
+
     override fun showMessage() {
         send(MessageEvent("Hello from HomeViewModel"))
     }

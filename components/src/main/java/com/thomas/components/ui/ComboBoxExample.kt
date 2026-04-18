@@ -52,8 +52,7 @@ fun ComboBoxExample() {
     
     var selectedCountry by remember { mutableStateOf<String?>(null) }
     var selectedLanguage by remember { mutableStateOf<String?>(null) }
-    var searchableSelection by remember { mutableStateOf<String?>(null) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,22 +96,6 @@ fun ComboBoxExample() {
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        // Searchable ComboBox
-        Text(
-            text = "Searchable ComboBox",
-            style = androidx.compose.material3.MaterialTheme.typography.titleMedium
-        )
-        SearchableComboBox(
-            selectedItem = searchableSelection,
-            items = countries,
-            onItemSelected = { searchableSelection = it },
-            label = "Search Country",
-            placeholder = "Type to search countries",
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
         // Disabled ComboBox
         Text(
             text = "Disabled ComboBox",
@@ -140,10 +123,6 @@ fun ComboBoxExample() {
             )
             Text(
                 text = "Language: ${selectedLanguage ?: "None"}",
-                style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Searchable: ${searchableSelection ?: "None"}",
                 style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
             )
         }

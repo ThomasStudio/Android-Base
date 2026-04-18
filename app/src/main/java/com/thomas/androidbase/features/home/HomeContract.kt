@@ -9,6 +9,7 @@ import com.thomas.base.viewmodel.UIStateIF
 interface HomeContract : BaseContract<UIState<HomeData>> {
     fun onClickNews()
     fun onClickWeibo()
+    fun onClickComponents()
     fun showMessage()
 }
 

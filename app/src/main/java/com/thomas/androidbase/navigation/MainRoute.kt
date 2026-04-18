@@ -6,5 +6,5 @@ sealed class MainRoute(override val path: String) : AppRoute() {
     object Home : MainRoute("home")
     object Weibo : MainRoute("weibo")
     object News : MainRoute("news")
+    object Components : MainRoute("components")
 }
-
