@@ -50,15 +50,14 @@ import androidx.compose.ui.unit.sp
  */
 data class ComboBoxTheme(
     // Colors with default values
-    val labelColor: Color = Color(0xFF666666),
     val borderColor: Color = Color(0xFFCCCCCC),
     val expandedBorderColor: Color = Color(0xFF1976D2), // Material Blue 700
     val backgroundColor: Color = Color(0xFFFFFFFF),
     val iconColor: Color = Color(0xFF666666),
-    val dialogTitleColor: Color = Color(0xFF000000),
 
-    // Text Styles
+    // Text Styles with default values
     val labelTextStyle: TextStyle = TextStyle(
+        color = Color(0xFF666666),
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp
     ),
@@ -79,6 +78,7 @@ data class ComboBoxTheme(
         fontSize = 14.sp
     ),
     val dialogTitleTextStyle: TextStyle = TextStyle(
+        color = Color(0xFF000000),
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
@@ -154,12 +154,10 @@ fun <T> ComboBox(
             Text(
                 text = labelText,
                 style = theme.labelTextStyle,
-                color = theme.labelColor,
                 modifier = Modifier
                     .padding(bottom = 4.dp)
                     .semantics {
-                        contentDescription =
-                            semantics.onLabelSemantics?.invoke(labelText) ?: labelText
+                        contentDescription = semantics.onLabelSemantics?.invoke(labelText) ?: labelText
                     }
             )
         }
@@ -261,8 +259,7 @@ fun <T> ComboBox(
                 title = {
                     Text(
                         text = label ?: "Select an option",
-                        style = theme.dialogTitleTextStyle,
-                        color = theme.dialogTitleColor
+                        style = theme.dialogTitleTextStyle
                     )
                 },
                 text = {
