@@ -66,21 +66,23 @@ data class ComboBoxConfig<T>(
     val cornerRadius: Dp = 8.dp,
     val buttonSize: Dp = 24.dp,
     val maxDropdownHeight: Dp = 200.dp,
+    val dropdownArrowSemantics: String = "Dropdown arrow",
+    val clearButtonSemantics: String = "Clear selection",
     val onLabelSemantics: ((String) -> String)? = null,
     val onPlaceholderSemantics: ((String) -> String)? = null,
     val onItemSemantics: ((T) -> String)? = null,
     val onSelectedItemSemantics: ((T) -> String)? = null,
-    val onDropdownArrowSemantics: (() -> String)? = null,
-    val onClearButtonSemantics: (() -> String)? = null,
     val onDialogTitleSemantics: ((String) -> String)? = null
 ) {
     companion object Defaults {
-        val labelTextStyle = TextStyle(color = Color(0xFF666666), fontWeight = FontWeight.Medium, fontSize = 14.sp)
+        val labelTextStyle =
+            TextStyle(color = Color(0xFF666666), fontWeight = FontWeight.Medium, fontSize = 14.sp)
         val selectedItemTextStyle = TextStyle(color = Color(0xFF000000), fontSize = 16.sp)
         val placeholderTextStyle = TextStyle(color = Color(0xFF999999), fontSize = 16.sp)
         val dropdownItemTextStyle = TextStyle(color = Color(0xFF000000), fontSize = 14.sp)
         val emptyStateTextStyle = TextStyle(color = Color(0xFF999999), fontSize = 14.sp)
-        val dialogTitleTextStyle = TextStyle(color = Color(0xFF000000), fontWeight = FontWeight.Medium, fontSize = 16.sp)
+        val dialogTitleTextStyle =
+            TextStyle(color = Color(0xFF000000), fontWeight = FontWeight.Medium, fontSize = 16.sp)
     }
 }
 
@@ -114,7 +116,7 @@ fun <T> ComboBox(
             expanded = expanded,
             enabled = config.enabled,
             showClearButton = config.showClearButton,
-            clearButtonSemantics = config.onClearButtonSemantics,
+            clearButtonSemantics = config.clearButtonSemantics,
             onClearClick = { onItemSelected(null as T) },
             onTriggerClick = { expanded = true },
             modifier = Modifier.fillMaxWidth(),
@@ -161,7 +163,7 @@ private fun <T> ComboBoxTrigger(
     expanded: Boolean,
     enabled: Boolean,
     showClearButton: Boolean,
-    clearButtonSemantics: (() -> String)?,
+    clearButtonSemantics: String,
     onClearClick: () -> Unit,
     onTriggerClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -194,7 +196,8 @@ private fun <T> ComboBoxTrigger(
                         contentDescription = if (isSelected) {
                             config.onSelectedItemSemantics?.invoke(selectedItem!!) ?: displayText
                         } else {
-                            config.onPlaceholderSemantics?.invoke(config.placeholder) ?: config.placeholder
+                            config.onPlaceholderSemantics?.invoke(config.placeholder)
+                                ?: config.placeholder
                         }
                     }
                 )
@@ -206,11 +209,13 @@ private fun <T> ComboBoxTrigger(
                         onClick = onClearClick,
                         modifier = Modifier
                             .size(config.buttonSize)
-                            .semantics {
-                                contentDescription = clearButtonSemantics?.invoke() ?: "Clear selection"
-                            }
+                            .semantics { contentDescription = clearButtonSemantics }
                     ) {
-                        Icon(Icons.Default.Clear, contentDescription = null, tint = config.iconColor)
+                        Icon(
+                            Icons.Default.Clear,
+                            contentDescription = null,
+                            tint = config.iconColor
+                        )
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                 }
@@ -222,9 +227,7 @@ private fun <T> ComboBoxTrigger(
                     modifier = Modifier
                         .size(config.buttonSize)
                         .rotate(if (expanded) 180f else 0f)
-                        .semantics {
-                            contentDescription = config.onDropdownArrowSemantics?.invoke() ?: "Dropdown arrow"
-                        }
+                        .semantics { contentDescription = config.dropdownArrowSemantics }
                 )
             }
         }
@@ -247,19 +250,26 @@ private fun <T> ComboBoxDropdown(
                 text = titleText,
                 style = config.dialogTitleTextStyle,
                 modifier = Modifier.semantics {
-                    contentDescription = config.onDialogTitleSemantics?.invoke(titleText) ?: titleText
+                    contentDescription =
+                        config.onDialogTitleSemantics?.invoke(titleText) ?: titleText
                 }
             )
         },
         text = {
-            Box(modifier = Modifier.fillMaxWidth().height(config.maxDropdownHeight)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(config.maxDropdownHeight)
+            ) {
                 LazyColumn {
                     if (items.isEmpty()) {
                         item {
                             Text(
                                 text = config.noItemsFoundText,
                                 style = config.emptyStateTextStyle,
-                                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
                             )
                         }
                     } else {
@@ -273,7 +283,9 @@ private fun <T> ComboBoxDropdown(
                                             text = item.toString(),
                                             style = config.dropdownItemTextStyle,
                                             modifier = Modifier.semantics {
-                                                contentDescription = config.onItemSemantics?.invoke(item) ?: item.toString()
+                                                contentDescription =
+                                                    config.onItemSemantics?.invoke(item)
+                                                        ?: item.toString()
                                             }
                                         )
                                     }
