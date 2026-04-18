@@ -75,6 +75,7 @@ fun ComboBoxExample() {
             items = countries,
             onItemSelected = { selectedCountry = it },
             label = "Select Country",
+            showClearButton = true,
             placeholder = "Choose a country"
         )
         

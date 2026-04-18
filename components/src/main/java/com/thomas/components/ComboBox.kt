@@ -34,6 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -53,6 +56,9 @@ import androidx.compose.ui.unit.sp
  * @param maxDropdownHeight Maximum height for the dropdown menu
  * @param showClearButton Whether to show a clear button
  * @param itemContent Custom composable for displaying each item
+ * @param onLabelSemantics Callback to customize label semantics (content description)
+ * @param onPlaceholderSemantics Callback to customize placeholder semantics (content description)
+ * @param onItemSemantics Callback to customize item semantics (content description)
  */
 @Composable
 fun <T> ComboBox(
@@ -64,8 +70,11 @@ fun <T> ComboBox(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
-    showClearButton: Boolean = true,
-    itemContent: @Composable ((T) -> Unit)? = null
+    showClearButton: Boolean = false,
+    itemContent: @Composable ((T) -> Unit)? = null,
+    onLabelSemantics: ((String) -> String)? = null,
+    onPlaceholderSemantics: ((String) -> String)? = null,
+    onItemSemantics: ((T) -> String)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     
@@ -94,15 +103,19 @@ fun <T> ComboBox(
     }
 
     Column(modifier = modifier) {
-        label?.let {
+        label?.let { labelText ->
             Text(
-                text = it,
+                text = labelText,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
                 ),
                 color = colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .semantics {
+                        contentDescription = onLabelSemantics?.invoke(labelText) ?: labelText
+                    }
             )
         }
 
@@ -142,7 +155,15 @@ fun <T> ComboBox(
                             color = textColor,
                             fontSize = 16.sp
                         ),
-                        maxLines = 1
+                        maxLines = 1,
+                        modifier = Modifier.semantics {
+                            val contentDesc = if (selectedItem != null) {
+                                displayText
+                            } else {
+                                onPlaceholderSemantics?.invoke(placeholder) ?: placeholder
+                            }
+                            contentDescription = contentDesc
+                        }
                     )
                 }
 
@@ -223,7 +244,10 @@ fun <T> ComboBox(
                                                     style = TextStyle(
                                                         color = MaterialTheme.colorScheme.onSurface,
                                                         fontSize = 14.sp
-                                                    )
+                                                    ),
+                                                    modifier = Modifier.semantics {
+                                                        contentDescription = onItemSemantics?.invoke(item) ?: item.toString()
+                                                    }
                                                 )
                                             }
                                         },
@@ -257,7 +281,10 @@ fun ComboBox(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
-    showClearButton: Boolean = true
+    showClearButton: Boolean = true,
+    onLabelSemantics: ((String) -> String)? = null,
+    onPlaceholderSemantics: ((String) -> String)? = null,
+    onItemSemantics: ((String) -> String)? = null
 ) {
     ComboBox<String>(
         selectedItem = selectedItem,
@@ -268,6 +295,9 @@ fun ComboBox(
         modifier = modifier,
         enabled = enabled,
         maxDropdownHeight = maxDropdownHeight,
-        showClearButton = showClearButton
+        showClearButton = showClearButton,
+        onLabelSemantics = onLabelSemantics,
+        onPlaceholderSemantics = onPlaceholderSemantics,
+        onItemSemantics = onItemSemantics
     )
 }
