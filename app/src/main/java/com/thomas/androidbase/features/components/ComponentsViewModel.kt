@@ -1,5 +1,6 @@
 package com.thomas.androidbase.features.components
 
+import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseViewModel
 import com.thomas.base.viewmodel.Status
 import com.thomas.base.viewmodel.UIState
@@ -53,5 +54,9 @@ class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<Componen
                 data = data?.copy(selectedComponentId = componentId)
             )
         }
+    }
+
+    override fun navigateToDemoScreen(componentId: String) {
+        navigate(MainRoute.ComponentDemo(componentId))
     }
 }

@@ -14,10 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,8 +22,6 @@ import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.collectUiState
 import com.thomas.base.viewmodel.Status
-import com.thomas.components.ui.ComboBox
-import com.thomas.components.ui.ComboBoxExample
 
 @Composable
 fun ComponentsScreen(
@@ -40,7 +34,7 @@ fun ComponentsScreen(
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -84,7 +78,7 @@ fun ComponentsScreen(
 
                         data.components.forEach { component ->
                             Button(
-                                onClick = { viewModel.onComponentSelected(component.id) },
+                                onClick = { viewModel.navigateToDemoScreen(component.id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp)
@@ -99,66 +93,6 @@ fun ComponentsScreen(
                                     Text(
                                         text = component.description,
                                         style = androidx.compose.material3.MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        // Show selected component example
-                        data.selectedComponentId?.let { selectedId ->
-                            Text(
-                                text = "${data.components.find { it.id == selectedId }?.name ?: "Component"} Example",
-                                style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
-
-                            when (selectedId) {
-                                "combobox" -> {
-                                    val countries = listOf(
-                                        "United States", "Canada", "United Kingdom", "Germany", "France",
-                                        "Japan", "Australia", "Brazil", "India", "China"
-                                    )
-                                    var selectedCountry by remember { mutableStateOf<String?>(null) }
-
-                                    ComboBox(
-                                        selectedItem = selectedCountry,
-                                        items = countries,
-                                        onItemSelected = { selectedCountry = it },
-                                        label = "Select Country",
-                                        placeholder = "Choose a country",
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp)
-                                    )
-                                }
-                                "button" -> {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Button(
-                                            onClick = { },
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
-                                            Text("Default Button")
-                                        }
-                                        Button(
-                                            onClick = { },
-                                            modifier = Modifier.fillMaxWidth(),
-                                            enabled = false
-                                        ) {
-                                            Text("Disabled Button")
-                                        }
-                                    }
-                                }
-                                else -> {
-                                    Text(
-                                        text = "Component example coming soon...",
-                                        modifier = Modifier.padding(16.dp)
                                     )
                                 }
                             }

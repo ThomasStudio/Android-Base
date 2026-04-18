@@ -2,8 +2,11 @@ package com.thomas.androidbase
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.thomas.androidbase.features.components.ComponentDemoScreen
 import com.thomas.androidbase.features.components.ComponentsScreen
 import com.thomas.androidbase.features.home.HomeScreen
 import com.thomas.androidbase.features.news.NewsScreen
@@ -32,6 +35,20 @@ fun MainScreen(navController: NavHostController) {
         }
         composable(MainRoute.Components.path) {
             ComponentsScreen(navigator = navigator)
+        }
+        composable(
+            route = MainRoute.ComponentDemo.ROUTE,
+            arguments = listOf(
+                navArgument("componentId") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val componentId = backStackEntry.arguments?.getString("componentId") ?: ""
+            ComponentDemoScreen(
+                navigator = navigator,
+                componentId = componentId
+            )
         }
     }
 }

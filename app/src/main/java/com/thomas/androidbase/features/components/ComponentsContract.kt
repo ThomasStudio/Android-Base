@@ -1,13 +1,11 @@
 package com.thomas.androidbase.features.components
 
 import com.thomas.base.viewmodel.BaseContract
-import com.thomas.base.viewmodel.Error
-import com.thomas.base.viewmodel.Status
 import com.thomas.base.viewmodel.UIState
-import com.thomas.base.viewmodel.UIStateIF
 
 interface ComponentsContract : BaseContract<UIState<ComponentsData>> {
     fun onComponentSelected(componentId: String)
+    fun navigateToDemoScreen(componentId: String)
 }
 
 data class ComponentsData(
