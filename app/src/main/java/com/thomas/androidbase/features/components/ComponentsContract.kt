@@ -5,7 +5,6 @@ import com.thomas.base.viewmodel.UIState
 
 interface ComponentsContract : BaseContract<UIState<ComponentsData>> {
     fun onComponentSelected(componentId: String)
-    fun navigateToDemoScreen(componentId: String)
 }
 
 data class ComponentsData(

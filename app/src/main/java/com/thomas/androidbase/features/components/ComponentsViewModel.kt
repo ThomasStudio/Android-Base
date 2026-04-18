@@ -49,14 +49,10 @@ class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<Componen
     }
 
     override fun onComponentSelected(componentId: String) {
-        updateState {
-            copy(
-                data = data?.copy(selectedComponentId = componentId)
-            )
-        }
+        navigateToDemoScreen(componentId)
     }
 
-    override fun navigateToDemoScreen(componentId: String) {
+    private fun navigateToDemoScreen(componentId: String) {
         navigate(MainRoute.ComponentDemo(componentId))
     }
 }

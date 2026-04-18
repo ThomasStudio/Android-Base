@@ -78,7 +78,7 @@ fun ComponentsScreen(
 
                         data.components.forEach { component ->
                             Button(
-                                onClick = { viewModel.navigateToDemoScreen(component.id) },
+                                onClick = { viewModel.onComponentSelected(component.id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp)
