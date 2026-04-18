@@ -21,6 +21,7 @@ import com.thomas.base.ui.collectUiState
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.viewmodel.MessageEvent
 import com.thomas.base.viewmodel.Status
+import com.thomas.components.ui.ComboBoxExample
 
 @Composable
 fun HomeScreen(
@@ -58,6 +59,8 @@ fun HomeScreen(
                     Button(onClick = viewModel::showMessage) {
                         Text("Show Message")
                     }
+
+                    ComboBoxExample()
                 }
             }
         }
