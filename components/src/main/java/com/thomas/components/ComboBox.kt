@@ -53,44 +53,28 @@ data class ComboBoxConfig<T>(
     val showClearButton: Boolean = false,
     val noItemsFoundText: String = "No items found",
 
-    // Theme properties (formerly in ComboBoxTheme)
+    // Theme properties
     val borderColor: Color = Color(0xFFCCCCCC),
-    val expandedBorderColor: Color = Color(0xFF1976D2), // Material Blue 700
+    val expandedBorderColor: Color = Color(0xFF1976D2),
     val backgroundColor: Color = Color(0xFFFFFFFF),
     val iconColor: Color = Color(0xFF666666),
-    val labelTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF666666),
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
-    ),
-    val selectedItemTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF000000),
-        fontSize = 16.sp
-    ),
-    val placeholderTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF999999),
-        fontSize = 16.sp
-    ),
-    val dropdownItemTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF000000),
-        fontSize = 14.sp
-    ),
-    val emptyStateTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF999999),
-        fontSize = 14.sp
-    ),
-    val dialogTitleTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF000000),
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
-    ),
+
+    // Text styles with defaults from companion
+    val labelTextStyle: TextStyle = Defaults.labelTextStyle,
+    val selectedItemTextStyle: TextStyle = Defaults.selectedItemTextStyle,
+    val placeholderTextStyle: TextStyle = Defaults.placeholderTextStyle,
+    val dropdownItemTextStyle: TextStyle = Defaults.dropdownItemTextStyle,
+    val emptyStateTextStyle: TextStyle = Defaults.emptyStateTextStyle,
+    val dialogTitleTextStyle: TextStyle = Defaults.dialogTitleTextStyle,
+
+    // Sizes
     val horizontalPadding: Dp = 16.dp,
     val verticalPadding: Dp = 12.dp,
     val cornerRadius: Dp = 8.dp,
     val buttonSize: Dp = 24.dp,
     val maxDropdownHeight: Dp = 200.dp,
 
-    // Semantics properties (formerly in ComboBoxSemantics)
+    // Semantics properties
     val onLabelSemantics: ((String) -> String)? = null,
     val onPlaceholderSemantics: ((String) -> String)? = null,
     val onItemSemantics: ((T) -> String)? = null,
@@ -98,7 +82,39 @@ data class ComboBoxConfig<T>(
     val onDropdownArrowSemantics: (() -> String)? = null,
     val onClearButtonSemantics: (() -> String)? = null,
     val onDialogTitleSemantics: ((String) -> String)? = null
-)
+) {
+    companion object Defaults {
+        /**
+         * Default text styles for ComboBox components
+         */
+        val labelTextStyle = TextStyle(
+            color = Color(0xFF666666),
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp
+        )
+        val selectedItemTextStyle = TextStyle(
+            color = Color(0xFF000000),
+            fontSize = 16.sp
+        )
+        val placeholderTextStyle = TextStyle(
+            color = Color(0xFF999999),
+            fontSize = 16.sp
+        )
+        val dropdownItemTextStyle = TextStyle(
+            color = Color(0xFF000000),
+            fontSize = 14.sp
+        )
+        val emptyStateTextStyle = TextStyle(
+            color = Color(0xFF999999),
+            fontSize = 14.sp
+        )
+        val dialogTitleTextStyle = TextStyle(
+            color = Color(0xFF000000),
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+    }
+}
 
 /**
  * ComboBox component that provides a dropdown selection
@@ -121,14 +137,14 @@ fun <T> ComboBox(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Dynamic border color based on state
-    val borderColor = remember(expanded, config.enabled, config.borderColor, config.expandedBorderColor) {
-        when {
-            !config.enabled -> config.borderColor.copy(alpha = 0.5f)
-            expanded -> config.expandedBorderColor
-            else -> config.borderColor
+    val borderColor =
+        remember(expanded, config.enabled, config.borderColor, config.expandedBorderColor) {
+            when {
+                !config.enabled -> config.borderColor.copy(alpha = 0.5f)
+                expanded -> config.expandedBorderColor
+                else -> config.borderColor
+            }
         }
-    }
 
     val displayText = remember(selectedItem, config.placeholder) {
         selectedItem?.toString() ?: config.placeholder
@@ -186,7 +202,8 @@ fun <T> ComboBox(
                             val contentDesc = if (selectedItem != null) {
                                 config.onSelectedItemSemantics?.invoke(selectedItem) ?: displayText
                             } else {
-                                config.onPlaceholderSemantics?.invoke(config.placeholder) ?: config.placeholder
+                                config.onPlaceholderSemantics?.invoke(config.placeholder)
+                                    ?: config.placeholder
                             }
                             contentDescription = contentDesc
                         }
@@ -234,7 +251,6 @@ fun <T> ComboBox(
             }
         }
 
-        // Dialog for dropdown menu
         if (expanded) {
             AlertDialog(
                 onDismissRequest = { expanded = false },
@@ -244,7 +260,8 @@ fun <T> ComboBox(
                         style = config.dialogTitleTextStyle,
                         modifier = Modifier.semantics {
                             val dialogTitle = config.label ?: "Select an option"
-                            contentDescription = config.onDialogTitleSemantics?.invoke(dialogTitle) ?: dialogTitle
+                            contentDescription =
+                                config.onDialogTitleSemantics?.invoke(dialogTitle) ?: dialogTitle
                         }
                     )
                 },
