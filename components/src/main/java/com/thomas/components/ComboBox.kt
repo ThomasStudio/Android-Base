@@ -155,9 +155,9 @@ fun <T> ComboBox(
     // Dynamic border color based on state
     val borderColor = remember(expanded, config.enabled, config.theme) {
         when {
-            !config.enabled -> theme.borderColor.copy(alpha = 0.5f)
-            expanded -> theme.expandedBorderColor
-            else -> theme.borderColor
+            !config.enabled -> config.theme.borderColor.copy(alpha = 0.5f)
+            expanded -> config.theme.expandedBorderColor
+            else -> config.theme.borderColor
         }
     }
 
@@ -169,11 +169,11 @@ fun <T> ComboBox(
         config.label?.let { labelText ->
             Text(
                 text = labelText,
-                style = theme.labelTextStyle,
+                style = config.theme.labelTextStyle,
                 modifier = Modifier
                     .padding(bottom = 4.dp)
                     .semantics {
-                        contentDescription = semantics.onLabelSemantics?.invoke(labelText) ?: labelText
+                        contentDescription = config.semantics.onLabelSemantics?.invoke(labelText) ?: labelText
                     }
             )
         }
@@ -181,15 +181,15 @@ fun <T> ComboBox(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(theme.cornerRadius))
+                .clip(RoundedCornerShape(config.theme.cornerRadius))
                 .border(
                     width = 1.dp,
                     color = borderColor,
-                    shape = RoundedCornerShape(theme.cornerRadius)
+                    shape = RoundedCornerShape(config.theme.cornerRadius)
                 )
                 .background(
-                    color = theme.backgroundColor,
-                    shape = RoundedCornerShape(theme.cornerRadius)
+                    color = config.theme.backgroundColor,
+                    shape = RoundedCornerShape(config.theme.cornerRadius)
                 )
         ) {
             Row(
@@ -200,8 +200,8 @@ fun <T> ComboBox(
                         onClick = { expanded = true }
                     )
                     .padding(
-                        horizontal = theme.horizontalPadding,
-                        vertical = theme.verticalPadding
+                        horizontal = config.theme.horizontalPadding,
+                        vertical = config.theme.verticalPadding
                     ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -211,13 +211,13 @@ fun <T> ComboBox(
                 ) {
                     Text(
                         text = displayText,
-                        style = if (selectedItem != null) theme.selectedItemTextStyle else theme.placeholderTextStyle,
+                        style = if (selectedItem != null) config.theme.selectedItemTextStyle else config.theme.placeholderTextStyle,
                         maxLines = 1,
                         modifier = Modifier.semantics {
                             val contentDesc = if (selectedItem != null) {
-                                semantics.onSelectedItemSemantics?.invoke(selectedItem) ?: displayText
+                                config.semantics.onSelectedItemSemantics?.invoke(selectedItem) ?: displayText
                             } else {
-                                semantics.onPlaceholderSemantics?.invoke(config.placeholder) ?: config.placeholder
+                                config.semantics.onPlaceholderSemantics?.invoke(config.placeholder) ?: config.placeholder
                             }
                             contentDescription = contentDesc
                         }
@@ -234,16 +234,16 @@ fun <T> ComboBox(
                                 onItemSelected(null as T)
                             },
                             modifier = Modifier
-                                .size(theme.buttonSize)
+                                .size(config.theme.buttonSize)
                                 .semantics {
-                                    contentDescription = semantics.onClearButtonSemantics?.invoke()
+                                    contentDescription = config.semantics.onClearButtonSemantics?.invoke()
                                         ?: "Clear selection"
                                 }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null,
-                                tint = theme.iconColor
+                                tint = config.theme.iconColor
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -252,13 +252,13 @@ fun <T> ComboBox(
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = null,
-                        tint = theme.iconColor,
+                        tint = config.theme.iconColor,
                         modifier = Modifier
-                            .size(theme.buttonSize)
+                            .size(config.theme.buttonSize)
                             .rotate(if (expanded) 180f else 0f)
                             .semantics {
                                 contentDescription =
-                                    semantics.onDropdownArrowSemantics?.invoke() ?: "Dropdown arrow"
+                                    config.semantics.onDropdownArrowSemantics?.invoke() ?: "Dropdown arrow"
                             }
                     )
                 }
