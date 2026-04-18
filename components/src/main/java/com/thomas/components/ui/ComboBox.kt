@@ -136,9 +136,6 @@ fun <T> ComboBox(
                     .fillMaxWidth()
                     .clickable(enabled = enabled) {
                         expanded = !expanded
-                        if (expanded && searchable) {
-                            focusRequester.requestFocus()
-                        }
                     }
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
