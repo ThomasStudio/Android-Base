@@ -14,12 +14,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thomas.components.ComboBox
 import com.thomas.components.ComboBoxSemantics
 import com.thomas.components.ComboBoxTheme
+import com.thomas.components.ComboBoxTheme.Companion.DropdownItemTextStyle
+import com.thomas.components.ComboBoxTheme.Companion.LabelTextStyle
 
 /**
  * Example demonstrating various usages of the ComboBox component
@@ -85,12 +89,21 @@ fun ComboBoxExample() {
                 onSelectedItemSemantics = { "Selected country: $it" },
                 onDropdownArrowSemantics = { "Dropdown arrow button" },
                 onClearButtonSemantics = { "Clear selected country" },
+                onDialogTitleSemantics = { "$it title" }
             ),
             theme = ComboBoxTheme(
                 cornerRadius = 0.dp,
                 horizontalPadding = 22.dp,
                 verticalPadding = 33.dp,
-                 
+                buttonSize = 48.dp,
+                maxDropdownHeight = 200.dp,
+                labelTextStyle = LabelTextStyle.copy(
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                dropdownItemTextStyle = DropdownItemTextStyle.copy(
+                    fontSize = 24.sp,
+                ),
             )
         )
 

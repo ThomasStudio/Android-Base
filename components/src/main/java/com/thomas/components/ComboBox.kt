@@ -114,7 +114,8 @@ data class ComboBoxSemantics<T>(
     val onItemSemantics: ((T) -> String)? = null,
     val onSelectedItemSemantics: ((T) -> String)? = null,
     val onDropdownArrowSemantics: (() -> String)? = null,
-    val onClearButtonSemantics: (() -> String)? = null
+    val onClearButtonSemantics: (() -> String)? = null,
+    val onDialogTitleSemantics: ((String) -> String)? = null
 )
 
 /**
@@ -273,7 +274,11 @@ fun <T> ComboBox(
                 title = {
                     Text(
                         text = label ?: "Select an option",
-                        style = theme.dialogTitleTextStyle
+                        style = theme.dialogTitleTextStyle,
+                        modifier = Modifier.semantics {
+                            val dialogTitle = label ?: "Select an option"
+                            contentDescription = semantics.onDialogTitleSemantics?.invoke(dialogTitle) ?: dialogTitle
+                        }
                     )
                 },
                 text = {
