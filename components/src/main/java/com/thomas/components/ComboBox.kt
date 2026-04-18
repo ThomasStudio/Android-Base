@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,39 +36,82 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Typography
+
+/**
+ * Unified data class for ComboBox theme configuration including colors, text styles, and sizes
+ */
+data class ComboBoxTheme(
+    // Colors
+    val labelColor: Color = Color(0xFF666666),
+    val borderColor: Color = Color(0xFFCCCCCC),
+    val backgroundColor: Color = Color(0xFFFFFFFF),
+    val selectedItemColor: Color = Color(0xFF000000),
+    val placeholderColor: Color = Color(0xFF999999),
+    val iconColor: Color = Color(0xFF666666),
+    val dropdownItemColor: Color = Color(0xFF000000),
+    val dropdownItemBackgroundColor: Color = Color(0xFFFFFFFF),
+    val emptyStateColor: Color = Color(0xFF999999),
+    val dialogTitleColor: Color = Color(0xFF000000),
+    
+    // Text Styles
+    val labelTextStyle: TextStyle = TextStyle(
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
+    ),
+    val selectedItemTextStyle: TextStyle = TextStyle(
+        color = Color(0xFF000000),
+        fontSize = 16.sp
+    ),
+    val placeholderTextStyle: TextStyle = TextStyle(
+        color = Color(0xFF999999),
+        fontSize = 16.sp
+    ),
+    val dropdownItemTextStyle: TextStyle = TextStyle(
+        color = Color(0xFF000000),
+        fontSize = 14.sp
+    ),
+    val emptyStateTextStyle: TextStyle = TextStyle(
+        color = Color(0xFF999999),
+        fontSize = 14.sp
+    ),
+    val dialogTitleTextStyle: TextStyle = TextStyle(
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp
+    ),
+    
+    // Sizes
+    val labelFontSize: Dp = 14.dp,
+    val placeholderFontSize: Dp = 16.dp,
+    val selectedItemFontSize: Dp = 16.dp,
+    val dropdownItemFontSize: Dp = 14.dp,
+    val horizontalPadding: Dp = 16.dp,
+    val verticalPadding: Dp = 12.dp,
+    val cornerRadius: Dp = 8.dp,
+    val buttonSize: Dp = 24.dp,
+    val maxDropdownHeight: Dp = 200.dp
+)
 
 /**
  * ComboBox component that provides a dropdown selection
- *
+ * 
  * @param selectedItem The currently selected item
  * @param items List of items to display in the dropdown
  * @param onItemSelected Callback when an item is selected
  * @param label Text label for the combobox
  * @param placeholder Placeholder text when no item is selected
  * @param modifier Modifier for styling the combobox
- * @param colors Map of colors for different combobox elements
- * @param textStyles Map of text styles for different combobox elements
+ * @param theme ComboBoxTheme configuration for combobox styling
  * @param enabled Whether the combobox is enabled
- * @param maxDropdownHeight Maximum height for the dropdown menu
  * @param showClearButton Whether to show a clear button
- * @param labelFontSize Font size for the label text
- * @param placeholderFontSize Font size for the placeholder text
- * @param selectedItemFontSize Font size for the selected item text
- * @param dropdownItemFontSize Font size for the dropdown item text
- * @param horizontalPadding Horizontal padding for the combobox
- * @param verticalPadding Vertical padding for the combobox
- * @param cornerRadius Corner radius for the combobox
  * @param noItemsFoundText Text to display when no items are available
- * @param buttonSize Size for the clear button and dropdown arrow
  * @param itemContent Custom composable for displaying each item
  * @param onLabelSemantics Callback to customize label semantics (content description)
  * @param onPlaceholderSemantics Callback to customize placeholder semantics (content description)
@@ -84,20 +128,10 @@ fun <T> ComboBox(
     label: String? = null,
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
-    colors: Map<String, Color> = emptyMap(),
-    textStyles: Map<String, TextStyle> = emptyMap(),
+    theme: ComboBoxTheme = ComboBoxTheme(),
     enabled: Boolean = true,
-    maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = false,
-    labelFontSize: Dp = 14.dp,
-    placeholderFontSize: Dp = 16.dp,
-    selectedItemFontSize: Dp = 16.dp,
-    dropdownItemFontSize: Dp = 14.dp,
-    horizontalPadding: Dp = 16.dp,
-    verticalPadding: Dp = 12.dp,
-    cornerRadius: Dp = 8.dp,
     noItemsFoundText: String = "No items found",
-    buttonSize: Dp = 24.dp,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((T) -> String)? = null,
@@ -108,59 +142,25 @@ fun <T> ComboBox(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Get colors from map or fallback to MaterialTheme
-    val colorScheme = MaterialTheme.colorScheme
-    val labelColor = colors["label"] ?: colorScheme.onSurfaceVariant
-    val borderColor = colors["border"] ?: when {
-        !enabled -> colorScheme.outline.copy(alpha = 0.5f)
-        expanded -> colorScheme.primary
-        else -> colorScheme.outline
+    // Dynamic border color based on state
+    val borderColor = remember(expanded, enabled, theme) {
+        when {
+            !enabled -> theme.borderColor.copy(alpha = 0.5f)
+            expanded -> MaterialTheme.colorScheme.primary
+            else -> theme.borderColor
+        }
     }
-    val backgroundColor = colors["background"] ?: if (enabled) colorScheme.surface else colorScheme.surfaceVariant
-    val selectedItemColor = colors["selectedItem"] ?: colorScheme.onSurface
-    val placeholderColor = colors["placeholder"] ?: colorScheme.onSurfaceVariant
-    val iconColor = colors["icon"] ?: colorScheme.onSurfaceVariant
-    val dropdownItemColor = colors["dropdownItem"] ?: colorScheme.onSurface
-    val dropdownItemBackground = colors["dropdownItemBackground"] ?: colorScheme.surface
-    val emptyStateColor = colors["emptyState"] ?: colorScheme.onSurfaceVariant
-
-    // Get text styles from map or fallback to MaterialTheme
-    val typography = MaterialTheme.typography
-    val labelStyle = textStyles["label"] ?: typography.bodyMedium.copy(
-        fontWeight = FontWeight.Medium,
-        fontSize = labelFontSize.value.sp
-    )
-    val selectedItemStyle = textStyles["selectedItem"] ?: TextStyle(
-        color = selectedItemColor,
-        fontSize = selectedItemFontSize.value.sp
-    )
-    val placeholderStyle = textStyles["placeholder"] ?: TextStyle(
-        color = placeholderColor,
-        fontSize = placeholderFontSize.value.sp
-    )
-    val dropdownItemStyle = textStyles["dropdownItem"] ?: TextStyle(
-        color = dropdownItemColor,
-        fontSize = dropdownItemFontSize.value.sp
-    )
-    val emptyStateStyle = textStyles["emptyState"] ?: TextStyle(
-        color = emptyStateColor,
-        fontSize = 14.sp
-    )
 
     val displayText = remember(selectedItem, placeholder) {
         selectedItem?.toString() ?: placeholder
-    }
-
-    val currentTextStyle = remember(selectedItem, selectedItemStyle, placeholderStyle) {
-        if (selectedItem != null) selectedItemStyle else placeholderStyle
     }
 
     Column(modifier = modifier) {
         label?.let { labelText ->
             Text(
                 text = labelText,
-                style = labelStyle,
-                color = labelColor,
+                style = theme.labelTextStyle,
+                color = theme.labelColor,
                 modifier = Modifier
                     .padding(bottom = 4.dp)
                     .semantics {
@@ -172,15 +172,15 @@ fun <T> ComboBox(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(cornerRadius))
+                .clip(RoundedCornerShape(theme.cornerRadius))
                 .border(
                     width = 1.dp,
                     color = borderColor,
-                    shape = RoundedCornerShape(cornerRadius)
+                    shape = RoundedCornerShape(theme.cornerRadius)
                 )
                 .background(
-                    color = backgroundColor,
-                    shape = RoundedCornerShape(cornerRadius)
+                    color = theme.backgroundColor,
+                    shape = RoundedCornerShape(theme.cornerRadius)
                 )
         ) {
             Row(
@@ -188,11 +188,11 @@ fun <T> ComboBox(
                     .fillMaxWidth()
                     .clickable(
                         enabled = enabled,
-                        onClick = {
-                            if (enabled) expanded = !expanded
+                        onClick = { 
+                            if (enabled) expanded = !expanded 
                         }
                     )
-                    .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+                    .padding(horizontal = theme.horizontalPadding, vertical = theme.verticalPadding),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -201,7 +201,7 @@ fun <T> ComboBox(
                 ) {
                     Text(
                         text = displayText,
-                        style = currentTextStyle,
+                        style = if (selectedItem != null) theme.selectedItemTextStyle else theme.placeholderTextStyle,
                         maxLines = 1,
                         modifier = Modifier.semantics {
                             val contentDesc = if (selectedItem != null) {
@@ -224,15 +224,15 @@ fun <T> ComboBox(
                                 onItemSelected(null as T) 
                             },
                             modifier = Modifier
-                                .size(buttonSize)
+                                .size(theme.buttonSize)
                                 .semantics {
                                     contentDescription = onClearButtonSemantics?.invoke() ?: "Clear selection"
                                 }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = null, // Content description handled by parent
-                                tint = iconColor
+                                contentDescription = null,
+                                tint = theme.iconColor
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -240,10 +240,10 @@ fun <T> ComboBox(
 
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null, // Content description handled by parent
-                        tint = iconColor,
+                        contentDescription = null,
+                        tint = theme.iconColor,
                         modifier = Modifier
-                            .size(buttonSize)
+                            .size(theme.buttonSize)
                             .rotate(if (expanded) 180f else 0f)
                             .semantics {
                                 contentDescription = onDropdownArrowSemantics?.invoke() ?: "Dropdown arrow"
@@ -253,28 +253,29 @@ fun <T> ComboBox(
             }
         }
 
-        // Dialog for dropdown menu - optimized with key to prevent unnecessary recompositions
+        // Dialog for dropdown menu
         if (expanded) {
             AlertDialog(
                 onDismissRequest = { expanded = false },
                 title = {
                     Text(
                         text = label ?: "Select an option",
-                        style = textStyles["dialogTitle"] ?: typography.titleMedium
+                        style = theme.dialogTitleTextStyle,
+                        color = theme.dialogTitleColor
                     )
                 },
                 text = {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(maxDropdownHeight)
+                            .height(theme.maxDropdownHeight)
                     ) {
                         LazyColumn {
                             if (items.isEmpty()) {
                                 item {
                                     Text(
                                         text = noItemsFoundText,
-                                        style = emptyStateStyle,
+                                        style = theme.emptyStateTextStyle,
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(16.dp)
@@ -292,7 +293,7 @@ fun <T> ComboBox(
                                             } else {
                                                 Text(
                                                     text = item.toString(),
-                                                    style = dropdownItemStyle,
+                                                    style = theme.dropdownItemTextStyle,
                                                     modifier = Modifier.semantics {
                                                         contentDescription = onItemSemantics?.invoke(item) ?: item.toString()
                                                     }
@@ -327,20 +328,10 @@ fun ComboBox(
     label: String? = null,
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
-    colors: Map<String, Color> = emptyMap(),
-    textStyles: Map<String, TextStyle> = emptyMap(),
+    theme: ComboBoxTheme = ComboBoxTheme(),
     enabled: Boolean = true,
-    maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = true,
-    labelFontSize: Dp = 14.dp,
-    placeholderFontSize: Dp = 16.dp,
-    selectedItemFontSize: Dp = 16.dp,
-    dropdownItemFontSize: Dp = 14.dp,
-    horizontalPadding: Dp = 16.dp,
-    verticalPadding: Dp = 12.dp,
-    cornerRadius: Dp = 8.dp,
     noItemsFoundText: String = "No items found",
-    buttonSize: Dp = 24.dp,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((String) -> String)? = null,
@@ -355,20 +346,10 @@ fun ComboBox(
         label = label,
         placeholder = placeholder,
         modifier = modifier,
-        colors = colors,
-        textStyles = textStyles,
+        theme = theme,
         enabled = enabled,
-        maxDropdownHeight = maxDropdownHeight,
         showClearButton = showClearButton,
-        labelFontSize = labelFontSize,
-        placeholderFontSize = placeholderFontSize,
-        selectedItemFontSize = selectedItemFontSize,
-        dropdownItemFontSize = dropdownItemFontSize,
-        horizontalPadding = horizontalPadding,
-        verticalPadding = verticalPadding,
-        cornerRadius = cornerRadius,
         noItemsFoundText = noItemsFoundText,
-        buttonSize = buttonSize,
         onLabelSemantics = onLabelSemantics,
         onPlaceholderSemantics = onPlaceholderSemantics,
         onItemSemantics = onItemSemantics,
