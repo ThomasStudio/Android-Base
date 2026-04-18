@@ -49,3 +49,4 @@ dependencyResolutionManagement {
 rootProject.name = "AndroidBase"
 include(":app")
 include(":base")
+include(":components")
