@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +35,7 @@ fun ComboBoxExample() {
         "India",
         "China"
     )
-    
+
     val programmingLanguages = listOf(
         "Kotlin",
         "Java",
@@ -50,10 +48,10 @@ fun ComboBoxExample() {
         "C++",
         "C#"
     )
-    
+
     var selectedCountry by remember { mutableStateOf<String?>(null) }
     var selectedLanguage by remember { mutableStateOf<String?>(null) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +62,7 @@ fun ComboBoxExample() {
             text = "ComboBox Examples",
             style = androidx.compose.material3.MaterialTheme.typography.headlineMedium
         )
-        
+
         // Basic ComboBox
         Text(
             text = "Basic ComboBox",
@@ -76,11 +74,14 @@ fun ComboBoxExample() {
             onItemSelected = { selectedCountry = it },
             label = "Select Country",
             showClearButton = true,
-            placeholder = "Choose a country"
+            placeholder = "Choose a country",
+            onItemSemantics = { "Select $it as your country" },
+            onLabelSemantics = { "Country selection $it" },
+            onPlaceholderSemantics = { "Country selection placeholder $it" },
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // ComboBox with custom styling
         Text(
             text = "ComboBox with Custom Styling",
@@ -92,11 +93,12 @@ fun ComboBoxExample() {
             onItemSelected = { selectedLanguage = it },
             label = "Programming Language",
             placeholder = "Select a programming language",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            showClearButton = false
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // Disabled ComboBox
         Text(
             text = "Disabled ComboBox",
@@ -111,7 +113,7 @@ fun ComboBoxExample() {
             modifier = Modifier.fillMaxWidth(),
             enabled = false
         )
-        
+
         // Display selected values
         Column {
             Text(
@@ -152,9 +154,9 @@ fun CustomObjectComboBoxExample() {
         User(3, "Bob Johnson", "bob@example.com"),
         User(4, "Alice Brown", "alice@example.com")
     )
-    
+
     var selectedUser by remember { mutableStateOf<User?>(null) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +166,7 @@ fun CustomObjectComboBoxExample() {
             text = "Custom Object ComboBox",
             style = androidx.compose.material3.MaterialTheme.typography.titleMedium
         )
-        
+
         ComboBox(
             selectedItem = selectedUser,
             items = users,
@@ -186,9 +188,9 @@ fun CustomObjectComboBoxExample() {
                 }
             }
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = "Selected User: ${selectedUser?.name ?: "None"}",
             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
