@@ -272,10 +272,10 @@ fun <T> ComboBox(
                 title = {
                     Text(
                         text = config.label ?: "Select an option",
-                        style = theme.dialogTitleTextStyle,
+                        style = config.theme.dialogTitleTextStyle,
                         modifier = Modifier.semantics {
                             val dialogTitle = config.label ?: "Select an option"
-                            contentDescription = semantics.onDialogTitleSemantics?.invoke(dialogTitle) ?: dialogTitle
+                            contentDescription = config.semantics.onDialogTitleSemantics?.invoke(dialogTitle) ?: dialogTitle
                         }
                     )
                 },
@@ -283,14 +283,14 @@ fun <T> ComboBox(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(theme.maxDropdownHeight)
+                            .height(config.theme.maxDropdownHeight)
                     ) {
                         LazyColumn {
                             if (items.isEmpty()) {
                                 item {
                                     Text(
                                         text = config.noItemsFoundText,
-                                        style = theme.emptyStateTextStyle,
+                                        style = config.theme.emptyStateTextStyle,
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(16.dp)
@@ -308,10 +308,10 @@ fun <T> ComboBox(
                                             } else {
                                                 Text(
                                                     text = item.toString(),
-                                                    style = theme.dropdownItemTextStyle,
+                                                    style = config.theme.dropdownItemTextStyle,
                                                     modifier = Modifier.semantics {
                                                         contentDescription =
-                                                            semantics.onItemSemantics?.invoke(item)
+                                                            config.semantics.onItemSemantics?.invoke(item)
                                                                 ?: item.toString()
                                                     }
                                                 )
@@ -343,17 +343,13 @@ fun ComboBox(
     items: List<String>,
     onItemSelected: (String?) -> Unit,
     modifier: Modifier = Modifier,
-    config: ComboBoxConfig = ComboBoxConfig(showClearButton = true),
-    theme: ComboBoxTheme = ComboBoxTheme(),
-    semantics: ComboBoxSemantics<String> = ComboBoxSemantics()
+    config: ComboBoxConfig<String> = ComboBoxConfig()
 ) {
     ComboBox<String>(
         selectedItem = selectedItem,
         items = items,
         onItemSelected = onItemSelected,
         modifier = modifier,
-        config = config,
-        theme = theme,
-        semantics = semantics
+        config = config
     )
 }
