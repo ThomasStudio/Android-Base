@@ -65,6 +65,8 @@ import androidx.compose.material3.Typography
  * @param horizontalPadding Horizontal padding for the combobox
  * @param verticalPadding Vertical padding for the combobox
  * @param cornerRadius Corner radius for the combobox
+ * @param noItemsFoundText Text to display when no items are available
+ * @param buttonSize Size for the clear button and dropdown arrow
  * @param itemContent Custom composable for displaying each item
  * @param onLabelSemantics Callback to customize label semantics (content description)
  * @param onPlaceholderSemantics Callback to customize placeholder semantics (content description)
@@ -93,6 +95,8 @@ fun <T> ComboBox(
     horizontalPadding: Dp = 16.dp,
     verticalPadding: Dp = 12.dp,
     cornerRadius: Dp = 8.dp,
+    noItemsFoundText: String = "No items found",
+    buttonSize: Dp = 24.dp,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((T) -> String)? = null,
@@ -194,12 +198,12 @@ fun <T> ComboBox(
                 ) {
                     if (showClearButton && selectedItem != null && enabled) {
                         IconButton(
-                            onClick = {
+                            onClick = { 
                                 @Suppress("UNCHECKED_CAST")
-                                onItemSelected(null as T)
+                                onItemSelected(null as T) 
                             },
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(buttonSize)
                                 .semantics {
                                     contentDescription = onClearButtonSemantics?.invoke() ?: "Clear selection"
                                 }
@@ -218,7 +222,7 @@ fun <T> ComboBox(
                         contentDescription = null, // Content description handled by parent
                         tint = colorScheme.onSurfaceVariant,
                         modifier = Modifier
-                            .size(24.dp)
+                            .size(buttonSize)
                             .rotate(if (expanded) 180f else 0f)
                             .semantics {
                                 contentDescription = onDropdownArrowSemantics?.invoke() ?: "Dropdown arrow"
@@ -248,7 +252,7 @@ fun <T> ComboBox(
                             if (items.isEmpty()) {
                                 item {
                                     Text(
-                                        text = "No items found",
+                                        text = noItemsFoundText,
                                         style = TextStyle(
                                             color = colorScheme.onSurfaceVariant,
                                             fontSize = 14.sp
@@ -320,6 +324,8 @@ fun ComboBox(
     horizontalPadding: Dp = 16.dp,
     verticalPadding: Dp = 12.dp,
     cornerRadius: Dp = 8.dp,
+    noItemsFoundText: String = "No items found",
+    buttonSize: Dp = 24.dp,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((String) -> String)? = null,
@@ -346,6 +352,8 @@ fun ComboBox(
         horizontalPadding = horizontalPadding,
         verticalPadding = verticalPadding,
         cornerRadius = cornerRadius,
+        noItemsFoundText = noItemsFoundText,
+        buttonSize = buttonSize,
         onLabelSemantics = onLabelSemantics,
         onPlaceholderSemantics = onPlaceholderSemantics,
         onItemSemantics = onItemSemantics,

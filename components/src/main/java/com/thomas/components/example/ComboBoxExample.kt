@@ -89,6 +89,7 @@ fun ComboBoxExample() {
             horizontalPadding = 22.dp,
             verticalPadding = 33.dp,
             cornerRadius = 0.dp,
+            buttonSize = 48.dp,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -114,10 +115,11 @@ fun ComboBoxExample() {
             selectedItem = selectedLanguage,
             items = emptyList(),
             onItemSelected = { selectedLanguage = it },
-            label = "Programming Language",
-            placeholder = "Select a programming language",
+            label = "No items example",
+            placeholder = "Select a item",
             modifier = Modifier.fillMaxWidth(),
-            showClearButton = false
+            showClearButton = false,
+            noItemsFoundText = "There is 0 item in the list",
         )
 
         Spacer(modifier = Modifier.height(8.dp))
