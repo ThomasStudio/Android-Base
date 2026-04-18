@@ -121,12 +121,14 @@ data class ComboBoxSemantics<T>(
 /**
  * Data class for ComboBox configuration including basic properties
  */
-data class ComboBoxConfig(
+data class ComboBoxConfig<T>(
     val label: String? = null,
     val placeholder: String = "Select an option",
     val enabled: Boolean = true,
     val showClearButton: Boolean = false,
-    val noItemsFoundText: String = "No items found"
+    val noItemsFoundText: String = "No items found",
+    val theme: ComboBoxTheme = ComboBoxTheme(),
+    val semantics: ComboBoxSemantics<T> = ComboBoxSemantics()
 )
 
 /**
@@ -147,15 +149,13 @@ fun <T> ComboBox(
     items: List<T>,
     onItemSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    config: ComboBoxConfig = ComboBoxConfig(),
-    theme: ComboBoxTheme = ComboBoxTheme(),
-    semantics: ComboBoxSemantics<T> = ComboBoxSemantics(),
+    config: ComboBoxConfig<T> = ComboBoxConfig(),
     itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     // Dynamic border color based on state
-    val borderColor = remember(expanded, config.enabled, theme) {
+    val borderColor = remember(expanded, config.enabled, config.theme) {
         when {
             !config.enabled -> theme.borderColor.copy(alpha = 0.5f)
             expanded -> theme.expandedBorderColor
