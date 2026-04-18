@@ -137,10 +137,8 @@ data class ComboBoxConfig<T>(
  * @param selectedItem The currently selected item
  * @param items List of items to display in the dropdown
  * @param onItemSelected Callback when an item is selected
- * @param config ComboBoxConfig configuration for basic combobox properties
- * @param modifier Modifier for styling the combobox
- * @param theme ComboBoxTheme configuration for combobox styling
- * @param semantics ComboBoxSemantics configuration for accessibility semantics
+ * @param config ComboBoxConfig configuration for basic ComboBox properties
+ * @param modifier Modifier for styling the ComboBox
  * @param itemContent Custom composable for displaying each item
  */
 @Composable
