@@ -42,16 +42,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Typography
 
 /**
  * ComboBox component that provides a dropdown selection
- * 
+ *
  * @param selectedItem The currently selected item
  * @param items List of items to display in the dropdown
  * @param onItemSelected Callback when an item is selected
  * @param label Text label for the combobox
  * @param placeholder Placeholder text when no item is selected
  * @param modifier Modifier for styling the combobox
+ * @param colorScheme Color scheme for styling the combobox
+ * @param typography Typography for text styling
  * @param enabled Whether the combobox is enabled
  * @param maxDropdownHeight Maximum height for the dropdown menu
  * @param showClearButton Whether to show a clear button
@@ -72,6 +75,7 @@ fun <T> ComboBox(
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
     colorScheme: ColorScheme = MaterialTheme.colorScheme,
+    typography: Typography = MaterialTheme.typography,
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = false,
@@ -110,7 +114,7 @@ fun <T> ComboBox(
         label?.let { labelText ->
             Text(
                 text = labelText,
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
                 ),
@@ -176,9 +180,9 @@ fun <T> ComboBox(
                 ) {
                     if (showClearButton && selectedItem != null && enabled) {
                         IconButton(
-                            onClick = { 
+                            onClick = {
                                 @Suppress("UNCHECKED_CAST")
-                                onItemSelected(null as T) 
+                                onItemSelected(null as T)
                             },
                             modifier = Modifier
                                 .size(24.dp)
@@ -189,7 +193,7 @@ fun <T> ComboBox(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null, // Content description handled by parent
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = colorScheme.onSurfaceVariant
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -198,7 +202,7 @@ fun <T> ComboBox(
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = null, // Content description handled by parent
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(24.dp)
                             .rotate(if (expanded) 180f else 0f)
@@ -217,7 +221,7 @@ fun <T> ComboBox(
                 title = {
                     Text(
                         text = label ?: "Select an option",
-                        style = MaterialTheme.typography.titleMedium
+                        style = typography.titleMedium
                     )
                 },
                 text = {
@@ -232,7 +236,7 @@ fun <T> ComboBox(
                                     Text(
                                         text = "No items found",
                                         style = TextStyle(
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            color = colorScheme.onSurfaceVariant,
                                             fontSize = 14.sp
                                         ),
                                         modifier = Modifier
@@ -253,13 +257,11 @@ fun <T> ComboBox(
                                                 Text(
                                                     text = item.toString(),
                                                     style = TextStyle(
-                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        color = colorScheme.onSurface,
                                                         fontSize = 14.sp
                                                     ),
                                                     modifier = Modifier.semantics {
-                                                        contentDescription =
-                                                            onItemSemantics?.invoke(item)
-                                                                ?: item.toString()
+                                                        contentDescription = onItemSemantics?.invoke(item) ?: item.toString()
                                                     }
                                                 )
                                             }
@@ -292,6 +294,8 @@ fun ComboBox(
     label: String? = null,
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
+    colorScheme: ColorScheme = MaterialTheme.colorScheme,
+    typography: Typography = MaterialTheme.typography,
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = true,
@@ -309,6 +313,8 @@ fun ComboBox(
         label = label,
         placeholder = placeholder,
         modifier = modifier,
+        colorScheme = colorScheme,
+        typography = typography,
         enabled = enabled,
         maxDropdownHeight = maxDropdownHeight,
         showClearButton = showClearButton,
