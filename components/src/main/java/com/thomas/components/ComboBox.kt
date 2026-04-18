@@ -112,11 +112,7 @@ fun <T> ComboBox(
         ComboBoxTrigger(
             displayText = displayText,
             selectedItem = selectedItem,
-            isSelected = selectedItem != null,
             expanded = expanded,
-            enabled = config.enabled,
-            showClearButton = config.showClearButton,
-            clearButtonSemantics = config.clearButtonSemantics,
             onClearClick = { onItemSelected(null as T) },
             onTriggerClick = { expanded = true },
             modifier = Modifier.fillMaxWidth(),
@@ -159,22 +155,20 @@ private fun ComboBoxLabel(
 private fun <T> ComboBoxTrigger(
     displayText: String,
     selectedItem: T?,
-    isSelected: Boolean,
     expanded: Boolean,
-    enabled: Boolean,
-    showClearButton: Boolean,
-    clearButtonSemantics: String,
     onClearClick: () -> Unit,
     onTriggerClick: () -> Unit,
     modifier: Modifier = Modifier,
     config: ComboBoxConfig<T>
 ) {
+    val isSelected = selectedItem != null
+
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(config.cornerRadius))
             .border(
                 width = 1.dp,
-                color = if (enabled && expanded) config.expandedBorderColor else config.borderColor,
+                color = if (config.enabled && expanded) config.expandedBorderColor else config.borderColor,
                 shape = RoundedCornerShape(config.cornerRadius)
             )
             .background(config.backgroundColor, RoundedCornerShape(config.cornerRadius))
@@ -182,7 +176,7 @@ private fun <T> ComboBoxTrigger(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = enabled) { onTriggerClick() }
+                .clickable(enabled = config.enabled) { onTriggerClick() }
                 .padding(horizontal = config.horizontalPadding, vertical = config.verticalPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -204,12 +198,12 @@ private fun <T> ComboBoxTrigger(
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (showClearButton && isSelected && enabled) {
+                if (config.showClearButton && isSelected && config.enabled) {
                     IconButton(
                         onClick = onClearClick,
                         modifier = Modifier
                             .size(config.buttonSize)
-                            .semantics { contentDescription = clearButtonSemantics }
+                            .semantics { contentDescription = config.clearButtonSemantics }
                     ) {
                         Icon(
                             Icons.Default.Clear,
