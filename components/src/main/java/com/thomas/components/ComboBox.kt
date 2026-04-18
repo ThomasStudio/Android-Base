@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
  * @param onLabelSemantics Callback to customize label semantics (content description)
  * @param onPlaceholderSemantics Callback to customize placeholder semantics (content description)
  * @param onItemSemantics Callback to customize item semantics (content description)
+ * @param onSelectedItemSemantics Callback to customize selected item semantics (content description)
  */
 @Composable
 fun <T> ComboBox(
@@ -75,6 +76,7 @@ fun <T> ComboBox(
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((T) -> String)? = null,
+    onSelectedItemSemantics: ((T) -> String)? = null,
     itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -156,7 +158,7 @@ fun <T> ComboBox(
                         maxLines = 1,
                         modifier = Modifier.semantics {
                             val contentDesc = if (selectedItem != null) {
-                                displayText
+                                onSelectedItemSemantics?.invoke(selectedItem) ?: displayText
                             } else {
                                 onPlaceholderSemantics?.invoke(placeholder) ?: placeholder
                             }
@@ -284,7 +286,8 @@ fun ComboBox(
     showClearButton: Boolean = true,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
-    onItemSemantics: ((String) -> String)? = null
+    onItemSemantics: ((String) -> String)? = null,
+    onSelectedItemSemantics: ((String) -> String)? = null
 ) {
     ComboBox<String>(
         selectedItem = selectedItem,
@@ -298,6 +301,7 @@ fun ComboBox(
         showClearButton = showClearButton,
         onLabelSemantics = onLabelSemantics,
         onPlaceholderSemantics = onPlaceholderSemantics,
-        onItemSemantics = onItemSemantics
+        onItemSemantics = onItemSemantics,
+        onSelectedItemSemantics = onSelectedItemSemantics
     )
 }
