@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -53,8 +54,8 @@ import androidx.compose.material3.Typography
  * @param label Text label for the combobox
  * @param placeholder Placeholder text when no item is selected
  * @param modifier Modifier for styling the combobox
- * @param colorScheme Color scheme for styling the combobox
- * @param typography Typography for text styling
+ * @param colors Map of colors for different combobox elements
+ * @param textStyles Map of text styles for different combobox elements
  * @param enabled Whether the combobox is enabled
  * @param maxDropdownHeight Maximum height for the dropdown menu
  * @param showClearButton Whether to show a clear button
@@ -83,8 +84,8 @@ fun <T> ComboBox(
     label: String? = null,
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
-    colorScheme: ColorScheme = MaterialTheme.colorScheme,
-    typography: Typography = MaterialTheme.typography,
+    colors: Map<String, Color> = emptyMap(),
+    textStyles: Map<String, TextStyle> = emptyMap(),
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = false,
@@ -107,36 +108,59 @@ fun <T> ComboBox(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Optimized derived states for better performance
-    val borderColor = remember(expanded, enabled, colorScheme) {
-        when {
-            !enabled -> colorScheme.outline.copy(alpha = 0.5f)
-            expanded -> colorScheme.primary
-            else -> colorScheme.outline
-        }
+    // Get colors from map or fallback to MaterialTheme
+    val colorScheme = MaterialTheme.colorScheme
+    val labelColor = colors["label"] ?: colorScheme.onSurfaceVariant
+    val borderColor = colors["border"] ?: when {
+        !enabled -> colorScheme.outline.copy(alpha = 0.5f)
+        expanded -> colorScheme.primary
+        else -> colorScheme.outline
     }
+    val backgroundColor = colors["background"] ?: if (enabled) colorScheme.surface else colorScheme.surfaceVariant
+    val selectedItemColor = colors["selectedItem"] ?: colorScheme.onSurface
+    val placeholderColor = colors["placeholder"] ?: colorScheme.onSurfaceVariant
+    val iconColor = colors["icon"] ?: colorScheme.onSurfaceVariant
+    val dropdownItemColor = colors["dropdownItem"] ?: colorScheme.onSurface
+    val dropdownItemBackground = colors["dropdownItemBackground"] ?: colorScheme.surface
+    val emptyStateColor = colors["emptyState"] ?: colorScheme.onSurfaceVariant
 
-    val backgroundColor = remember(enabled, colorScheme) {
-        if (enabled) colorScheme.surface else colorScheme.surfaceVariant
-    }
+    // Get text styles from map or fallback to MaterialTheme
+    val typography = MaterialTheme.typography
+    val labelStyle = textStyles["label"] ?: typography.bodyMedium.copy(
+        fontWeight = FontWeight.Medium,
+        fontSize = labelFontSize.value.sp
+    )
+    val selectedItemStyle = textStyles["selectedItem"] ?: TextStyle(
+        color = selectedItemColor,
+        fontSize = selectedItemFontSize.value.sp
+    )
+    val placeholderStyle = textStyles["placeholder"] ?: TextStyle(
+        color = placeholderColor,
+        fontSize = placeholderFontSize.value.sp
+    )
+    val dropdownItemStyle = textStyles["dropdownItem"] ?: TextStyle(
+        color = dropdownItemColor,
+        fontSize = dropdownItemFontSize.value.sp
+    )
+    val emptyStateStyle = textStyles["emptyState"] ?: TextStyle(
+        color = emptyStateColor,
+        fontSize = 14.sp
+    )
 
     val displayText = remember(selectedItem, placeholder) {
         selectedItem?.toString() ?: placeholder
     }
 
-    val textColor = remember(selectedItem, colorScheme) {
-        if (selectedItem != null) colorScheme.onSurface else colorScheme.onSurfaceVariant
+    val currentTextStyle = remember(selectedItem, selectedItemStyle, placeholderStyle) {
+        if (selectedItem != null) selectedItemStyle else placeholderStyle
     }
 
     Column(modifier = modifier) {
         label?.let { labelText ->
             Text(
                 text = labelText,
-                style = typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Medium,
-                    fontSize = labelFontSize.value.sp
-                ),
-                color = colorScheme.onSurfaceVariant,
+                style = labelStyle,
+                color = labelColor,
                 modifier = Modifier
                     .padding(bottom = 4.dp)
                     .semantics {
@@ -177,10 +201,7 @@ fun <T> ComboBox(
                 ) {
                     Text(
                         text = displayText,
-                        style = TextStyle(
-                            color = textColor,
-                            fontSize = if (selectedItem != null) selectedItemFontSize.value.sp else placeholderFontSize.value.sp
-                        ),
+                        style = currentTextStyle,
                         maxLines = 1,
                         modifier = Modifier.semantics {
                             val contentDesc = if (selectedItem != null) {
@@ -211,7 +232,7 @@ fun <T> ComboBox(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null, // Content description handled by parent
-                                tint = colorScheme.onSurfaceVariant
+                                tint = iconColor
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -220,7 +241,7 @@ fun <T> ComboBox(
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = null, // Content description handled by parent
-                        tint = colorScheme.onSurfaceVariant,
+                        tint = iconColor,
                         modifier = Modifier
                             .size(buttonSize)
                             .rotate(if (expanded) 180f else 0f)
@@ -239,7 +260,7 @@ fun <T> ComboBox(
                 title = {
                     Text(
                         text = label ?: "Select an option",
-                        style = typography.titleMedium
+                        style = textStyles["dialogTitle"] ?: typography.titleMedium
                     )
                 },
                 text = {
@@ -253,10 +274,7 @@ fun <T> ComboBox(
                                 item {
                                     Text(
                                         text = noItemsFoundText,
-                                        style = TextStyle(
-                                            color = colorScheme.onSurfaceVariant,
-                                            fontSize = 14.sp
-                                        ),
+                                        style = emptyStateStyle,
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(16.dp)
@@ -274,10 +292,7 @@ fun <T> ComboBox(
                                             } else {
                                                 Text(
                                                     text = item.toString(),
-                                                    style = TextStyle(
-                                                        color = colorScheme.onSurface,
-                                                        fontSize = dropdownItemFontSize.value.sp
-                                                    ),
+                                                    style = dropdownItemStyle,
                                                     modifier = Modifier.semantics {
                                                         contentDescription = onItemSemantics?.invoke(item) ?: item.toString()
                                                     }
@@ -312,8 +327,8 @@ fun ComboBox(
     label: String? = null,
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
-    colorScheme: ColorScheme = MaterialTheme.colorScheme,
-    typography: Typography = MaterialTheme.typography,
+    colors: Map<String, Color> = emptyMap(),
+    textStyles: Map<String, TextStyle> = emptyMap(),
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = true,
@@ -340,8 +355,8 @@ fun ComboBox(
         label = label,
         placeholder = placeholder,
         modifier = modifier,
-        colorScheme = colorScheme,
-        typography = typography,
+        colors = colors,
+        textStyles = textStyles,
         enabled = enabled,
         maxDropdownHeight = maxDropdownHeight,
         showClearButton = showClearButton,
