@@ -20,13 +20,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,32 +53,12 @@ data class ComboBoxTheme(
     val iconColor: Color = Color(0xFF666666),
 
     // Text Styles with default values
-    val labelTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF666666),
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
-    ),
-    val selectedItemTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF000000),
-        fontSize = 16.sp
-    ),
-    val placeholderTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF999999),
-        fontSize = 16.sp
-    ),
-    val dropdownItemTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF000000),
-        fontSize = 14.sp
-    ),
-    val emptyStateTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF999999),
-        fontSize = 14.sp
-    ),
-    val dialogTitleTextStyle: TextStyle = TextStyle(
-        color = Color(0xFF000000),
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
-    ),
+    val labelTextStyle: TextStyle = LabelTextStyle,
+    val selectedItemTextStyle: TextStyle = SelectedItemTextStyle,
+    val placeholderTextStyle: TextStyle = PlaceholderTextStyle,
+    val dropdownItemTextStyle: TextStyle = DropdownItemTextStyle,
+    val emptyStateTextStyle: TextStyle = EmptyStateTextStyle,
+    val dialogTitleTextStyle: TextStyle = DialogTitleTextStyle,
 
     // Sizes
     val horizontalPadding: Dp = 16.dp,
@@ -89,7 +66,44 @@ data class ComboBoxTheme(
     val cornerRadius: Dp = 8.dp,
     val buttonSize: Dp = 24.dp,
     val maxDropdownHeight: Dp = 200.dp
-)
+) {
+    companion object {
+        /**
+         * Default text styles for ComboBox components
+         */
+        val LabelTextStyle = TextStyle(
+            color = Color(0xFF666666),
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp
+        )
+        
+        val SelectedItemTextStyle = TextStyle(
+            color = Color(0xFF000000),
+            fontSize = 16.sp
+        )
+        
+        val PlaceholderTextStyle = TextStyle(
+            color = Color(0xFF999999),
+            fontSize = 16.sp
+        )
+        
+        val DropdownItemTextStyle = TextStyle(
+            color = Color(0xFF000000),
+            fontSize = 14.sp
+        )
+        
+        val EmptyStateTextStyle = TextStyle(
+            color = Color(0xFF999999),
+            fontSize = 14.sp
+        )
+        
+        val DialogTitleTextStyle = TextStyle(
+            color = Color(0xFF000000),
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+    }
+}
 
 /**
  * Data class for ComboBox semantic callback configuration
