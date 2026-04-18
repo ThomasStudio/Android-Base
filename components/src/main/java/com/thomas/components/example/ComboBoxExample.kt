@@ -20,10 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thomas.components.ComboBox
 import com.thomas.components.ComboBoxConfig
-import com.thomas.components.ComboBoxSemantics
-import com.thomas.components.ComboBoxTheme
-import com.thomas.components.ComboBoxTheme.Companion.DropdownItemTextStyle
-import com.thomas.components.ComboBoxTheme.Companion.LabelTextStyle
+import com.thomas.components.ComboBoxConfig.Defaults
 
 /**
  * Example demonstrating various usages of the ComboBox component
@@ -85,29 +82,25 @@ fun ComboBoxExample() {
                 label = "Select Country",
                 showClearButton = true,
                 placeholder = "Choose a country",
-            ),
-            semantics = ComboBoxSemantics(
                 onItemSemantics = { "Select $it as your country" },
                 onLabelSemantics = { "Country selection $it" },
                 onPlaceholderSemantics = { "Country selection placeholder $it" },
                 onSelectedItemSemantics = { "Selected country: $it" },
                 onDropdownArrowSemantics = { "Dropdown arrow button" },
                 onClearButtonSemantics = { "Clear selected country" },
-                onDialogTitleSemantics = { "$it title" }
-            ),
-            theme = ComboBoxTheme(
+                onDialogTitleSemantics = { "$it title" },
                 cornerRadius = 0.dp,
                 horizontalPadding = 22.dp,
                 verticalPadding = 33.dp,
                 buttonSize = 48.dp,
                 maxDropdownHeight = 200.dp,
-                labelTextStyle = LabelTextStyle.copy(
+                labelTextStyle = Defaults.labelTextStyle.copy(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 ),
-                dropdownItemTextStyle = DropdownItemTextStyle.copy(
-                    fontSize = 24.sp,
-                ),
+                dropdownItemTextStyle = Defaults.dropdownItemTextStyle.copy(fontSize = 30.sp),
+                placeholderTextStyle = Defaults.placeholderTextStyle.copy(fontSize = 10.sp),
+                selectedItemTextStyle = Defaults.selectedItemTextStyle.copy(fontSize = 20.sp),
             )
         )
 
