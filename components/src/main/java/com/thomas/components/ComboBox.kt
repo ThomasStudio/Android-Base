@@ -49,9 +49,10 @@ import androidx.compose.ui.unit.sp
  * Unified data class for ComboBox theme configuration including colors, text styles, and sizes
  */
 data class ComboBoxTheme(
-    // Colors
+    // Colors with default values
     val labelColor: Color = Color(0xFF666666),
     val borderColor: Color = Color(0xFFCCCCCC),
+    val expandedBorderColor: Color = Color(0xFF1976D2), // Material Blue 700
     val backgroundColor: Color = Color(0xFFFFFFFF),
     val selectedItemColor: Color = Color(0xFF000000),
     val placeholderColor: Color = Color(0xFF999999),
@@ -146,7 +147,7 @@ fun <T> ComboBox(
     val borderColor = remember(expanded, enabled, theme) {
         when {
             !enabled -> theme.borderColor.copy(alpha = 0.5f)
-            expanded -> MaterialTheme.colorScheme.primary
+            expanded -> theme.expandedBorderColor
             else -> theme.borderColor
         }
     }

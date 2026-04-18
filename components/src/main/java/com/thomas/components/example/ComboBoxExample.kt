@@ -82,14 +82,6 @@ fun ComboBoxExample() {
             onSelectedItemSemantics = { "Selected country: $it" },
             onDropdownArrowSemantics = { "Dropdown arrow button" },
             onClearButtonSemantics = { "Clear selected country" },
-            labelFontSize = 12.dp,
-            placeholderFontSize = 10.dp,
-            selectedItemFontSize = 16.dp,
-            dropdownItemFontSize = 20.dp,
-            horizontalPadding = 22.dp,
-            verticalPadding = 33.dp,
-            cornerRadius = 0.dp,
-            buttonSize = 48.dp,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
