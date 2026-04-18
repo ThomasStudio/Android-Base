@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thomas.components.ComboBox
+import com.thomas.components.ComboBoxSemantics
+import com.thomas.components.ComboBoxTheme
 
 /**
  * Example demonstrating various usages of the ComboBox component
@@ -76,12 +78,20 @@ fun ComboBoxExample() {
             label = "Select Country",
             showClearButton = true,
             placeholder = "Choose a country",
-            onItemSemantics = { "Select $it as your country" },
-            onLabelSemantics = { "Country selection $it" },
-            onPlaceholderSemantics = { "Country selection placeholder $it" },
-            onSelectedItemSemantics = { "Selected country: $it" },
-            onDropdownArrowSemantics = { "Dropdown arrow button" },
-            onClearButtonSemantics = { "Clear selected country" },
+            semantics = ComboBoxSemantics(
+                onItemSemantics = { "Select $it as your country" },
+                onLabelSemantics = { "Country selection $it" },
+                onPlaceholderSemantics = { "Country selection placeholder $it" },
+                onSelectedItemSemantics = { "Selected country: $it" },
+                onDropdownArrowSemantics = { "Dropdown arrow button" },
+                onClearButtonSemantics = { "Clear selected country" },
+            ),
+            theme = ComboBoxTheme(
+                cornerRadius = 0.dp,
+                horizontalPadding = 22.dp,
+                verticalPadding = 33.dp,
+                 
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
