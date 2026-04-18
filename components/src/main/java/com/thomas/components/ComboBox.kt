@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -68,19 +68,17 @@ fun <T> ComboBox(
     label: String? = null,
     placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
+    colorScheme: ColorScheme = MaterialTheme.colorScheme,
     enabled: Boolean = true,
     maxDropdownHeight: Dp = 200.dp,
     showClearButton: Boolean = false,
-    itemContent: @Composable ((T) -> Unit)? = null,
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
-    onItemSemantics: ((T) -> String)? = null
+    onItemSemantics: ((T) -> String)? = null,
+    itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
-    // Get color scheme once in composable context
-    val colorScheme = MaterialTheme.colorScheme
-    
+
     // Optimized derived states for better performance
     val borderColor = remember(expanded, enabled, colorScheme) {
         when {
@@ -89,15 +87,15 @@ fun <T> ComboBox(
             else -> colorScheme.outline
         }
     }
-    
+
     val backgroundColor = remember(enabled, colorScheme) {
         if (enabled) colorScheme.surface else colorScheme.surfaceVariant
     }
-    
+
     val displayText = remember(selectedItem, placeholder) {
         selectedItem?.toString() ?: placeholder
     }
-    
+
     val textColor = remember(selectedItem, colorScheme) {
         if (selectedItem != null) colorScheme.onSurface else colorScheme.onSurfaceVariant
     }
@@ -138,8 +136,8 @@ fun <T> ComboBox(
                     .fillMaxWidth()
                     .clickable(
                         enabled = enabled,
-                        onClick = { 
-                            if (enabled) expanded = !expanded 
+                        onClick = {
+                            if (enabled) expanded = !expanded
                         }
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -172,9 +170,9 @@ fun <T> ComboBox(
                 ) {
                     if (showClearButton && selectedItem != null && enabled) {
                         IconButton(
-                            onClick = { 
+                            onClick = {
                                 @Suppress("UNCHECKED_CAST")
-                                onItemSelected(null as T) 
+                                onItemSelected(null as T)
                             },
                             modifier = Modifier.size(24.dp)
                         ) {
@@ -246,7 +244,9 @@ fun <T> ComboBox(
                                                         fontSize = 14.sp
                                                     ),
                                                     modifier = Modifier.semantics {
-                                                        contentDescription = onItemSemantics?.invoke(item) ?: item.toString()
+                                                        contentDescription =
+                                                            onItemSemantics?.invoke(item)
+                                                                ?: item.toString()
                                                     }
                                                 )
                                             }
