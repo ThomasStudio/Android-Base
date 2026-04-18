@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thomas.components.ComboBox
+import com.thomas.components.ComboBoxConfig
 import com.thomas.components.ComboBoxSemantics
 import com.thomas.components.ComboBoxTheme
 import com.thomas.components.ComboBoxTheme.Companion.DropdownItemTextStyle
@@ -65,6 +66,8 @@ fun ComboBoxExample() {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        CustomObjectComboBoxExample()
+
         Text(
             text = "ComboBox Examples",
             style = androidx.compose.material3.MaterialTheme.typography.headlineMedium
@@ -79,9 +82,11 @@ fun ComboBoxExample() {
             selectedItem = selectedCountry,
             items = countries,
             onItemSelected = { selectedCountry = it },
-            label = "Select Country",
-            showClearButton = true,
-            placeholder = "Choose a country",
+            config = ComboBoxConfig(
+                label = "Select Country",
+                showClearButton = true,
+                placeholder = "Choose a country",
+            ),
             semantics = ComboBoxSemantics(
                 onItemSemantics = { "Select $it as your country" },
                 onLabelSemantics = { "Country selection $it" },
@@ -118,10 +123,12 @@ fun ComboBoxExample() {
             selectedItem = selectedLanguage,
             items = programmingLanguages,
             onItemSelected = { selectedLanguage = it },
-            label = "Programming Language",
-            placeholder = "Select a programming language",
+            config = ComboBoxConfig(
+                label = "Programming Language",
+                placeholder = "Select a programming language",
+                showClearButton = false
+            ),
             modifier = Modifier.fillMaxWidth(),
-            showClearButton = false
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -130,11 +137,13 @@ fun ComboBoxExample() {
             selectedItem = selectedLanguage,
             items = emptyList(),
             onItemSelected = { selectedLanguage = it },
-            label = "No items example",
-            placeholder = "Select a item",
             modifier = Modifier.fillMaxWidth(),
-            showClearButton = false,
-            noItemsFoundText = "There is 0 item in the list",
+            config = ComboBoxConfig(
+                label = "No items example",
+                placeholder = "Select a item",
+                showClearButton = false,
+                noItemsFoundText = "There is 0 item in the list",
+            ),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -148,10 +157,13 @@ fun ComboBoxExample() {
             selectedItem = "United States",
             items = countries,
             onItemSelected = {},
-            label = "Disabled Selection",
-            placeholder = "This is disabled",
             modifier = Modifier.fillMaxWidth(),
-            enabled = false
+            config = ComboBoxConfig(
+                label = "Disabled Selection",
+                placeholder = "This is disabled",
+                enabled = false
+            )
+
         )
 
         // Display selected values
@@ -211,23 +223,24 @@ fun CustomObjectComboBoxExample() {
             selectedItem = selectedUser,
             items = users,
             onItemSelected = { selectedUser = it },
-            label = "Select User",
-            placeholder = "Choose a user",
+            config = ComboBoxConfig(
+                label = "Select User",
+                placeholder = "Choose a user",
+            ),
             modifier = Modifier.fillMaxWidth(),
-            itemContent = { user ->
-                Column {
-                    Text(
-                        text = user.name,
-                        style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = user.email,
-                        style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+        ) { user ->
+            Column {
+                Text(
+                    text = user.name,
+                    style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = user.email,
+                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
-        )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 

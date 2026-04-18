@@ -119,19 +119,26 @@ data class ComboBoxSemantics<T>(
 )
 
 /**
+ * Data class for ComboBox configuration including basic properties
+ */
+data class ComboBoxConfig(
+    val label: String? = null,
+    val placeholder: String = "Select an option",
+    val enabled: Boolean = true,
+    val showClearButton: Boolean = false,
+    val noItemsFoundText: String = "No items found"
+)
+
+/**
  * ComboBox component that provides a dropdown selection
  * 
  * @param selectedItem The currently selected item
  * @param items List of items to display in the dropdown
  * @param onItemSelected Callback when an item is selected
- * @param label Text label for the combobox
- * @param placeholder Placeholder text when no item is selected
+ * @param config ComboBoxConfig configuration for basic combobox properties
  * @param modifier Modifier for styling the combobox
  * @param theme ComboBoxTheme configuration for combobox styling
  * @param semantics ComboBoxSemantics configuration for accessibility semantics
- * @param enabled Whether the combobox is enabled
- * @param showClearButton Whether to show a clear button
- * @param noItemsFoundText Text to display when no items are available
  * @param itemContent Custom composable for displaying each item
  */
 @Composable
@@ -139,33 +146,29 @@ fun <T> ComboBox(
     selectedItem: T?,
     items: List<T>,
     onItemSelected: (T) -> Unit,
-    label: String? = null,
-    placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
+    config: ComboBoxConfig = ComboBoxConfig(),
     theme: ComboBoxTheme = ComboBoxTheme(),
     semantics: ComboBoxSemantics<T> = ComboBoxSemantics(),
-    enabled: Boolean = true,
-    showClearButton: Boolean = false,
-    noItemsFoundText: String = "No items found",
     itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     // Dynamic border color based on state
-    val borderColor = remember(expanded, enabled, theme) {
+    val borderColor = remember(expanded, config.enabled, theme) {
         when {
-            !enabled -> theme.borderColor.copy(alpha = 0.5f)
+            !config.enabled -> theme.borderColor.copy(alpha = 0.5f)
             expanded -> theme.expandedBorderColor
             else -> theme.borderColor
         }
     }
 
-    val displayText = remember(selectedItem, placeholder) {
-        selectedItem?.toString() ?: placeholder
+    val displayText = remember(selectedItem, config.placeholder) {
+        selectedItem?.toString() ?: config.placeholder
     }
 
     Column(modifier = modifier) {
-        label?.let { labelText ->
+        config.label?.let { labelText ->
             Text(
                 text = labelText,
                 style = theme.labelTextStyle,
@@ -195,10 +198,8 @@ fun <T> ComboBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(
-                        enabled = enabled,
-                        onClick = {
-                            if (enabled) expanded = !expanded
-                        }
+                        enabled = config.enabled,
+                        onClick = { expanded = true }
                     )
                     .padding(
                         horizontal = theme.horizontalPadding,
@@ -216,10 +217,9 @@ fun <T> ComboBox(
                         maxLines = 1,
                         modifier = Modifier.semantics {
                             val contentDesc = if (selectedItem != null) {
-                                semantics.onSelectedItemSemantics?.invoke(selectedItem)
-                                    ?: displayText
+                                semantics.onSelectedItemSemantics?.invoke(selectedItem) ?: displayText
                             } else {
-                                semantics.onPlaceholderSemantics?.invoke(placeholder) ?: placeholder
+                                semantics.onPlaceholderSemantics?.invoke(config.placeholder) ?: config.placeholder
                             }
                             contentDescription = contentDesc
                         }
@@ -229,7 +229,7 @@ fun <T> ComboBox(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (showClearButton && selectedItem != null && enabled) {
+                    if (config.showClearButton && selectedItem != null && config.enabled) {
                         IconButton(
                             onClick = {
                                 @Suppress("UNCHECKED_CAST")
@@ -273,10 +273,10 @@ fun <T> ComboBox(
                 onDismissRequest = { expanded = false },
                 title = {
                     Text(
-                        text = label ?: "Select an option",
+                        text = config.label ?: "Select an option",
                         style = theme.dialogTitleTextStyle,
                         modifier = Modifier.semantics {
-                            val dialogTitle = label ?: "Select an option"
+                            val dialogTitle = config.label ?: "Select an option"
                             contentDescription = semantics.onDialogTitleSemantics?.invoke(dialogTitle) ?: dialogTitle
                         }
                     )
@@ -291,7 +291,7 @@ fun <T> ComboBox(
                             if (items.isEmpty()) {
                                 item {
                                     Text(
-                                        text = noItemsFoundText,
+                                        text = config.noItemsFoundText,
                                         style = theme.emptyStateTextStyle,
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -344,26 +344,18 @@ fun ComboBox(
     selectedItem: String?,
     items: List<String>,
     onItemSelected: (String?) -> Unit,
-    label: String? = null,
-    placeholder: String = "Select an option",
     modifier: Modifier = Modifier,
+    config: ComboBoxConfig = ComboBoxConfig(showClearButton = true),
     theme: ComboBoxTheme = ComboBoxTheme(),
-    semantics: ComboBoxSemantics<String> = ComboBoxSemantics(),
-    enabled: Boolean = true,
-    showClearButton: Boolean = true,
-    noItemsFoundText: String = "No items found"
+    semantics: ComboBoxSemantics<String> = ComboBoxSemantics()
 ) {
     ComboBox<String>(
         selectedItem = selectedItem,
         items = items,
         onItemSelected = onItemSelected,
-        label = label,
-        placeholder = placeholder,
         modifier = modifier,
+        config = config,
         theme = theme,
-        semantics = semantics,
-        enabled = enabled,
-        showClearButton = showClearButton,
-        noItemsFoundText = noItemsFoundText
+        semantics = semantics
     )
 }
