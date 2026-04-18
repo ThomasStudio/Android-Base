@@ -1,10 +1,5 @@
 package com.thomas.components.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -73,6 +68,30 @@ fun <T> ComboBox(
     itemContent: @Composable ((T) -> Unit)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
+    
+    // Get color scheme once in composable context
+    val colorScheme = MaterialTheme.colorScheme
+    
+    // Optimized derived states for better performance
+    val borderColor = remember(expanded, enabled, colorScheme) {
+        when {
+            !enabled -> colorScheme.outline.copy(alpha = 0.5f)
+            expanded -> colorScheme.primary
+            else -> colorScheme.outline
+        }
+    }
+    
+    val backgroundColor = remember(enabled, colorScheme) {
+        if (enabled) colorScheme.surface else colorScheme.surfaceVariant
+    }
+    
+    val displayText = remember(selectedItem, placeholder) {
+        selectedItem?.toString() ?: placeholder
+    }
+    
+    val textColor = remember(selectedItem, colorScheme) {
+        if (selectedItem != null) colorScheme.onSurface else colorScheme.onSurfaceVariant
+    }
 
     Column(modifier = modifier) {
         label?.let {
@@ -82,7 +101,7 @@ fun <T> ComboBox(
                     fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
                 ),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
@@ -93,20 +112,23 @@ fun <T> ComboBox(
                 .clip(RoundedCornerShape(8.dp))
                 .border(
                     width = 1.dp,
-                    color = if (expanded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                    color = borderColor,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .background(
-                    color = if (enabled) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant,
+                    color = backgroundColor,
                     shape = RoundedCornerShape(8.dp)
                 )
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(enabled = enabled) {
-                        expanded = !expanded
-                    }
+                    .clickable(
+                        enabled = enabled,
+                        onClick = { 
+                            if (enabled) expanded = !expanded 
+                        }
+                    )
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -115,10 +137,9 @@ fun <T> ComboBox(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = selectedItem?.toString() ?: placeholder,
+                        text = displayText,
                         style = TextStyle(
-                            color = if (selectedItem != null) MaterialTheme.colorScheme.onSurface
-                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = textColor,
                             fontSize = 16.sp
                         ),
                         maxLines = 1
@@ -130,13 +151,16 @@ fun <T> ComboBox(
                 ) {
                     if (showClearButton && selectedItem != null && enabled) {
                         IconButton(
-                            onClick = { onItemSelected(null as T) },
+                            onClick = { 
+                                @Suppress("UNCHECKED_CAST")
+                                onItemSelected(null as T) 
+                            },
                             modifier = Modifier.size(24.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Clear selection",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = colorScheme.onSurfaceVariant
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -145,7 +169,7 @@ fun <T> ComboBox(
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Dropdown arrow",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(24.dp)
                             .rotate(if (expanded) 180f else 0f)
@@ -154,7 +178,7 @@ fun <T> ComboBox(
             }
         }
 
-        // Dialog for dropdown menu
+        // Dialog for dropdown menu - optimized with key to prevent unnecessary recompositions
         if (expanded) {
             AlertDialog(
                 onDismissRequest = { expanded = false },
@@ -176,7 +200,7 @@ fun <T> ComboBox(
                                     Text(
                                         text = "No items found",
                                         style = TextStyle(
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            color = colorScheme.onSurfaceVariant,
                                             fontSize = 14.sp
                                         ),
                                         modifier = Modifier
@@ -185,7 +209,10 @@ fun <T> ComboBox(
                                     )
                                 }
                             } else {
-                                items(items) { item ->
+                                items(
+                                    items = items,
+                                    key = { item -> item.hashCode() }
+                                ) { item ->
                                     DropdownMenuItem(
                                         text = {
                                             if (itemContent != null) {
@@ -194,7 +221,7 @@ fun <T> ComboBox(
                                                 Text(
                                                     text = item.toString(),
                                                     style = TextStyle(
-                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        color = colorScheme.onSurface,
                                                         fontSize = 14.sp
                                                     )
                                                 )
