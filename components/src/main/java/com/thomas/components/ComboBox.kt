@@ -60,6 +60,8 @@ import androidx.compose.ui.unit.sp
  * @param onPlaceholderSemantics Callback to customize placeholder semantics (content description)
  * @param onItemSemantics Callback to customize item semantics (content description)
  * @param onSelectedItemSemantics Callback to customize selected item semantics (content description)
+ * @param onDropdownArrowSemantics Callback to customize dropdown arrow semantics (content description)
+ * @param onClearButtonSemantics Callback to customize clear button semantics (content description)
  */
 @Composable
 fun <T> ComboBox(
@@ -77,6 +79,8 @@ fun <T> ComboBox(
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((T) -> String)? = null,
     onSelectedItemSemantics: ((T) -> String)? = null,
+    onDropdownArrowSemantics: (() -> String)? = null,
+    onClearButtonSemantics: (() -> String)? = null,
     itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -172,15 +176,19 @@ fun <T> ComboBox(
                 ) {
                     if (showClearButton && selectedItem != null && enabled) {
                         IconButton(
-                            onClick = {
+                            onClick = { 
                                 @Suppress("UNCHECKED_CAST")
-                                onItemSelected(null as T)
+                                onItemSelected(null as T) 
                             },
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .semantics {
+                                    contentDescription = onClearButtonSemantics?.invoke() ?: "Clear selection"
+                                }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear selection",
+                                contentDescription = null, // Content description handled by parent
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -189,11 +197,14 @@ fun <T> ComboBox(
 
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Dropdown arrow",
+                        contentDescription = null, // Content description handled by parent
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(24.dp)
                             .rotate(if (expanded) 180f else 0f)
+                            .semantics {
+                                contentDescription = onDropdownArrowSemantics?.invoke() ?: "Dropdown arrow"
+                            }
                     )
                 }
             }
@@ -287,7 +298,9 @@ fun ComboBox(
     onLabelSemantics: ((String) -> String)? = null,
     onPlaceholderSemantics: ((String) -> String)? = null,
     onItemSemantics: ((String) -> String)? = null,
-    onSelectedItemSemantics: ((String) -> String)? = null
+    onSelectedItemSemantics: ((String) -> String)? = null,
+    onDropdownArrowSemantics: (() -> String)? = null,
+    onClearButtonSemantics: (() -> String)? = null
 ) {
     ComboBox<String>(
         selectedItem = selectedItem,
@@ -302,6 +315,8 @@ fun ComboBox(
         onLabelSemantics = onLabelSemantics,
         onPlaceholderSemantics = onPlaceholderSemantics,
         onItemSemantics = onItemSemantics,
-        onSelectedItemSemantics = onSelectedItemSemantics
+        onSelectedItemSemantics = onSelectedItemSemantics,
+        onDropdownArrowSemantics = onDropdownArrowSemantics,
+        onClearButtonSemantics = onClearButtonSemantics
     )
 }

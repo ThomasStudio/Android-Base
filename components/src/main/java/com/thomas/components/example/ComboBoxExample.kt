@@ -78,7 +78,9 @@ fun ComboBoxExample() {
             onItemSemantics = { "Select $it as your country" },
             onLabelSemantics = { "Country selection $it" },
             onPlaceholderSemantics = { "Country selection placeholder $it" },
-            onSelectedItemSemantics = { "Selected country: $it" }
+            onSelectedItemSemantics = { "Selected country: $it" },
+            onDropdownArrowSemantics = { "Dropdown arrow button" },
+            onClearButtonSemantics = { "Clear selected country" }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
