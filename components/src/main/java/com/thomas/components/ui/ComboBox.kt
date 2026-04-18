@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -85,7 +86,7 @@ fun <T> ComboBox(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
-        
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,14 +117,14 @@ fun <T> ComboBox(
                     Text(
                         text = selectedItem?.toString() ?: placeholder,
                         style = TextStyle(
-                            color = if (selectedItem != null) MaterialTheme.colorScheme.onSurface 
-                                   else MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = if (selectedItem != null) MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 16.sp
                         ),
                         maxLines = 1
                     )
                 }
-                
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -140,7 +141,7 @@ fun <T> ComboBox(
                         }
                         Spacer(modifier = Modifier.width(4.dp))
                     }
-                    
+
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Dropdown arrow",
@@ -152,65 +153,66 @@ fun <T> ComboBox(
                 }
             }
         }
-        
-        // Dropdown menu
-        AnimatedVisibility(
-            visible = expanded,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { -it / 2 }),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { -it / 2 })
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(8.dp)
+
+        // Dialog for dropdown menu
+        if (expanded) {
+            AlertDialog(
+                onDismissRequest = { expanded = false },
+                title = {
+                    Text(
+                        text = label ?: "Select an option",
+                        style = MaterialTheme.typography.titleMedium
                     )
-                    .background(MaterialTheme.colorScheme.surface)
-                    .height(maxDropdownHeight)
-            ) {
-                LazyColumn {
-                    if (items.isEmpty()) {
-                        item {
-                            Text(
-                                text = "No items found",
-                                style = TextStyle(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontSize = 14.sp
-                                ),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            )
-                        }
-                    } else {
-                        items(items) { item ->
-                            DropdownMenuItem(
-                                text = {
-                                    if (itemContent != null) {
-                                        itemContent(item)
-                                    } else {
-                                        Text(
-                                            text = item.toString(),
-                                            style = TextStyle(
-                                                color = MaterialTheme.colorScheme.onSurface,
-                                                fontSize = 14.sp
-                                            )
-                                        )
-                                    }
-                                },
-                                onClick = {
-                                    onItemSelected(item)
-                                    expanded = false
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                },
+                text = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(maxDropdownHeight)
+                    ) {
+                        LazyColumn {
+                            if (items.isEmpty()) {
+                                item {
+                                    Text(
+                                        text = "No items found",
+                                        style = TextStyle(
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            fontSize = 14.sp
+                                        ),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                    )
+                                }
+                            } else {
+                                items(items) { item ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            if (itemContent != null) {
+                                                itemContent(item)
+                                            } else {
+                                                Text(
+                                                    text = item.toString(),
+                                                    style = TextStyle(
+                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        fontSize = 14.sp
+                                                    )
+                                                )
+                                            }
+                                        },
+                                        onClick = {
+                                            onItemSelected(item)
+                                            expanded = false
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                            }
                         }
                     }
-                }
-            }
+                },
+                confirmButton = {}
+            )
         }
     }
 }
