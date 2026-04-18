@@ -1,4 +1,4 @@
-package com.thomas.components.ui
+package com.thomas.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -160,7 +160,7 @@ fun <T> ComboBox(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Clear selection",
-                                tint = colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         Spacer(modifier = Modifier.width(4.dp))
@@ -169,7 +169,7 @@ fun <T> ComboBox(
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Dropdown arrow",
-                        tint = colorScheme.onSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(24.dp)
                             .rotate(if (expanded) 180f else 0f)
@@ -200,7 +200,7 @@ fun <T> ComboBox(
                                     Text(
                                         text = "No items found",
                                         style = TextStyle(
-                                            color = colorScheme.onSurfaceVariant,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             fontSize = 14.sp
                                         ),
                                         modifier = Modifier
@@ -221,7 +221,7 @@ fun <T> ComboBox(
                                                 Text(
                                                     text = item.toString(),
                                                     style = TextStyle(
-                                                        color = colorScheme.onSurface,
+                                                        color = MaterialTheme.colorScheme.onSurface,
                                                         fontSize = 14.sp
                                                     )
                                                 )

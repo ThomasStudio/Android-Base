@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.thomas.base.navigation.Navigator
-import com.thomas.components.ui.ComboBoxExample
+import com.thomas.components.example.ComboBoxExample
 
 @Composable
 fun ComponentDemoScreen(
