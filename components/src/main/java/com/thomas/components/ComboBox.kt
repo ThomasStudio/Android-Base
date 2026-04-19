@@ -91,7 +91,7 @@ data class ComboBoxConfig<T>(
  * Extension function to create a [ComboBoxConfig] using MaterialTheme colors and text styles.
  */
 @Composable
-fun <T> ComboBoxConfig<T>.materialTheme() = this.copy(
+fun <T> ComboBoxConfig<T>.material() = this.copy(
     borderColor = MaterialTheme.colorScheme.outline,
     expandedBorderColor = MaterialTheme.colorScheme.primary,
     backgroundColor = MaterialTheme.colorScheme.surface,
@@ -128,7 +128,7 @@ fun <T> ComboBoxConfig<T>.materialTheme() = this.copy(
  * Creates a new [ComboBoxConfig] using MaterialTheme colors and text styles.
  */
 @Composable
-fun <T> materialConfig() = ComboBoxConfig<T>().materialTheme()
+fun <T> materialConfig() = ComboBoxConfig<T>().material()
 
 @Stable
 @Composable
@@ -137,7 +137,7 @@ fun <T> ComboBox(
     items: List<T>,
     onItemSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    config: ComboBoxConfig<T> = ComboBoxConfig(),
+    config: ComboBoxConfig<T> = materialConfig(),
     itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -346,7 +346,7 @@ fun ComboBox(
     items: List<String>,
     onItemSelected: (String?) -> Unit,
     modifier: Modifier = Modifier,
-    config: ComboBoxConfig<String> = ComboBoxConfig()
+    config: ComboBoxConfig<String> = materialConfig()
 ) {
     ComboBox<String>(
         selectedItem = selectedItem,
