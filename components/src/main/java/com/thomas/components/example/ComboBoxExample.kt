@@ -78,14 +78,14 @@ fun ComboBoxExample() {
             selectedItem = selectedCountry,
             items = countries,
             onItemSelected = { selectedCountry = it },
-            config = materialConfig<String>().copy(
+            onItemSemantics = { "Select $it as your country" },
+            onSelectedItemSemantics = { "Selected country: $it" },
+            config = materialConfig().copy(
                 label = "Select Country",
                 showClearButton = true,
                 placeholder = "Choose a country",
-                onItemSemantics = { "Select $it as your country" },
                 onLabelSemantics = { "Country selection $it" },
                 onPlaceholderSemantics = { "Country selection placeholder $it" },
-                onSelectedItemSemantics = { "Selected country: $it" },
                 dropdownArrowSemantics = "Dropdown arrow button",
                 clearButtonSemantics = "Clear selected country",
                 onDialogTitleSemantics = { "$it title" },
@@ -115,7 +115,7 @@ fun ComboBoxExample() {
             selectedItem = selectedLanguage,
             items = programmingLanguages,
             onItemSelected = { selectedLanguage = it },
-            config = materialConfig<String>().copy(
+            config = materialConfig().copy(
                 label = "Programming Language",
                 placeholder = "Select a programming language"
             ),
@@ -129,7 +129,7 @@ fun ComboBoxExample() {
             items = emptyList(),
             onItemSelected = { selectedLanguage = it },
             modifier = Modifier.fillMaxWidth(),
-            config = materialConfig<String>().copy(
+            config = materialConfig().copy(
                 label = "No items example",
                 placeholder = "Select a item",
                 showClearButton = false,
@@ -149,7 +149,7 @@ fun ComboBoxExample() {
             items = countries,
             onItemSelected = {},
             modifier = Modifier.fillMaxWidth(),
-            config = materialConfig<String>().copy(
+            config = materialConfig().copy(
                 label = "Disabled Selection",
                 placeholder = "This is disabled",
                 enabled = false
@@ -214,7 +214,7 @@ fun CustomObjectComboBoxExample() {
             selectedItem = selectedUser,
             items = users,
             onItemSelected = { selectedUser = it },
-            config = materialConfig<User>().copy(
+            config = materialConfig().copy(
                 label = "Select User",
                 placeholder = "Choose a user",
             ),

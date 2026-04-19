@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Immutable
-data class ComboBoxConfig<T>(
+data class ComboBoxConfig(
     val label: String? = null,
     val placeholder: String = "Select an option",
     val enabled: Boolean = true,
@@ -71,8 +71,6 @@ data class ComboBoxConfig<T>(
     val clearButtonSemantics: String = "Clear selection",
     val onLabelSemantics: ((String) -> String)? = null,
     val onPlaceholderSemantics: ((String) -> String)? = null,
-    val onItemSemantics: ((T) -> String)? = null,
-    val onSelectedItemSemantics: ((T) -> String)? = null,
     val onDialogTitleSemantics: ((String) -> String)? = null
 ) {
     companion object Defaults {
@@ -89,7 +87,7 @@ data class ComboBoxConfig<T>(
          * create a [ComboBoxConfig] using MaterialTheme colors and text styles.
          */
         @Composable
-        fun <T> material() = ComboBoxConfig<T>().copy(
+        fun material() = ComboBoxConfig().copy(
             borderColor = MaterialTheme.colorScheme.outline,
             expandedBorderColor = MaterialTheme.colorScheme.primary,
             backgroundColor = MaterialTheme.colorScheme.surface,
@@ -139,16 +137,18 @@ data class ComboBoxConfig<T>(
  * Creates a new [ComboBoxConfig] using MaterialTheme colors and text styles.
  */
 @Composable
-fun <T> materialConfig() = ComboBoxConfig.material<T>()
+fun materialConfig() = ComboBoxConfig.material()
 
 @Stable
 @Composable
 fun <T> ComboBox(
+    modifier: Modifier = Modifier,
     selectedItem: T?,
     items: List<T>,
     onItemSelected: (T) -> Unit,
-    modifier: Modifier = Modifier,
-    config: ComboBoxConfig<T> = materialConfig(),
+    onItemSemantics: ((T) -> String)? = null,
+    onSelectedItemSemantics: ((T) -> String)? = null,
+    config: ComboBoxConfig = materialConfig(),
     itemContent: @Composable ((T) -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -171,7 +171,8 @@ fun <T> ComboBox(
             onClearClick = { onItemSelected(null as T) },
             onTriggerClick = { expanded = true },
             modifier = Modifier.fillMaxWidth(),
-            config = config
+            config = config,
+            onSelectedItemSemantics = onSelectedItemSemantics,
         )
 
         if (expanded) {
@@ -183,6 +184,7 @@ fun <T> ComboBox(
                 },
                 onDismiss = { expanded = false },
                 config = config,
+                onItemSemantics = onItemSemantics,
                 itemContent = itemContent
             )
         }
@@ -214,7 +216,8 @@ private fun <T> ComboBoxTrigger(
     onClearClick: () -> Unit,
     onTriggerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    config: ComboBoxConfig<T>
+    config: ComboBoxConfig = materialConfig(),
+    onSelectedItemSemantics: ((T) -> String)? = null,
 ) {
     val isSelected = selectedItem != null
 
@@ -243,7 +246,7 @@ private fun <T> ComboBoxTrigger(
                     maxLines = 1,
                     modifier = Modifier.semantics {
                         contentDescription = if (isSelected) {
-                            config.onSelectedItemSemantics?.invoke(selectedItem!!) ?: displayText
+                            onSelectedItemSemantics?.invoke(selectedItem) ?: displayText
                         } else {
                             config.onPlaceholderSemantics?.invoke(config.placeholder)
                                 ?: config.placeholder
@@ -288,7 +291,8 @@ private fun <T> ComboBoxDropdown(
     items: List<T>,
     onItemSelected: (T) -> Unit,
     onDismiss: () -> Unit,
-    config: ComboBoxConfig<T>,
+    config: ComboBoxConfig = materialConfig(),
+    onItemSemantics: ((T) -> String)? = null,
     itemContent: (@Composable (T) -> Unit)?
 ) {
     AlertDialog(
@@ -333,7 +337,7 @@ private fun <T> ComboBoxDropdown(
                                             style = config.dropdownItemTextStyle,
                                             modifier = Modifier.semantics {
                                                 contentDescription =
-                                                    config.onItemSemantics?.invoke(item)
+                                                    onItemSemantics?.invoke(item)
                                                         ?: item.toString()
                                             }
                                         )
@@ -353,17 +357,21 @@ private fun <T> ComboBoxDropdown(
 
 @Composable
 fun ComboBox(
+    modifier: Modifier = Modifier,
     selectedItem: String?,
     items: List<String>,
     onItemSelected: (String?) -> Unit,
-    modifier: Modifier = Modifier,
-    config: ComboBoxConfig<String> = materialConfig()
+    config: ComboBoxConfig = ComboBoxConfig.material(),
+    onItemSemantics: ((String) -> String)? = null,
+    onSelectedItemSemantics: ((String) -> String)? = null,
 ) {
     ComboBox<String>(
+        modifier = modifier,
         selectedItem = selectedItem,
         items = items,
         onItemSelected = onItemSelected,
-        modifier = modifier,
-        config = config
+        config = config,
+        onItemSemantics = onItemSemantics,
+        onSelectedItemSemantics = onSelectedItemSemantics,
     )
 }
