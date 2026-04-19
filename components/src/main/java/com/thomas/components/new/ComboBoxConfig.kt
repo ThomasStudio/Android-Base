@@ -60,15 +60,26 @@ data class ComboBoxTextStyleConfig(
 // 颜色配置
 data class ComboBoxColorConfig(
     val containerColor: Color = Color.Transparent,
-    val contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    val contentColor: Color,
     val focusedContainerColor: Color = Color.Transparent,
-    val focusedContentColor: Color = MaterialTheme.colorScheme.primary,
+    val focusedContentColor: Color,
     val unfocusedContainerColor: Color = Color.Transparent,
-    val unfocusedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    val unfocusedContentColor: Color,
     val disabledContainerColor: Color = Color.Transparent,
-    val disabledContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-    val cursorColor: Color = MaterialTheme.colorScheme.primary,
-    val errorCursorColor: Color = MaterialTheme.colorScheme.error
+    val disabledContentColor: Color,
+    val cursorColor: Color,
+    val errorCursorColor: Color
+)
+
+// 默认颜色配置
+@Composable
+fun defaultComboBoxColorConfig() = ComboBoxColorConfig(
+    contentColor = MaterialTheme.colorScheme.onSurface,
+    focusedContentColor = MaterialTheme.colorScheme.primary,
+    unfocusedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+    cursorColor = MaterialTheme.colorScheme.primary,
+    errorCursorColor = MaterialTheme.colorScheme.error
 )
 
 // 形状配置
@@ -91,7 +102,7 @@ data class ComboBoxConfig(
     val textStyle: ComboBoxTextStyleConfig = ComboBoxTextStyleConfig(),
 
     // 颜色配置
-    val colors: ComboBoxColorConfig = ComboBoxColorConfig(),
+    val colors: ComboBoxColorConfig,
 
     // 形状配置
     val shape: ComboBoxShapeConfig = ComboBoxShapeConfig(),
@@ -109,4 +120,10 @@ data class ComboBoxConfig(
     val placeholder: @Composable (() -> Unit)? = null,
     val leadingIcon: @Composable (() -> Unit)? = null,
     val trailingIcon: @Composable ((Boolean) -> Unit)? = null
+)
+
+// 默认配置
+@Composable
+fun defaultComboBoxConfig() = ComboBoxConfig(
+    colors = defaultComboBoxColorConfig()
 )

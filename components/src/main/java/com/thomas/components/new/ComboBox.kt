@@ -5,6 +5,7 @@ package com.thomas.components.new
  */
 
 import androidx.compose.animation.AnimatedVisibility
+import com.thomas.components.new.defaultComboBoxConfig
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
@@ -44,7 +45,7 @@ fun <T> ComboBox(
     selectedItem: T?,
     onItemSelected: (T?) -> Unit,
     modifier: Modifier = Modifier,
-    config: ComboBoxConfig = ComboBoxConfig(),
+    config: ComboBoxConfig = defaultComboBoxConfig(),
     itemContent: @Composable (T) -> Unit = { item ->
         Text(
             text = item.toString(),

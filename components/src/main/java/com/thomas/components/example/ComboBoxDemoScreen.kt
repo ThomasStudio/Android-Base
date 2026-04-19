@@ -23,6 +23,7 @@ import com.thomas.components.new.ComboBoxSemanticsConfig
 import com.thomas.components.new.ComboBoxShapeConfig
 import com.thomas.components.new.ComboBoxSizeConfig
 import com.thomas.components.new.ComboBoxTextStyleConfig
+import com.thomas.components.new.defaultComboBoxColorConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,10 +70,7 @@ fun ComboBoxDemoScreen() {
                     fontSize = 16,
                     fontWeight = FontWeight.Medium
                 ),
-                colors = ComboBoxColorConfig(
-                    focusedContentColor = Color(0xFF6200EE),
-                    unfocusedContentColor = Color(0xFF757575)
-                )
+                colors = defaultComboBoxColorConfig()
             ),
         )
 
@@ -103,13 +101,7 @@ fun ComboBoxDemoScreen() {
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 ),
-                colors = ComboBoxColorConfig(
-                    containerColor = Color(0xFFF5F5F5),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    focusedContentColor = Color(0xFF1976D2),
-                    unfocusedContentColor = Color(0xFF424242),
-                    cursorColor = Color(0xFF1976D2)
-                ),
+                colors = defaultComboBoxColorConfig(),
                 shape = ComboBoxShapeConfig(
                     shape = RoundedCornerShape(12.dp),
                     focusedBorderThickness = 2.dp
@@ -146,9 +138,7 @@ fun ComboBoxDemoScreen() {
             config = ComboBoxConfig(
                 enabled = false,
                 size = ComboBoxSizeConfig(width = 300.dp),
-                colors = ComboBoxColorConfig(
-                    disabledContentColor = Color(0xFFBDBDBD)
-                )
+                colors = defaultComboBoxColorConfig()
             ),
         )
 
@@ -165,10 +155,7 @@ fun ComboBoxDemoScreen() {
             config = ComboBoxConfig(
                 isError = true,
                 size = ComboBoxSizeConfig(width = 300.dp),
-                colors = ComboBoxColorConfig(
-                    focusedContentColor = MaterialTheme.colorScheme.error,
-                    unfocusedContentColor = MaterialTheme.colorScheme.error
-                )
+                colors = defaultComboBoxColorConfig()
             ),
         )
     }
