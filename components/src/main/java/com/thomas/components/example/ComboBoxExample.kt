@@ -99,7 +99,7 @@ fun ComboBoxExample() {
                     fontWeight = FontWeight.Bold
                 ),
                 dropdownItemTextStyle = Defaults.dropdownItemTextStyle.copy(fontSize = 30.sp),
-                placeholderTextStyle = Defaults.placeholderTextStyle.copy(fontSize = 10.sp),
+                placeholderTextStyle = Defaults.placeholderTextStyle.copy(fontSize = 18.sp),
                 selectedItemTextStyle = Defaults.selectedItemTextStyle.copy(fontSize = 20.sp),
             )
         )

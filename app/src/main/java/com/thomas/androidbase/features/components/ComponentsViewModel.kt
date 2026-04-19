@@ -10,7 +10,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<ComponentsData>>(), ComponentsContract {
+class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<ComponentsData>>(),
+    ComponentsContract {
     override fun initialState() = UIState<ComponentsData>()
 
     init {
@@ -21,11 +22,6 @@ class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<Componen
                     status = Status.SUCCESS,
                     data = ComponentsData(
                         components = listOf(
-                            ComponentItem(
-                                id = "comboboxNew",
-                                name = "ComboBox New",
-                                description = "Dropdown selection component"
-                            ),
                             ComponentItem(
                                 id = "combobox",
                                 name = "ComboBox",
@@ -45,7 +41,12 @@ class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<Componen
                                 id = "card",
                                 name = "Card",
                                 description = "Container with elevation and padding"
-                            )
+                            ),
+                            ComponentItem(
+                                id = "comboboxNew",
+                                name = "ComboBox New",
+                                description = "Dropdown selection component"
+                            ),
                         )
                     )
                 )
