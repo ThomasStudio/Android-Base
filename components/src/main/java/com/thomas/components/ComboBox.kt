@@ -96,31 +96,23 @@ fun <T> ComboBoxConfig<T>.material() = this.copy(
     expandedBorderColor = MaterialTheme.colorScheme.primary,
     backgroundColor = MaterialTheme.colorScheme.surface,
     iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    labelTextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
+    labelTextStyle = MaterialTheme.typography.labelMedium.copy(
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     ),
-    selectedItemTextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurface,
-        fontSize = 16.sp
+    selectedItemTextStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = MaterialTheme.colorScheme.onSurface
     ),
-    placeholderTextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontSize = 16.sp
+    placeholderTextStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     ),
-    dropdownItemTextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurface,
-        fontSize = 14.sp
+    dropdownItemTextStyle = MaterialTheme.typography.bodyMedium.copy(
+        color = MaterialTheme.colorScheme.onSurface
     ),
-    emptyStateTextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontSize = 14.sp
+    emptyStateTextStyle = MaterialTheme.typography.bodyMedium.copy(
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     ),
-    dialogTitleTextStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onSurface,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
+    dialogTitleTextStyle = MaterialTheme.typography.titleMedium.copy(
+        color = MaterialTheme.colorScheme.onSurface
     )
 )
 
