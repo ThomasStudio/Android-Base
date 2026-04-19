@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -94,13 +95,13 @@ fun ComboBoxExample() {
                 verticalPadding = 33.dp,
                 buttonSize = 48.dp,
                 maxDropdownHeight = 200.dp,
-                labelTextStyle = Defaults.labelTextStyle.copy(
+                labelTextStyle = Defaults.label().copy(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 ),
-                dropdownItemTextStyle = Defaults.dropdownItemTextStyle.copy(fontSize = 30.sp),
-                placeholderTextStyle = Defaults.placeholderTextStyle.copy(fontSize = 18.sp),
-                selectedItemTextStyle = Defaults.selectedItemTextStyle.copy(fontSize = 20.sp),
+                dropdownItemTextStyle = Defaults.dropdownItem().copy(fontSize = 30.sp),
+                placeholderTextStyle = Defaults.placeholder().copy(fontSize = 18.sp, color = Color(0xFFAAAAAA)),
+                selectedItemTextStyle = Defaults.selectedItem().copy(fontSize = 20.sp),
             )
         )
 
