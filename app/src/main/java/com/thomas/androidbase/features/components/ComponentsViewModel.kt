@@ -28,6 +28,11 @@ class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<Componen
                                 description = "Dropdown selection component"
                             ),
                             ComponentItem(
+                                id = "input",
+                                name = "Input",
+                                description = "Various input styles and states"
+                            ),
+                            ComponentItem(
                                 id = "button",
                                 name = "Button",
                                 description = "Various button styles and states"
