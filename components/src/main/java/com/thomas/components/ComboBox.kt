@@ -23,6 +23,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -85,6 +86,49 @@ data class ComboBoxConfig<T>(
             TextStyle(color = Color(0xFF000000), fontWeight = FontWeight.Medium, fontSize = 16.sp)
     }
 }
+
+/**
+ * Extension function to create a [ComboBoxConfig] using MaterialTheme colors and text styles.
+ */
+@Composable
+fun <T> ComboBoxConfig<T>.materialTheme() = this.copy(
+    borderColor = MaterialTheme.colorScheme.outline,
+    expandedBorderColor = MaterialTheme.colorScheme.primary,
+    backgroundColor = MaterialTheme.colorScheme.surface,
+    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    labelTextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
+    ),
+    selectedItemTextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 16.sp
+    ),
+    placeholderTextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = 16.sp
+    ),
+    dropdownItemTextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 14.sp
+    ),
+    emptyStateTextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = 14.sp
+    ),
+    dialogTitleTextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp
+    )
+)
+
+/**
+ * Creates a new [ComboBoxConfig] using MaterialTheme colors and text styles.
+ */
+@Composable
+fun <T> materialConfig() = ComboBoxConfig<T>().materialTheme()
 
 @Stable
 @Composable

@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thomas.components.ComboBox
-import com.thomas.components.ComboBoxConfig
 import com.thomas.components.ComboBoxConfig.Defaults
+import com.thomas.components.materialConfig
 
 /**
  * Example demonstrating various usages of the ComboBox component
@@ -78,7 +78,7 @@ fun ComboBoxExample() {
             selectedItem = selectedCountry,
             items = countries,
             onItemSelected = { selectedCountry = it },
-            config = ComboBoxConfig(
+            config = materialConfig<String>().copy(
                 label = "Select Country",
                 showClearButton = true,
                 placeholder = "Choose a country",
@@ -115,10 +115,9 @@ fun ComboBoxExample() {
             selectedItem = selectedLanguage,
             items = programmingLanguages,
             onItemSelected = { selectedLanguage = it },
-            config = ComboBoxConfig(
+            config = materialConfig<String>().copy(
                 label = "Programming Language",
-                placeholder = "Select a programming language",
-                showClearButton = false
+                placeholder = "Select a programming language"
             ),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -130,7 +129,7 @@ fun ComboBoxExample() {
             items = emptyList(),
             onItemSelected = { selectedLanguage = it },
             modifier = Modifier.fillMaxWidth(),
-            config = ComboBoxConfig(
+            config = materialConfig<String>().copy(
                 label = "No items example",
                 placeholder = "Select a item",
                 showClearButton = false,
@@ -150,7 +149,7 @@ fun ComboBoxExample() {
             items = countries,
             onItemSelected = {},
             modifier = Modifier.fillMaxWidth(),
-            config = ComboBoxConfig(
+            config = materialConfig<String>().copy(
                 label = "Disabled Selection",
                 placeholder = "This is disabled",
                 enabled = false
@@ -215,7 +214,7 @@ fun CustomObjectComboBoxExample() {
             selectedItem = selectedUser,
             items = users,
             onItemSelected = { selectedUser = it },
-            config = ComboBoxConfig(
+            config = materialConfig<User>().copy(
                 label = "Select User",
                 placeholder = "Choose a user",
             ),
