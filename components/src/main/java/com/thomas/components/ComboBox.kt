@@ -84,43 +84,45 @@ data class ComboBoxConfig<T>(
         val emptyStateTextStyle = TextStyle(color = Color(0xFF999999), fontSize = 14.sp)
         val dialogTitleTextStyle =
             TextStyle(color = Color(0xFF000000), fontWeight = FontWeight.Medium, fontSize = 16.sp)
+
+        /**
+         * create a [ComboBoxConfig] using MaterialTheme colors and text styles.
+         */
+        @Composable
+        fun <T> material() = ComboBoxConfig<T>().copy(
+            borderColor = MaterialTheme.colorScheme.outline,
+            expandedBorderColor = MaterialTheme.colorScheme.primary,
+            backgroundColor = MaterialTheme.colorScheme.surface,
+            iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            labelTextStyle = MaterialTheme.typography.labelMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            selectedItemTextStyle = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            placeholderTextStyle = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            dropdownItemTextStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            emptyStateTextStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            dialogTitleTextStyle = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
+
     }
 }
 
-/**
- * Extension function to create a [ComboBoxConfig] using MaterialTheme colors and text styles.
- */
-@Composable
-fun <T> ComboBoxConfig<T>.material() = this.copy(
-    borderColor = MaterialTheme.colorScheme.outline,
-    expandedBorderColor = MaterialTheme.colorScheme.primary,
-    backgroundColor = MaterialTheme.colorScheme.surface,
-    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    labelTextStyle = MaterialTheme.typography.labelMedium.copy(
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    ),
-    selectedItemTextStyle = MaterialTheme.typography.bodyLarge.copy(
-        color = MaterialTheme.colorScheme.onSurface
-    ),
-    placeholderTextStyle = MaterialTheme.typography.bodyLarge.copy(
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    ),
-    dropdownItemTextStyle = MaterialTheme.typography.bodyMedium.copy(
-        color = MaterialTheme.colorScheme.onSurface
-    ),
-    emptyStateTextStyle = MaterialTheme.typography.bodyMedium.copy(
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    ),
-    dialogTitleTextStyle = MaterialTheme.typography.titleMedium.copy(
-        color = MaterialTheme.colorScheme.onSurface
-    )
-)
 
 /**
  * Creates a new [ComboBoxConfig] using MaterialTheme colors and text styles.
  */
 @Composable
-fun <T> materialConfig() = ComboBoxConfig<T>().material()
+fun <T> materialConfig() = ComboBoxConfig.material<T>()
 
 @Stable
 @Composable
