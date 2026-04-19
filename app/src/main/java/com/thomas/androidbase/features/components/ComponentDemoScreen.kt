@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.thomas.base.navigation.Navigator
+import com.thomas.components.example.ComboBoxDemoScreen
 import com.thomas.components.example.ComboBoxExample
 
 @Composable
@@ -42,6 +43,7 @@ fun ComponentDemoScreen(
             // Component demo content based on componentId
             when (componentId) {
                 "combobox" -> ComboBoxExample()
+                "comboboxNew" -> ComboBoxDemoScreen()
                 "button" -> ButtonExample()
                 else -> DefaultExample(componentId)
 

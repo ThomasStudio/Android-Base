@@ -22,6 +22,11 @@ class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<Componen
                     data = ComponentsData(
                         components = listOf(
                             ComponentItem(
+                                id = "comboboxNew",
+                                name = "ComboBox New",
+                                description = "Dropdown selection component"
+                            ),
+                            ComponentItem(
                                 id = "combobox",
                                 name = "ComboBox",
                                 description = "Dropdown selection component"
