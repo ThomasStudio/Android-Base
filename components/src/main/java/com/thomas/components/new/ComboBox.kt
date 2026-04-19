@@ -58,7 +58,8 @@ fun <T> ComboBox(
             color = config.colors.contentColor
         )
     },
-    keySelector: (T) -> Any = { it.hashCode() }
+    keySelector: (T) -> Any = { it.hashCode() },
+    filterPredicate: ((T, String) -> Boolean)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     var textFieldValue by remember {
@@ -73,11 +74,21 @@ fun <T> ComboBox(
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
 
+    // 过滤后的项目列表
+    val filteredItems = remember(textFieldValue.text, items) {
+        if (filterPredicate != null && textFieldValue.text.isNotEmpty()) {
+            items.filter { filterPredicate(it, textFieldValue.text) }
+        } else {
+            items
+        }
+    }
+
     // 更新选中项时同步文本
     LaunchedEffect(selectedItem) {
+        val newText = selectedItem?.toString() ?: ""
         textFieldValue = TextFieldValue(
-            text = selectedItem?.toString() ?: "",
-            selection = TextRange(selectedItem?.toString()?.length ?: 0)
+            text = newText,
+            selection = TextRange(newText.length)
         )
     }
 
@@ -89,12 +100,20 @@ fun <T> ComboBox(
     ) {
         Column {
             // 输入框
-            OutlinedTextField<String>(
+            OutlinedTextField(
                 value = textFieldValue,
-                onValueChange = { newValue ->
+                onValueChange = { newValue: TextFieldValue ->
                     textFieldValue = newValue
-                    // 过滤选项
-                    expanded = true
+
+                    // 当文本变化时，展开下拉菜单
+                    if (newValue.text.isNotEmpty() || items.isNotEmpty()) {
+                        expanded = true
+                    }
+
+                    // 如果文本为空，清除选中项
+                    if (newValue.text.isEmpty()) {
+                        onItemSelected(null)
+                    }
                 },
                 modifier = Modifier
                     .then(
@@ -109,14 +128,27 @@ fun <T> ComboBox(
                     .onKeyEvent { event ->
                         when (event.key) {
                             Key.DirectionDown -> {
-                                expanded = true
+                                if (!expanded) {
+                                    expanded = true
+                                }
                                 true
                             }
+
                             Key.Escape -> {
                                 expanded = false
                                 focusManager.clearFocus()
                                 true
                             }
+
+                            Key.Enter -> {
+                                if (filteredItems.isNotEmpty()) {
+                                    onItemSelected(filteredItems.first())
+                                    expanded = false
+                                    focusManager.clearFocus()
+                                }
+                                true
+                            }
+
                             else -> false
                         }
                     }
@@ -131,22 +163,26 @@ fun <T> ComboBox(
                 label = config.label,
                 placeholder = config.placeholder,
                 leadingIcon = config.leadingIcon,
-                trailingIcon = config.trailingIcon ?: {
-                    IconButton(
-                        onClick = { expanded = !expanded },
-                        modifier = Modifier.semantics {
-                            contentDescription = config.semantics.dropdownButtonDescription
-                        }
-                    ) {
-                        Icon(
-                            imageVector = if (expanded) config.expandedDropdownIcon else config.dropdownIcon,
-                            contentDescription = null,
-                            tint = if (config.enabled) {
-                                config.colors.contentColor
-                            } else {
-                                config.colors.disabledContentColor
+                trailingIcon = if (config.trailingIcon != null) {
+                    { config.trailingIcon!!(expanded) }
+                } else {
+                    {
+                        IconButton(
+                            onClick = { expanded = !expanded },
+                            modifier = Modifier.semantics {
+                                contentDescription = config.semantics.dropdownButtonDescription
                             }
-                        )
+                        ) {
+                            Icon(
+                                imageVector = if (expanded) config.expandedDropdownIcon else config.dropdownIcon,
+                                contentDescription = null,
+                                tint = if (config.enabled) {
+                                    config.colors.contentColor
+                                } else {
+                                    config.colors.disabledContentColor
+                                }
+                            )
+                        }
                     }
                 },
                 shape = config.shape.shape,
@@ -210,7 +246,7 @@ fun <T> ComboBox(
                             modifier = Modifier.padding(vertical = config.size.verticalPadding / 2),
                             contentPadding = PaddingValues(horizontal = config.size.horizontalPadding)
                         ) {
-                            items(items, key = keySelector) { item ->
+                            items(filteredItems, key = keySelector) { item ->
                                 val isSelected = selectedItem == item
 
                                 Row(
@@ -223,7 +259,8 @@ fun <T> ComboBox(
                                             focusManager.clearFocus()
                                         }
                                         .semantics {
-                                            contentDescription = "${config.semantics.optionDescriptionPrefix}${item}"
+                                            contentDescription =
+                                                "${config.semantics.optionDescriptionPrefix}${item}"
                                             selected = isSelected
                                         },
                                     verticalAlignment = Alignment.CenterVertically
@@ -242,7 +279,7 @@ fun <T> ComboBox(
                                     }
                                 }
 
-                                if (items.indexOf(item) < items.size - 1) {
+                                if (filteredItems.indexOf(item) < filteredItems.size - 1) {
                                     HorizontalDivider(
                                         thickness = 0.5.dp,
                                         color = MaterialTheme.colorScheme.outlineVariant
