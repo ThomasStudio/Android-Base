@@ -94,26 +94,43 @@ data class ComboBoxConfig<T>(
             expandedBorderColor = MaterialTheme.colorScheme.primary,
             backgroundColor = MaterialTheme.colorScheme.surface,
             iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            labelTextStyle = MaterialTheme.typography.labelMedium.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            selectedItemTextStyle = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            placeholderTextStyle = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            dropdownItemTextStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            emptyStateTextStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            dialogTitleTextStyle = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            labelTextStyle = label(),
+            selectedItemTextStyle = selectedItem(),
+            placeholderTextStyle = placeholder(),
+            dropdownItemTextStyle = dropdownItem(),
+            emptyStateTextStyle = emptyState(),
+            dialogTitleTextStyle = dialogTitle()
         )
 
+        @Composable
+        fun label() = MaterialTheme.typography.labelMedium.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        @Composable
+        fun selectedItem() = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        @Composable
+        fun placeholder() = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        @Composable
+        fun dropdownItem() = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        @Composable
+        fun emptyState() = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        @Composable
+        fun dialogTitle() = MaterialTheme.typography.titleMedium.copy(
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
