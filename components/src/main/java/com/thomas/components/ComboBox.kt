@@ -23,7 +23,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -88,10 +89,10 @@ data class ComboBoxConfig(
          */
         @Composable
         fun material() = ComboBoxConfig().copy(
-            borderColor = MaterialTheme.colorScheme.outline,
-            expandedBorderColor = MaterialTheme.colorScheme.primary,
-            backgroundColor = MaterialTheme.colorScheme.surface,
-            iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            borderColor = colorScheme.outline,
+            expandedBorderColor = colorScheme.primary,
+            backgroundColor = colorScheme.surface,
+            iconColor = colorScheme.onSurfaceVariant,
             labelTextStyle = label(),
             selectedItemTextStyle = selectedItem(),
             placeholderTextStyle = placeholder(),
@@ -101,33 +102,33 @@ data class ComboBoxConfig(
         )
 
         @Composable
-        fun label() = MaterialTheme.typography.labelMedium.copy(
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        fun label() = typography.labelMedium.copy(
+            color = colorScheme.onSurfaceVariant
         )
 
         @Composable
-        fun selectedItem() = MaterialTheme.typography.bodyLarge.copy(
-            color = MaterialTheme.colorScheme.onSurface
+        fun selectedItem() = typography.bodyLarge.copy(
+            color = colorScheme.onSurface
         )
 
         @Composable
-        fun placeholder() = MaterialTheme.typography.bodyLarge.copy(
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        fun placeholder() = typography.bodyLarge.copy(
+            color = colorScheme.onSurfaceVariant
         )
 
         @Composable
-        fun dropdownItem() = MaterialTheme.typography.bodyMedium.copy(
-            color = MaterialTheme.colorScheme.onSurface
+        fun dropdownItem() = typography.bodyMedium.copy(
+            color = colorScheme.onSurface
         )
 
         @Composable
-        fun emptyState() = MaterialTheme.typography.bodyMedium.copy(
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        fun emptyState() = typography.bodyMedium.copy(
+            color = colorScheme.onSurfaceVariant
         )
 
         @Composable
-        fun dialogTitle() = MaterialTheme.typography.titleMedium.copy(
-            color = MaterialTheme.colorScheme.onSurface
+        fun dialogTitle() = typography.titleMedium.copy(
+            color = colorScheme.onSurface
         )
     }
 }
