@@ -69,10 +69,7 @@ class ComponentsViewModel @Inject constructor(
     }
 
     private fun navigateToDemoScreen(componentId: String) {
-        val id = PayloadStore.putJson(
-            Pair("componentId", componentId),
-            Pair("test", "test")
-        )
+        val id = PayloadStore.putJson("componentId" to componentId, "test" to "test")
         navigate(MainRoute.ComponentDemo(id))
     }
 }
