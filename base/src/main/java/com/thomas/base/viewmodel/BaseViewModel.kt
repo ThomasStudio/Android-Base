@@ -21,8 +21,9 @@ abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STAT
     protected open val scope: CoroutineScope
         get() = viewModelScope
 
-    private val _uiState = MutableStateFlow(initialState())
-    override val uiState: StateFlow<STATE> = _uiState
+    private val _uiState by lazy { MutableStateFlow(initialState()) }
+    override val uiState: StateFlow<STATE>
+        get() = _uiState
 
     private val _event = MutableSharedFlow<Event>(extraBufferCapacity = 1)
     override val event: SharedFlow<Event> = _event.asSharedFlow()
