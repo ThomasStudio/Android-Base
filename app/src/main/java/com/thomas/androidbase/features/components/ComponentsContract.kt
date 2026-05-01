@@ -12,9 +12,9 @@ data class ComponentsData(
     val componentId: String? = null
 )
 
-@Serializable
 data class ComponentId(
-    val componentId: String
+    val componentId: String,
+    val test:String
 )
 
 data class ComponentItem(
