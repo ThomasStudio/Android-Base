@@ -7,10 +7,14 @@ sealed class MainRoute(override val path: String) : AppRoute() {
     object Weibo : MainRoute("weibo")
     object News : MainRoute("news")
     object Components : MainRoute("components")
-    
-    data class ComponentDemo(val componentId: String) : MainRoute("component-demo/$componentId") {
+
+    data class ComponentDemo(val payloadId: String) : MainRoute("component-demo/$payloadId") {
         companion object {
-            const val ROUTE = "component-demo/{componentId}"
+            const val ROUTE = "component-demo/{payloadId}"
         }
+    }
+
+    companion object {
+        val PAYLOAD_ID = "payloadId"
     }
 }

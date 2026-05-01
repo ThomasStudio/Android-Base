@@ -28,15 +28,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.base.navigation.Navigator
+import com.thomas.base.ui.collectUiState
 import com.thomas.components.example.ComboBoxDemoScreen
 import com.thomas.components.example.ComboBoxExample
 
 @Composable
 fun ComponentDemoScreen(
     navigator: Navigator,
-    componentId: String
+    viewModel: ComponentsContract = hiltViewModel<ComponentsViewModel>()
 ) {
+    val uiState = viewModel.collectUiState()
+    val componentId = uiState.data?.componentId ?: "unknown"
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier

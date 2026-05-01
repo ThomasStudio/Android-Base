@@ -8,6 +8,8 @@ interface BaseContract<STATE : UIStateIF> {
     val event: SharedFlow<Event>
 
     fun viewCreated() {}
-    
+
     fun back()
 }
+
+interface BaseDataContract<DATA> : BaseContract<UIState<DATA>>

@@ -1,17 +1,28 @@
 package com.thomas.androidbase.features.components
 
 import com.thomas.androidbase.navigation.MainRoute
+import com.thomas.base.domain.PayloadStore
 import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.lifecycle.SavedStateHandle
 
 @HiltViewModel
-class ComponentsViewModel @Inject constructor() : BaseDataViewModel<ComponentsData>(),
+class ComponentsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : BaseDataViewModel<ComponentsData>(),
     ComponentsContract {
     init {
+        val payloadId = savedStateHandle.get<String>(MainRoute.PAYLOAD_ID)
+        payloadId?.let {
+            PayloadStore.consume<ComponentId>(it)?.let { data ->
+                updateData { copy(componentId = data.componentId) }
+            }
+        }
+
         scope.launch {
             delay(500) // Simulate loading
             updateState {
@@ -61,6 +72,7 @@ class ComponentsViewModel @Inject constructor() : BaseDataViewModel<ComponentsDa
     }
 
     private fun navigateToDemoScreen(componentId: String) {
-        navigate(MainRoute.ComponentDemo(componentId))
+        val id = PayloadStore.put(Pair("componentId", componentId))
+        navigate(MainRoute.ComponentDemo(id))
     }
 }

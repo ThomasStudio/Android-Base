@@ -16,10 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.thomas.androidbase.features.components.ComponentDemoScreen
 import com.thomas.androidbase.features.components.ComponentsScreen
 import com.thomas.androidbase.features.home.HomeScreen
@@ -88,19 +86,8 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
         composable(MainRoute.Components.path) {
             ComponentsScreen(navigator = navigator)
         }
-        composable(
-            route = MainRoute.ComponentDemo.ROUTE,
-            arguments = listOf(
-                navArgument("componentId") {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            val componentId = backStackEntry.arguments?.getString("componentId") ?: ""
-            ComponentDemoScreen(
-                navigator = navigator,
-                componentId = componentId
-            )
+        composable(MainRoute.ComponentDemo.ROUTE) {
+            ComponentDemoScreen(navigator = navigator)
         }
     }
 }
