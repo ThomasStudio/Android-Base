@@ -53,7 +53,6 @@ object PayloadStore {
 
     /**
      * consume json and convert it to T.
-     * T must Serializable.
      */
     inline fun <reified T> consume(id: String): T? {
         val payload = payloads.remove(id) ?: return null
