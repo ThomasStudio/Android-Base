@@ -1,19 +1,16 @@
 package com.thomas.androidbase.features.components
 
 import com.thomas.androidbase.navigation.MainRoute
-import com.thomas.base.viewmodel.BaseViewModel
+import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.Status
-import com.thomas.base.viewmodel.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ComponentsViewModel @Inject constructor() : BaseViewModel<UIState<ComponentsData>>(),
+class ComponentsViewModel @Inject constructor() : BaseDataViewModel<ComponentsData>(),
     ComponentsContract {
-    override fun initialState() = UIState<ComponentsData>()
-
     init {
         scope.launch {
             delay(500) // Simulate loading

@@ -1,21 +1,16 @@
 package com.thomas.androidbase.features.home
 
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.thomas.base.viewmodel.BaseViewModel
 import com.thomas.androidbase.navigation.MainRoute
+import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.MessageEvent
 import com.thomas.base.viewmodel.Status
-import com.thomas.base.viewmodel.UIState
-import com.thomas.base.viewmodel.UIStateIF
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : BaseViewModel<UIState<HomeData>>(), HomeContract {
-    override fun initialState() = UIState<HomeData>()
-
+class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeContract {
     init {
         scope.launch {
             delay(1000)

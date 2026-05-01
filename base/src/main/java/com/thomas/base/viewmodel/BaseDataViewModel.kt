@@ -5,7 +5,7 @@ package com.thomas.base.viewmodel
  */
 
 abstract class BaseDataViewModel<DATA> : BaseViewModel<UIState<DATA>>() {
-    abstract fun initialData(): DATA
+    protected open fun initialData(): DATA? = null
     protected open fun initialStatus() = Status.LOADING
     protected open fun defaultData() = initialData()
 
