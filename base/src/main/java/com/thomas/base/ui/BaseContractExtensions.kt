@@ -1,5 +1,7 @@
 package com.thomas.base.ui
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -11,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -21,6 +24,7 @@ import com.thomas.base.viewmodel.BackEvent
 import com.thomas.base.viewmodel.BaseContract
 import com.thomas.base.viewmodel.Event
 import com.thomas.base.viewmodel.HideLoadingIndicatorEvent
+import com.thomas.base.viewmodel.MessageEvent
 import com.thomas.base.viewmodel.NavigateEvent
 import com.thomas.base.viewmodel.ShowLoadingIndicatorEvent
 import com.thomas.base.viewmodel.UIStateIF
@@ -32,6 +36,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 fun handleBaseContractEvent(
     event: Event,
+    context: Context,
     navigator: Navigator? = null,
     loadingState: MutableState<Boolean>? = null,
     onEvent: (Event) -> Unit = {},
@@ -49,6 +54,7 @@ fun handleBaseContractEvent(
         is BackEvent -> navigator?.back()
         is ShowLoadingIndicatorEvent -> loadingState?.value = true
         is HideLoadingIndicatorEvent -> loadingState?.value = false
+        is MessageEvent -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
         else -> onEvent(event)
     }
 }
@@ -65,10 +71,9 @@ fun <STATE : UIStateIF> BaseContract<STATE>.HandleEvents(
     onEvent: (Event) -> Unit = {},
 ) {
     val lifecyclerOwner = LocalLifecycleOwner.current
-    // Loading state shown as an overlay when true
+    val context = LocalContext.current
     val loadingState = remember { mutableStateOf(false) }
 
-    // Render loading overlay above content when requested
     LoadingOverlay(visible = loadingState.value)
     ViewCreated()
     OnVisible()
@@ -76,7 +81,13 @@ fun <STATE : UIStateIF> BaseContract<STATE>.HandleEvents(
     LaunchedEffect(this, lifecyclerOwner, navigator) {
         lifecyclerOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             event.collectLatest { viewEvent ->
-                handleBaseContractEvent(viewEvent, navigator, loadingState, onEvent)
+                handleBaseContractEvent(
+                    event = viewEvent,
+                    context = context,
+                    navigator = navigator,
+                    loadingState = loadingState,
+                    onEvent = onEvent
+                )
             }
         }
     }

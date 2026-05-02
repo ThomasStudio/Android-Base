@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
         }
     }
 
-    override fun onVisible() {
+    override fun viewCreated() {
         Store.rootVM?.setTitle("Home")
     }
 
@@ -51,6 +51,6 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
     }
 
     override fun showMessage() {
-        send(MessageEvent("Hello from HomeViewModel"))
+        sendMessage("Hello from HomeViewModel")
     }
 }

@@ -16,8 +16,6 @@ class ComponentsViewModel @Inject constructor(
     override fun initialData(): ComponentsData = ComponentsData()
 
     init {
-        Store.rootVM?.setTitle("Components")
-
         payload<ComponentId>()?.let {
             Store.rootVM?.setTitle(it.componentId)
             updateData { copy(componentId = it.componentId) }
@@ -68,4 +66,8 @@ class ComponentsViewModel @Inject constructor(
         MainRoute.ComponentDemo,
         "componentId" to componentId, "test" to "test"
     )
+
+    override fun viewCreated() {
+        Store.rootVM?.setTitle("Components")
+    }
 }
