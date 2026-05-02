@@ -3,6 +3,7 @@ package com.thomas.androidbase.features.components
 import androidx.lifecycle.SavedStateHandle
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.domain.PayloadStore
+import com.thomas.base.navigation.AppRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -16,7 +17,7 @@ class ComponentsViewModel @Inject constructor(
     override fun initialData(): ComponentsData = ComponentsData()
 
     init {
-        val payloadId = savedStateHandle.get<String>(MainRoute.PAYLOAD_ID)
+        val payloadId = savedStateHandle.get<String>(AppRoute.PAYLOAD_ID)
         payloadId?.let {
             PayloadStore.consume<ComponentId>(it)?.let { data ->
                 updateData { copy(componentId = data.componentId) }
@@ -70,6 +71,6 @@ class ComponentsViewModel @Inject constructor(
 
     private fun navigateToDemoScreen(componentId: String) {
         val id = PayloadStore.putJson("componentId" to componentId, "test" to "test")
-        navigate(MainRoute.ComponentDemo(id))
+        navigate(MainRoute.ComponentDemo.withPayload(id))
     }
 }

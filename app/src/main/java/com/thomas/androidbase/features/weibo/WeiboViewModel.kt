@@ -4,9 +4,7 @@ import com.thomas.androidbase.data.WeiboHot
 import com.thomas.androidbase.data.repositories.WeiboRepository
 import com.thomas.base.domain.Result
 import com.thomas.base.viewmodel.BaseDataViewModel
-import com.thomas.base.viewmodel.Error
 import com.thomas.base.viewmodel.MessageEvent
-import com.thomas.base.viewmodel.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,16 +21,11 @@ class WeiboViewModel @Inject constructor(
         scope.launch {
             when (val result = weiboRepository.getWeiboHot()) {
                 is Result.Success -> {
-                    updateState { copy(status = Status.SUCCESS, data = result.data) }
+                    updateData { result.data }
                 }
 
                 is Result.Error -> {
-                    updateState {
-                        copy(
-                            status = Status.ERROR,
-                            error = Error(code = result.code, message = result.message ?: "")
-                        )
-                    }
+                    showError(code = result.code, message = result.message ?: "")
                 }
             }
         }

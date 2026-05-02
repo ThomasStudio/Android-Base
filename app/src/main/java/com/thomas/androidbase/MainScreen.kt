@@ -66,7 +66,7 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
         composable(MainRoute.Components.path) {
             ComponentsScreen(navigator = navigator)
         }
-        composable(MainRoute.ComponentDemo.ROUTE) {
+        composable(MainRoute.ComponentDemo.withPayload()) {
             ComponentDemoScreen(navigator = navigator)
         }
     }
