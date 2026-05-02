@@ -13,15 +13,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ComponentsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
-) : BaseDataViewModel<ComponentsData>(), ComponentsContract {
+) : BaseDataViewModel<ComponentsData>(savedStateHandle), ComponentsContract {
     override fun initialData(): ComponentsData = ComponentsData()
 
     init {
-        val payloadId = savedStateHandle.get<String>(AppRoute.PAYLOAD_ID)
-        payloadId?.let {
-            PayloadStore.consume<ComponentId>(it)?.let { data ->
-                updateData { copy(componentId = data.componentId) }
-            }
+        payload<ComponentId>()?.let {
+            updateData { copy(componentId = it.componentId) }
         }
 
         scope.launch {
@@ -70,7 +67,7 @@ class ComponentsViewModel @Inject constructor(
     }
 
     private fun navigateToDemoScreen(componentId: String) {
-        val id = PayloadStore.putJson("componentId" to componentId, "test" to "test")
-        navigate(MainRoute.ComponentDemo.withPayload(id))
+        val id = putJsonPayload("componentId" to componentId, "test" to "test")
+        navigate(MainRoute.ComponentDemo.withId(id))
     }
 }

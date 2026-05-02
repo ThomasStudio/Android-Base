@@ -1,6 +1,5 @@
 package com.thomas.base.navigation
 
-import com.thomas.base.navigation.AppRoute.Companion.routeString
 import com.thomas.base.util.StringUtil
 
 /**
@@ -18,8 +17,9 @@ abstract class AppRoute {
     fun withQuery(vararg params: Pair<String, Any?>): String =
         routeWithQuery(path, *params)
 
+    fun withId(vararg ids: String): String = routeString(path, *ids)
+
     fun withPayload(): String = routeString(path, "{$PAYLOAD_ID}")
-    fun withPayload(id: String): String = routeString(path, id)
 
     data class Route(override val path: String) : AppRoute() {
         override fun toString(): String = path
