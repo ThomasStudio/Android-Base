@@ -2,8 +2,6 @@ package com.thomas.androidbase.features.components
 
 import androidx.lifecycle.SavedStateHandle
 import com.thomas.androidbase.navigation.MainRoute
-import com.thomas.base.domain.PayloadStore
-import com.thomas.base.navigation.AppRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -62,12 +60,8 @@ class ComponentsViewModel @Inject constructor(
         }
     }
 
-    override fun onComponentSelected(componentId: String) {
-        navigateToDemoScreen(componentId)
-    }
-
-    private fun navigateToDemoScreen(componentId: String) {
-        val id = putJsonPayload("componentId" to componentId, "test" to "test")
-        navigate(MainRoute.ComponentDemo.withId(id))
-    }
+    override fun onComponentSelected(componentId: String) = navigateWithJson(
+        MainRoute.ComponentDemo,
+        "componentId" to componentId, "test" to "test"
+    )
 }

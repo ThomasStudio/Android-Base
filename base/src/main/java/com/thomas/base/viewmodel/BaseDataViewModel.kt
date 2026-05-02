@@ -37,9 +37,11 @@ abstract class BaseDataViewModel<DATA>(val savedStateHandle: SavedStateHandle? =
     protected inline fun <reified T> payload() = payloadId()?.let { store.consume<T>(it) }
 
     // navigation with payload
-    protected fun navigateWithPayload(data: Any, route: AppRoute) {
-        val id = putPayload(data)
-        navigate(route.withQuery(AppRoute.PAYLOAD_ID to id))
-    }
+    protected fun navigateWithPayload(route: AppRoute, data: Any) =
+        navigate(route.withId(putPayload(data)))
+
+    protected fun navigateWithJson(route: AppRoute, vararg kvs: Pair<String, Any?>) =
+        navigate(route.withId(putJsonPayload(*kvs)))
+
 
 }

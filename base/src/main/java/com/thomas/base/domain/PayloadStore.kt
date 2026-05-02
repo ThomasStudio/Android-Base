@@ -43,11 +43,15 @@ object PayloadStore {
         return id
     }
 
-    fun putJson(vararg kvs: Pair<String, Any?>): String {
-        val id = generateId()
+    fun toJson(vararg kvs: Pair<String, Any?>): JSONObject {
         val json = JSONObject()
         kvs.forEach { json.put(it.first, it.second) }
-        payloads[id] = json
+        return json
+    }
+
+    fun putJson(vararg kvs: Pair<String, Any?>): String {
+        val id = generateId()
+        payloads[id] = toJson(*kvs)
         return id
     }
 
