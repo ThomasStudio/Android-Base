@@ -10,6 +10,14 @@ import javax.inject.Inject
  * Created by thomas on 5/2/2026.
  */
 
+interface RootContract : BaseDataContract<RootData> {
+    fun setTitle(title: String)
+}
+
+data class RootData(
+    val title: String = "Home",
+)
+
 @HiltViewModel
 class RootViewModel @Inject constructor(savedStateHandle: SavedStateHandle) :
     BaseDataViewModel<RootData>(savedStateHandle), RootContract {
@@ -19,12 +27,3 @@ class RootViewModel @Inject constructor(savedStateHandle: SavedStateHandle) :
         updateData { copy(title = title) }
     }
 }
-
-
-interface RootContract : BaseDataContract<RootData> {
-    fun setTitle(title: String)
-}
-
-data class RootData(
-    val title: String = "Home",
-)

@@ -44,6 +44,4 @@ abstract class BaseDataViewModel<DATA>(val savedStateHandle: SavedStateHandle? =
 
     protected fun navigateWithJson(route: AppRoute, vararg kvs: Pair<String, Any?>) =
         navigate(route.withId(putJsonPayload(*kvs)))
-
-
 }
