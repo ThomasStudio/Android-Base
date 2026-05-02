@@ -23,7 +23,7 @@ fun WebScreen(viewModel: WebContract = hiltViewModel<WebViewModel>()) {
     data?.let {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp)) {
             Text(it.title)
-            WebPage(url = it.url, modifier = Modifier.weight(1f))
+            WebPage(url = it.url, modifier = Modifier.fillMaxSize())
         }
     }
 
