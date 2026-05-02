@@ -15,6 +15,7 @@ interface Navigator {
     )
 
     fun back()
+    fun canBack(): Boolean = true
 }
 
 fun Navigator.navigate(route: String) = navigate(route, null, false, false)
@@ -35,10 +36,11 @@ fun NavHostController.asNavigator(): Navigator = object : Navigator {
     }
 
     override fun back() {
-        if (previousBackStackEntry == null) return
-
-        popBackStack()
+        if (canBack())
+            popBackStack()
     }
+
+    override fun canBack(): Boolean = previousBackStackEntry != null
 }
 
 class DefaultNavigator : Navigator {

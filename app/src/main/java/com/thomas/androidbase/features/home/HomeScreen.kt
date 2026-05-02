@@ -59,7 +59,7 @@ fun HomeScreen(
                 Status.SUCCESS -> {
                     Text("Data loaded successfully! ${uiState.data?.content ?: ""}")
                     Btn("Weibo", viewModel::onClickWeibo)
-                    Btn("News", viewModel::onClickNews)
+                    Btn("Zhihu", viewModel::onClickNews)
                     Btn("Components", viewModel::onClickComponents)
                     Btn("loadingEvent", viewModel::loadingEvent)
                     Btn("Show Message", viewModel::showMessage)
