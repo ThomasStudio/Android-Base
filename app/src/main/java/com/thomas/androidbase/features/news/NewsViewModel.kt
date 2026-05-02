@@ -5,9 +5,7 @@ import com.thomas.androidbase.data.ZhihuNewsItem
 import com.thomas.androidbase.data.repositories.ZhihuRepository
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
-import com.thomas.base.viewmodel.Error
 import com.thomas.base.viewmodel.MessageEvent
-import com.thomas.base.viewmodel.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

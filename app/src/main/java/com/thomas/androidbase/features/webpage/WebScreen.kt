@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.collectUIState
 import com.thomas.components.WebPage
 
