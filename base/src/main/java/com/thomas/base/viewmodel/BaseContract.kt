@@ -8,6 +8,7 @@ interface BaseContract<STATE : UIStateIF> {
     val event: SharedFlow<Event>
 
     fun viewCreated() {}
+    fun onVisible() {}
 
     fun back()
 }

@@ -34,9 +34,6 @@ fun WeiboScreen(
 
     viewModel.HandleEvents(navigator)
 
-    // Call getWeiboHot when the screen is first composed
-    viewModel.ViewCreated()
-
     Column(
         modifier = Modifier
             .fillMaxSize()

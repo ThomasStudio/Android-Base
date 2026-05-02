@@ -70,6 +70,8 @@ fun <STATE : UIStateIF> BaseContract<STATE>.HandleEvents(
 
     // Render loading overlay above content when requested
     LoadingOverlay(visible = loadingState.value)
+    ViewCreated()
+    OnVisible()
 
     LaunchedEffect(this, lifecyclerOwner, navigator) {
         lifecyclerOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -84,6 +86,16 @@ fun <STATE : UIStateIF> BaseContract<STATE>.HandleEvents(
 fun <STATE : UIStateIF> BaseContract<STATE>.ViewCreated() {
     LaunchedEffect(Unit) {
         viewCreated()
+    }
+}
+
+@Composable
+fun <STATE : UIStateIF> BaseContract<STATE>.OnVisible() {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            onVisible()
+        }
     }
 }
 

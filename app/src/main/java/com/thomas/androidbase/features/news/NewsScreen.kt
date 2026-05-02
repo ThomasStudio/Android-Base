@@ -21,7 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.ui.components.LoadingScreen
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
-import com.thomas.base.ui.ViewCreated
 import com.thomas.base.ui.collectUIState
 import com.thomas.base.viewmodel.Status.ERROR
 import com.thomas.base.viewmodel.Status.LOADING
@@ -34,9 +33,6 @@ fun NewsScreen(
 ) {
     val uiState = viewModel.collectUIState()
     val data = uiState.data
-
-    // Call getZhihuHot when the screen is first composed
-    viewModel.ViewCreated()
 
     viewModel.HandleEvents(navigator)
 

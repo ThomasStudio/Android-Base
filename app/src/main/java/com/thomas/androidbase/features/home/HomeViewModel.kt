@@ -15,8 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeContract {
     init {
-        Store.rootVM?.setTitle("Home")
-
         scope.launch {
             delay(1000)
             updateState {
@@ -26,6 +24,10 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
                 )
             }
         }
+    }
+
+    override fun onVisible() {
+        Store.rootVM?.setTitle("Home")
     }
 
     override fun onClickNews() {
