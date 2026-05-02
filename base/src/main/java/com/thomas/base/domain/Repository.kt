@@ -1,5 +1,7 @@
 package com.thomas.base.domain
 
+import kotlin.map
+
 /**
  * Created by thomas on 4/11/2026.
  */
@@ -22,4 +24,8 @@ abstract class Repository {
             errorHandler.toError(e)
         }
     }
+
+    suspend fun <T, R> runLegacy(legacyCall: suspend () -> R, converter: (R) -> Response<T>) =
+        runCall { converter(legacyCall()) }
+
 }

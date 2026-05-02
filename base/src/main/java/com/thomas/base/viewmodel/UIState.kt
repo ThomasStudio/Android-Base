@@ -24,6 +24,7 @@ data class UIState<DATA>(
 }
 
 
+
 interface UIStateIF {
     val status: Status
     val data: Any?
