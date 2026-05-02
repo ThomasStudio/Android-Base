@@ -1,7 +1,9 @@
 package com.thomas.androidbase.features.news
 
 import com.thomas.androidbase.data.ZhihuHot
+import com.thomas.androidbase.data.ZhihuNewsItem
 import com.thomas.androidbase.data.repositories.ZhihuRepository
+import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.Error
 import com.thomas.base.viewmodel.MessageEvent
@@ -26,18 +28,18 @@ class NewsViewModel @Inject constructor(
         scope.launch {
             when (val result = zhihuRepository.getZhihuHot()) {
                 is com.thomas.base.domain.Result.Success -> {
-                    updateState { copy(status = Status.SUCCESS, data = result.data) }
+                    updateData(result.data)
                 }
 
                 is com.thomas.base.domain.Result.Error -> {
-                    updateState {
-                        copy(
-                            status = Status.ERROR,
-                            error = Error(code = result.code, message = result.message ?: "")
-                        )
-                    }
+                    showError(code = result.code, message = result.message ?: "")
                 }
             }
         }
+    }
+
+    override fun onItemClick(item: ZhihuNewsItem) {
+        val data = item.target
+        navigateWithJson(MainRoute.Web, "url" to data.url, "title" to data.question.title)
     }
 }

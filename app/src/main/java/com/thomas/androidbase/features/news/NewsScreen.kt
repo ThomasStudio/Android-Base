@@ -1,5 +1,6 @@
 package com.thomas.androidbase.features.news
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import com.thomas.base.ui.ViewCreated
 import com.thomas.base.ui.collectUIState
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.viewmodel.MessageEvent
+import com.thomas.base.viewmodel.Status.*
 
 @Composable
 fun NewsScreen(
@@ -32,6 +34,7 @@ fun NewsScreen(
     viewModel: NewsContract = hiltViewModel<NewsViewModel>()
 ) {
     val uiState = viewModel.collectUIState()
+    val data = uiState.data
     val context = LocalContext.current
 
     // Call getZhihuHot when the screen is first composed
@@ -63,21 +66,23 @@ fun NewsScreen(
             }
 
             when (uiState.status) {
-                com.thomas.base.viewmodel.Status.LOADING -> {
-                    LoadingScreen()
-                }
+                LOADING -> LoadingScreen()
 
-                com.thomas.base.viewmodel.Status.SUCCESS -> {
-                    uiState.data?.let { zhihuHot ->
+                SUCCESS -> {
+                    data?.let { zhihuHot ->
                         LazyColumn(modifier = Modifier.fillMaxSize()) {
                             items(zhihuHot.data) { item ->
                                 Column(
                                     modifier = Modifier
+                                        .clickable { viewModel.onItemClick(item) }
                                         .fillMaxWidth()
                                         .padding(16.dp),
                                     verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Text(text = item.target.question.title, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = item.target.question.title,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                     Text(text = "Answer Count: ${item.target.question.answerCount}")
                                     Text(text = "Follower Count: ${item.target.question.followerCount}")
                                 }
@@ -91,7 +96,7 @@ fun NewsScreen(
                     }
                 }
 
-                com.thomas.base.viewmodel.Status.ERROR -> {
+                ERROR -> {
                     Text(text = "code: ${uiState.error?.code} Error: ${uiState.error?.message}")
                 }
             }
