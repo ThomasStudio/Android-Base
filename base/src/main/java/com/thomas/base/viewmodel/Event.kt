@@ -15,3 +15,6 @@ data class NavigateEvent(
 
 object BackEvent : Event
 data class MessageEvent(val message: String) : Event
+
+object ShowLoadingIndicatorEvent : Event
+object HideLoadingIndicatorEvent : Event

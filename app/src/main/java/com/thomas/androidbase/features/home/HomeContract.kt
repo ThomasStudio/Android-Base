@@ -1,15 +1,12 @@
 package com.thomas.androidbase.features.home
 
-import com.thomas.base.viewmodel.BaseContract
-import com.thomas.base.viewmodel.Error
-import com.thomas.base.viewmodel.Status
-import com.thomas.base.viewmodel.UIState
-import com.thomas.base.viewmodel.UIStateIF
+import com.thomas.base.viewmodel.BaseDataContract
 
-interface HomeContract : BaseContract<UIState<HomeData>> {
+interface HomeContract : BaseDataContract<HomeData> {
     fun onClickNews()
     fun onClickWeibo()
     fun onClickComponents()
+    fun loadingEvent()
     fun showMessage()
 }
 

@@ -2,7 +2,9 @@ package com.thomas.androidbase.features.home
 
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
+import com.thomas.base.viewmodel.HideLoadingIndicatorEvent
 import com.thomas.base.viewmodel.MessageEvent
+import com.thomas.base.viewmodel.ShowLoadingIndicatorEvent
 import com.thomas.base.viewmodel.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -33,6 +35,14 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
 
     override fun onClickComponents() {
         navigate(MainRoute.Components)
+    }
+
+    override fun loadingEvent() {
+        scope.launch {
+            send(ShowLoadingIndicatorEvent)
+            delay(1000)
+            send(HideLoadingIndicatorEvent)
+        }
     }
 
     override fun showMessage() {

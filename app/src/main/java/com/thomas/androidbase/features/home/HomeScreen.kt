@@ -58,6 +58,9 @@ fun HomeScreen(
                     Button(onClick = viewModel::onClickComponents) {
                         Text("Components")
                     }
+                    Button(onClick = viewModel::loadingEvent) {
+                        Text("loadingEvent")
+                    }
                     Button(onClick = viewModel::showMessage) {
                         Text("Show Message")
                     }
