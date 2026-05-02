@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+         Permit cleartext (HTTP) traffic for all domains. If you want to restrict
+         to specific domains, replace base-config with domain-config entries.
+    -->
+    <base-config cleartextTrafficPermitted="true" />
+
+    <!-- Example of restricting to specific domains:
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">example.com</domain>
+    </domain-config>
+    -->
+</network-security-config>
+

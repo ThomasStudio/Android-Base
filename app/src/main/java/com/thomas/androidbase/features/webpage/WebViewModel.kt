@@ -2,12 +2,15 @@ package com.thomas.androidbase.features.webpage
 
 import androidx.lifecycle.SavedStateHandle
 import com.thomas.base.viewmodel.BaseDataViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * Created by thomas on 5/2/2026.
  */
 
-class WebViewModel(savedStateHandle: SavedStateHandle) :
+@HiltViewModel
+class WebViewModel @Inject constructor(savedStateHandle: SavedStateHandle) :
     BaseDataViewModel<WebData>(savedStateHandle), WebContract {
 
     init {

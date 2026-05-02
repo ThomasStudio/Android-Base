@@ -15,6 +15,7 @@ import com.thomas.androidbase.features.components.ComponentDemoScreen
 import com.thomas.androidbase.features.components.ComponentsScreen
 import com.thomas.androidbase.features.home.HomeScreen
 import com.thomas.androidbase.features.news.NewsScreen
+import com.thomas.androidbase.features.webpage.WebScreen
 import com.thomas.androidbase.features.weibo.WeiboScreen
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.androidbase.ui.components.NavigationBar
@@ -68,6 +69,9 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
         }
         composable(MainRoute.ComponentDemo.withPayload()) {
             ComponentDemoScreen(navigator = navigator)
+        }
+        composable(MainRoute.Web.withPayload()) {
+            WebScreen()
         }
     }
 }

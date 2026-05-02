@@ -1,7 +1,9 @@
 package com.thomas.androidbase.features.weibo
 
+import com.thomas.androidbase.data.HotItem
 import com.thomas.androidbase.data.WeiboHot
 import com.thomas.androidbase.data.repositories.WeiboRepository
+import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.domain.Result
 import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.MessageEvent
@@ -35,4 +37,7 @@ class WeiboViewModel @Inject constructor(
         getWeiboHot()
     }
 
+    override fun onItemClick(item: HotItem) {
+        navigateWithJson(MainRoute.Web, "url" to item.url, "title" to item.title)
+    }
 }
