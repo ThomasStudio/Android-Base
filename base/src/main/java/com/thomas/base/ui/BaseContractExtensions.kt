@@ -40,7 +40,7 @@ fun handleBaseContractEvent(
 }
 
 @Composable
-fun <STATE : UIStateIF> BaseContract<STATE>.collectUiState(): STATE {
+fun <STATE : UIStateIF> BaseContract<STATE>.collectUIState(): STATE {
     val uiState by this.uiState.collectAsStateWithLifecycle()
     return uiState
 }

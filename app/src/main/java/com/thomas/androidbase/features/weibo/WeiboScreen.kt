@@ -23,7 +23,7 @@ import com.thomas.androidbase.ui.components.LoadingScreen
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.ViewCreated
-import com.thomas.base.ui.collectUiState
+import com.thomas.base.ui.collectUIState
 import com.thomas.base.viewmodel.MessageEvent
 
 @Composable
@@ -31,7 +31,7 @@ fun WeiboScreen(
     navigator: Navigator,
     viewModel: WeiboContract = hiltViewModel<WeiboViewModel>()
 ) {
-    val uiState = viewModel.collectUiState()
+    val uiState = viewModel.collectUIState()
     val context = LocalContext.current
 
     viewModel.HandleEvents(navigator = navigator) {

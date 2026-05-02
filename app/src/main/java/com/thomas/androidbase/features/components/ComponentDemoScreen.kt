@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.base.navigation.Navigator
-import com.thomas.base.ui.collectUiState
+import com.thomas.base.ui.collectUIState
 import com.thomas.components.example.ComboBoxDemoScreen
 import com.thomas.components.example.ComboBoxExample
 
@@ -39,7 +39,7 @@ fun ComponentDemoScreen(
     navigator: Navigator,
     viewModel: ComponentsContract = hiltViewModel<ComponentsViewModel>()
 ) {
-    val uiState = viewModel.collectUiState()
+    val uiState = viewModel.collectUIState()
     val componentId = uiState.data?.componentId ?: "unknown"
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
-import com.thomas.base.ui.collectUiState
+import com.thomas.base.ui.collectUIState
 import com.thomas.base.viewmodel.MessageEvent
 import com.thomas.base.viewmodel.Status
 
@@ -27,7 +27,7 @@ fun HomeScreen(
     navigator: Navigator,
     viewModel: HomeContract = hiltViewModel<HomeViewModel>()
 ) {
-    val uiState = viewModel.collectUiState()
+    val uiState = viewModel.collectUIState()
     val context = LocalContext.current
 
     viewModel.HandleEvents(navigator = navigator) {
