@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -16,17 +15,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.ui.components.LoadingScreen
 import com.thomas.base.navigation.Navigator
+import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.ViewCreated
 import com.thomas.base.ui.collectUIState
-import com.thomas.base.ui.HandleEvents
-import com.thomas.base.viewmodel.MessageEvent
-import com.thomas.base.viewmodel.Status.*
+import com.thomas.base.viewmodel.Status.ERROR
+import com.thomas.base.viewmodel.Status.LOADING
+import com.thomas.base.viewmodel.Status.SUCCESS
 
 @Composable
 fun NewsScreen(
@@ -35,22 +34,11 @@ fun NewsScreen(
 ) {
     val uiState = viewModel.collectUIState()
     val data = uiState.data
-    val context = LocalContext.current
 
     // Call getZhihuHot when the screen is first composed
     viewModel.ViewCreated()
 
-    viewModel.HandleEvents(navigator = navigator) {
-        when (it) {
-            is MessageEvent -> {
-                android.widget.Toast.makeText(
-                    context,
-                    it.message,
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
+    viewModel.HandleEvents()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -60,10 +48,7 @@ fun NewsScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "News Screen")
-            Button(onClick = viewModel::showMessage) {
-                Text("Show Message")
-            }
+            Text(text = "News")
 
             when (uiState.status) {
                 LOADING -> LoadingScreen()

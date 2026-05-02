@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -16,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,7 +23,7 @@ import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.ViewCreated
 import com.thomas.base.ui.collectUIState
-import com.thomas.base.viewmodel.MessageEvent
+import com.thomas.base.viewmodel.Status.*
 
 @Composable
 fun WeiboScreen(
@@ -33,19 +31,8 @@ fun WeiboScreen(
     viewModel: WeiboContract = hiltViewModel<WeiboViewModel>()
 ) {
     val uiState = viewModel.collectUIState()
-    val context = LocalContext.current
 
-    viewModel.HandleEvents(navigator = navigator) {
-        when (it) {
-            is MessageEvent -> {
-                android.widget.Toast.makeText(
-                    context,
-                    it.message,
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
+    viewModel.HandleEvents()
 
     // Call getWeiboHot when the screen is first composed
     viewModel.ViewCreated()
@@ -58,17 +45,14 @@ fun WeiboScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Weibo Screen")
-            Button(onClick = viewModel::showMessage) {
-                Text("Show Message")
-            }
+            Text(text = "Weibo")
 
             when (uiState.status) {
-                com.thomas.base.viewmodel.Status.LOADING -> {
+                LOADING -> {
                     LoadingScreen()
                 }
 
-                com.thomas.base.viewmodel.Status.SUCCESS -> {
+                SUCCESS -> {
                     uiState.data?.let { weiboHot ->
                         LazyColumn(modifier = Modifier.fillMaxSize()) {
                             items(weiboHot.data) { item ->
@@ -95,7 +79,7 @@ fun WeiboScreen(
                     }
                 }
 
-                com.thomas.base.viewmodel.Status.ERROR -> {
+                ERROR -> {
                     Text(text = "Error: ${uiState.error?.message}")
                 }
             }
