@@ -35,6 +35,8 @@ fun NavHostController.asNavigator(): Navigator = object : Navigator {
     }
 
     override fun back() {
+        if (previousBackStackEntry == null) return
+
         popBackStack()
     }
 }

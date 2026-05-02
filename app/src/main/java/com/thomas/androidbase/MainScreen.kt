@@ -1,16 +1,9 @@
 package com.thomas.androidbase
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +17,7 @@ import com.thomas.androidbase.features.home.HomeScreen
 import com.thomas.androidbase.features.news.NewsScreen
 import com.thomas.androidbase.features.weibo.WeiboScreen
 import com.thomas.androidbase.navigation.MainRoute
+import com.thomas.androidbase.ui.components.NavigationBar
 import com.thomas.base.navigation.DefaultNavigator
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.navigation.asNavigator
@@ -33,11 +27,13 @@ import com.thomas.base.navigation.asNavigator
  */
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(innerPadding: PaddingValues, navController: NavHostController) {
     val navigator = navController.asNavigator()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding),
         topBar = {
             NavigationBar(navigator)
         }
@@ -52,22 +48,6 @@ fun MainScreen(navController: NavHostController) {
     }
 }
 
-@Composable
-fun NavigationBar(navigator: Navigator) {
-    NavigationBar {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            IconButton({ navigator.back() }) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-        }
-    }
-
-}
 
 @Composable
 fun MainContent(navController: NavHostController, navigator: Navigator) {
