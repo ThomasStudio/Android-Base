@@ -19,7 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.ui.components.LoadingScreen
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
-import com.thomas.base.ui.ViewCreated
 import com.thomas.base.ui.collectUIState
 import com.thomas.base.viewmodel.Status.ERROR
 import com.thomas.base.viewmodel.Status.LOADING
@@ -39,22 +38,21 @@ fun WeiboScreen(
             .fillMaxSize()
             .padding(horizontal = 5.dp)
     ) {
-        Text(text = "Weibo")
-
         when (uiState.status) {
-            LOADING -> {
-                LoadingScreen()
-            }
+            LOADING -> LoadingScreen()
+            ERROR -> Text(text = "Error: ${uiState.error?.message}")
 
             SUCCESS -> {
                 uiState.data?.let { weiboHot ->
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
                         items(weiboHot.data) { item ->
                             Column(
                                 modifier = Modifier
                                     .clickable { viewModel.onItemClick(item) }
                                     .fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Text(
                                     text = "${item.index}. ${item.title}",
@@ -70,10 +68,6 @@ fun WeiboScreen(
                         }
                     }
                 }
-            }
-
-            ERROR -> {
-                Text(text = "Error: ${uiState.error?.message}")
             }
         }
     }

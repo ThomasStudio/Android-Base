@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.news
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,16 +38,20 @@ fun NewsScreen(
     viewModel.HandleEvents(navigator)
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 5.dp),
     ) {
-        Text(text = "News")
-
         when (uiState.status) {
             LOADING -> LoadingScreen()
+            ERROR -> Text(text = "code: ${uiState.error?.code} Error: ${uiState.error?.message}")
 
             SUCCESS -> {
                 data?.let { zhihuHot ->
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(5.dp),
+                    ) {
                         items(zhihuHot.data) { item ->
                             Column(
                                 modifier = Modifier
@@ -71,10 +76,6 @@ fun NewsScreen(
                         }
                     }
                 }
-            }
-
-            ERROR -> {
-                Text(text = "code: ${uiState.error?.code} Error: ${uiState.error?.message}")
             }
         }
     }
