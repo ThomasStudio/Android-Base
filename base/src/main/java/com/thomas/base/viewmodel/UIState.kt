@@ -18,11 +18,10 @@ data class UIState<DATA>(
         copy(status = Status.ERROR, error = Error(code, message))
 
     fun toData(reducer: DATA.() -> DATA) =
-        copy(status = Status.SUCCESS, data = data?.let(reducer), error = null)
+        copy(status = Status.SUCCESS, data = data?.let(reducer))
 
     fun toData(data: DATA) = toData { data }
 }
-
 
 
 interface UIStateIF {

@@ -21,7 +21,7 @@ class WeiboViewModel @Inject constructor(
         scope.launch {
             when (val result = weiboRepository.getWeiboHot()) {
                 is Result.Success -> {
-                    updateData { result.data }
+                    updateData(result.data)
                 }
 
                 is Result.Error -> {
