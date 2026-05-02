@@ -1,5 +1,6 @@
 package com.thomas.androidbase.features.news
 
+import com.thomas.androidbase.Store
 import com.thomas.androidbase.data.ZhihuHot
 import com.thomas.androidbase.data.ZhihuNewsItem
 import com.thomas.androidbase.data.repositories.ZhihuRepository
@@ -19,6 +20,7 @@ class NewsViewModel @Inject constructor(
     }
 
     override fun viewCreated() {
+        Store.rootVM?.setTitle("News")
         getZhihuHot()
     }
 

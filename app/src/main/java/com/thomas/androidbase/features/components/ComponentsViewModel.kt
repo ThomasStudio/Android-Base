@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.components
 
 import androidx.lifecycle.SavedStateHandle
+import com.thomas.androidbase.Store
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,10 @@ class ComponentsViewModel @Inject constructor(
     override fun initialData(): ComponentsData = ComponentsData()
 
     init {
+        Store.rootVM?.setTitle("Components")
+
         payload<ComponentId>()?.let {
+            Store.rootVM?.setTitle(it.componentId)
             updateData { copy(componentId = it.componentId) }
         }
 

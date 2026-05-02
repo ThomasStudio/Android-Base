@@ -1,5 +1,6 @@
 package com.thomas.androidbase.features.weibo
 
+import com.thomas.androidbase.Store
 import com.thomas.androidbase.data.HotItem
 import com.thomas.androidbase.data.WeiboHot
 import com.thomas.androidbase.data.repositories.WeiboRepository
@@ -34,6 +35,7 @@ class WeiboViewModel @Inject constructor(
     }
 
     override fun viewCreated() {
+        Store.rootVM?.setTitle("Weibo Hot")
         getWeiboHot()
     }
 

@@ -1,5 +1,6 @@
 package com.thomas.androidbase.features.home
 
+import com.thomas.androidbase.Store
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.HideLoadingIndicatorEvent
@@ -14,6 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeContract {
     init {
+        Store.rootVM?.setTitle("Home")
+
         scope.launch {
             delay(1000)
             updateState {

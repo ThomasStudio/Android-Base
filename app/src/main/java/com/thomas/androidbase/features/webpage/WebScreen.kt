@@ -21,8 +21,12 @@ fun WebScreen(viewModel: WebContract = hiltViewModel<WebViewModel>()) {
     val data = uiState.data
 
     data?.let {
-        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp)) {
-            Text(it.title)
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 5.dp)) {
+            it.title?.let { title ->
+                Text(text = title)
+            }
             WebPage(url = it.url, modifier = Modifier.fillMaxSize())
         }
     }

@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,21 +23,28 @@ import com.thomas.androidbase.ui.components.NavigationBar
 import com.thomas.base.navigation.DefaultNavigator
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.navigation.asNavigator
+import com.thomas.base.ui.collectUIState
 
 /**
  * Created by thomas on 4/11/2026.
  */
 
 @Composable
-fun MainScreen(innerPadding: PaddingValues, navController: NavHostController) {
+fun MainScreen(
+    innerPadding: PaddingValues, navController: NavHostController,
+    viewModel: RootContract = hiltViewModel<RootViewModel>()
+) {
+    val uiState = viewModel.collectUIState()
+    val data = uiState.data
     val navigator = navController.asNavigator()
+    Store.rootVM = viewModel
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding),
         topBar = {
-            NavigationBar(navigator)
+            NavigationBar(navigator, title = data?.title ?: "")
         }
     ) { innerPadding ->
         Box(

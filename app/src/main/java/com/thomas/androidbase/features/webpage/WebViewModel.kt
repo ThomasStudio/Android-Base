@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.webpage
 
 import androidx.lifecycle.SavedStateHandle
+import com.thomas.androidbase.Store
 import com.thomas.base.viewmodel.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +16,10 @@ class WebViewModel @Inject constructor(savedStateHandle: SavedStateHandle) :
 
     init {
         payload<WebData>()?.let {
-            updateData(it)
+            it.title?.let { title ->
+                Store.rootVM?.setTitle(title)
+            }
+            updateData(it.copy(title = null))
         }
     }
 

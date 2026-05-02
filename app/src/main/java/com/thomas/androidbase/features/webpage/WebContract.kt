@@ -9,5 +9,5 @@ import com.thomas.base.viewmodel.BaseDataContract
 interface WebContract : BaseDataContract<WebData>
 data class WebData(
     val url: String,
-    val title: String,
+    val title: String? = null,
 )
