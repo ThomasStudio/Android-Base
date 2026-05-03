@@ -12,10 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.features.components.ButtonExample
 import com.thomas.androidbase.features.components.InputExample
+import com.thomas.base.navigation.DefaultNavigator
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.collectUIState
@@ -76,4 +78,10 @@ fun Btn(example: Examples, viewModel: ExampleContract) {
     OutlinedButton({ viewModel.onClickExample(example) }) {
         Text(example.name)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ExampleScreenPreview() {
+    ExampleScreen(DefaultNavigator(), FakeExampleContract())
 }

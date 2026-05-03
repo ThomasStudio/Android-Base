@@ -85,19 +85,5 @@ fun Btn(text: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    val contract = object : DefaultContract<HomeData>(), HomeContract {
-        override var initState = UIState(
-            status = Status.SUCCESS,
-            data = HomeData()
-        )
-
-        override fun onClickNews() {}
-        override fun onClickWeibo() {}
-        override fun onClickComponents() {}
-        override fun loadingEvent() {}
-        override fun showMessage() {}
-        override fun onClickExamples() {}
-    }
-
-    HomeScreen(navigator = DefaultNavigator(), contract)
+    HomeScreen(navigator = DefaultNavigator(), FakeHomeContract())
 }

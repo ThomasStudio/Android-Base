@@ -1,15 +1,11 @@
 package com.thomas.base.viewmodel
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 interface BaseContract<STATE : UIStateIF> {
     var initialized: Boolean
@@ -38,25 +34,31 @@ interface BaseDataContract<DATA> : BaseContract<UIState<DATA>>
 
 //for unit test and preview
 open class DefaultContract<DATA> : BaseDataContract<DATA> {
-    open val initState = UIState<DATA>()
     override var initialized: Boolean = true
 
-    // Use a controlled scope for event emissions instead of GlobalScope
-    open val eventScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
+    protected open fun initialData(): DATA? = null
+    protected open fun initialStatus() = Status.SUCCESS
+    protected fun initialState() = UIState(status = initialStatus(), data = initialData())
+    override fun back() {}
 
-    private val _uiState by lazy { MutableStateFlow(initState) }
+    private val _uiState by lazy { MutableStateFlow(initialState()) }
     override val uiState: StateFlow<UIState<DATA>>
         get() = _uiState
 
     private val _event = MutableSharedFlow<Event>(extraBufferCapacity = 1)
     override val event: SharedFlow<Event> = _event.asSharedFlow()
 
-    override fun back() = send(BackEvent)
+    protected fun updateData(data: DATA) =
+        updateState { copy(status = Status.SUCCESS, data = data) }
 
-    protected fun send(viewEvent: Event) {
-        if (_event.tryEmit(viewEvent)) return
+    protected fun updateData(reducer: DATA.() -> DATA) = updateState { toData(reducer) }
 
-        // Emit from a local scope to avoid GlobalScope usage
-        eventScope.launch { _event.emit(viewEvent) }
+    protected fun showLoading() = updateState { toLoading() }
+    protected fun showError(code: Int = -1, message: String = "") =
+        updateState { toError(code, message) }
+
+    protected fun updateState(reducer: UIState<DATA>.() -> UIState<DATA>) {
+        _uiState.update(reducer)
     }
+
 }

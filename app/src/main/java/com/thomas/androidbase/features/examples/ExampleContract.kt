@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.examples
 
 import com.thomas.base.viewmodel.BaseDataContract
+import com.thomas.base.viewmodel.DefaultContract
 
 /**
  * Created by thomas on 5/3/2026.
@@ -26,3 +27,9 @@ data class ExampleItem(
     val name: String,
     val description: String
 )
+
+class FakeExampleContract() : DefaultContract<ExampleData>(), ExampleContract {
+    override fun initialData() = ExampleData()
+    override fun onClickExample(example: Examples) = updateData { copy(currentExample = example) }
+    override fun back() = updateData { copy(currentExample = null) }
+}
