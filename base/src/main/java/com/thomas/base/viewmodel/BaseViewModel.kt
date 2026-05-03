@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
  */
 
 abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STATE> {
+    override var initialized: Boolean = false
+    protected abstract fun initialState(): STATE
 
     protected open val scope: CoroutineScope
         get() = viewModelScope
@@ -28,10 +30,15 @@ abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STAT
     private val _event = MutableSharedFlow<Event>(extraBufferCapacity = 1)
     override val event: SharedFlow<Event> = _event.asSharedFlow()
 
-    protected abstract fun initialState(): STATE
-
     override fun back() {
         send(BackEvent)
+    }
+
+    override fun onViewCreated(initCall: () -> Unit) {
+        if (initialized) return
+
+        initialized = true
+        initCall.invoke()
     }
 
     protected fun updateState(state: STATE) {

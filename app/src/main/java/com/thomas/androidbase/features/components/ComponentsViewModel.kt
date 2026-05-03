@@ -67,7 +67,7 @@ class ComponentsViewModel @Inject constructor(
         "componentId" to componentId, "test" to "test"
     )
 
-    override fun viewCreated() {
+    override fun onViewInit() {
         Store.rootVM?.setTitle("Components")
     }
 }

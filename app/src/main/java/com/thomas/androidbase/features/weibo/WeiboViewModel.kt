@@ -34,7 +34,7 @@ class WeiboViewModel @Inject constructor(
         }
     }
 
-    override fun viewCreated() {
+    override fun onViewInit() {
         Store.rootVM?.setTitle("Weibo Hot")
         getWeiboHot()
     }

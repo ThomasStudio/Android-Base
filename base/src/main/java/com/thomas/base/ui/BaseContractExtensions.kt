@@ -96,7 +96,7 @@ fun <STATE : UIStateIF> BaseContract<STATE>.HandleEvents(
 @Composable
 fun <STATE : UIStateIF> BaseContract<STATE>.ViewCreated() {
     LaunchedEffect(Unit) {
-        viewCreated()
+        onViewCreated()
     }
 }
 
