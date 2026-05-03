@@ -16,4 +16,8 @@ class ExampleViewModel @Inject constructor() : BaseDataViewModel<ExampleData>(),
     override fun onVisible() {
         Store.rootVM?.setTitle(currentData()?.title ?: "")
     }
+
+    override fun onClickExample(example: Examples) {
+        updateData { copy(currentExample = example) }
+    }
 }

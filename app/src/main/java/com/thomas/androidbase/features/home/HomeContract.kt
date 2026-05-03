@@ -8,6 +8,7 @@ interface HomeContract : BaseDataContract<HomeData> {
     fun onClickComponents()
     fun loadingEvent()
     fun showMessage()
+    fun onClickExamples()
 }
 
 data class HomeData(

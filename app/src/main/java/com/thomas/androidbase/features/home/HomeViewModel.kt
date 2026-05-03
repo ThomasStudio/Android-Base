@@ -53,4 +53,8 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
     override fun showMessage() {
         sendMessage("Hello from HomeViewModel")
     }
+
+    override fun onClickExamples() {
+        navigate(MainRoute.Examples)
+    }
 }

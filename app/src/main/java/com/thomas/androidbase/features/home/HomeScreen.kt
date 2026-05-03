@@ -63,6 +63,7 @@ fun HomeScreen(
                     Text(uiState.data?.content ?: "", style = Style.t.blue().f10().medium())
                     Btn("Weibo", viewModel::onClickWeibo)
                     Btn("Zhihu", viewModel::onClickNews)
+                    Btn("Examples", viewModel::onClickExamples)
                     Btn("Components", viewModel::onClickComponents)
                     Btn("loadingEvent", viewModel::loadingEvent)
                     Btn("Show Message", viewModel::showMessage)
@@ -95,6 +96,7 @@ fun HomeScreenPreview() {
         override fun onClickComponents() {}
         override fun loadingEvent() {}
         override fun showMessage() {}
+        override fun onClickExamples() {}
     }
 
     HomeScreen(navigator = DefaultNavigator(), contract)

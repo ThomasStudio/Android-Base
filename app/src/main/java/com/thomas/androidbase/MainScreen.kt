@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.thomas.androidbase.features.components.ComponentDemoScreen
 import com.thomas.androidbase.features.components.ComponentsScreen
+import com.thomas.androidbase.features.examples.ExampleScreen
 import com.thomas.androidbase.features.home.HomeScreen
 import com.thomas.androidbase.features.news.NewsScreen
 import com.thomas.androidbase.features.webpage.WebScreen
@@ -80,6 +81,9 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
         }
         composable(MainRoute.Web.withPayload()) {
             WebScreen()
+        }
+        composable(MainRoute.Examples.path) {
+            ExampleScreen(navigator = navigator)
         }
     }
 }

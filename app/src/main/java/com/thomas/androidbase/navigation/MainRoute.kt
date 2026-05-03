@@ -11,4 +11,5 @@ sealed class MainRoute(override val path: String) : AppRoute() {
     object ComponentDemo : MainRoute("component-demo")
 
     object Web : MainRoute("Web")
+    object Examples : MainRoute("examples")
 }
