@@ -11,5 +11,5 @@ interface HomeContract : BaseDataContract<HomeData> {
 }
 
 data class HomeData(
-    val content: String = "hello world"
+    val content: String = "Android Base"
 )

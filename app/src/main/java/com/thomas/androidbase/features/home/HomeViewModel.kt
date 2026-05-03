@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
         }
     }
 
-    override fun onViewInit() {
+    override fun onVisible() {
         Store.rootVM?.setTitle("Home")
     }
 

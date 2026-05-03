@@ -34,13 +34,6 @@ abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STAT
         send(BackEvent)
     }
 
-    override fun onViewCreated(initCall: () -> Unit) {
-        if (initialized) return
-
-        initialized = true
-        initCall.invoke()
-    }
-
     protected fun updateState(state: STATE) {
         updateState { state }
     }

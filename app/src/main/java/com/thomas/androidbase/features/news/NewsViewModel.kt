@@ -20,8 +20,11 @@ class NewsViewModel @Inject constructor(
     }
 
     override fun onViewInit() {
-        Store.rootVM?.setTitle("Zhihu")
         getZhihuHot()
+    }
+
+    override fun onVisible() {
+        Store.rootVM?.setTitle("Zhihu")
     }
 
     fun getZhihuHot() {

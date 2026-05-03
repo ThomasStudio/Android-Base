@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.thomas.base.ui.*
+import com.thomas.base.viewmodel.DefaultContract
 
 @Composable
 fun HomeScreen(
@@ -59,7 +60,7 @@ fun HomeScreen(
                 Status.LOADING -> CircularProgressIndicator(modifier = Modifier.size(50.dp))
                 Status.ERROR -> Text("Error loading data.")
                 Status.SUCCESS -> {
-                    Text("Data loaded successfully! ${uiState.data?.content ?: ""}")
+                    Text(uiState.data?.content ?: "", style = Style.t.blue().f10().medium())
                     Btn("Weibo", viewModel::onClickWeibo)
                     Btn("Zhihu", viewModel::onClickNews)
                     Btn("Components", viewModel::onClickComponents)
@@ -83,23 +84,17 @@ fun Btn(text: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    val contract = object : HomeContract {
+    val contract = object : DefaultContract<HomeData>(), HomeContract {
+        override var initState = UIState(
+            status = Status.SUCCESS,
+            data = HomeData()
+        )
+
         override fun onClickNews() {}
         override fun onClickWeibo() {}
         override fun onClickComponents() {}
         override fun loadingEvent() {}
         override fun showMessage() {}
-        override val uiState: StateFlow<UIState<HomeData>>
-            get() = MutableStateFlow(
-                UIState(
-                    status = Status.SUCCESS,
-                    data = HomeData(content = "Preview Data")
-                )
-            )
-        override val event: SharedFlow<Event>
-            get() = MutableSharedFlow()
-
-        override fun back() {}
     }
 
     HomeScreen(navigator = DefaultNavigator(), contract)
