@@ -3,12 +3,14 @@ package com.thomas.androidbase.features.examples
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,8 +59,11 @@ fun ExampleList(data: ExampleData?, viewModel: ExampleContract, modifier: Modifi
     if (data?.currentExample != null) return
 
     LazyColumn(
-        modifier = modifier.padding(horizontal = 5.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        modifier = modifier
+            .padding(horizontal = 5.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(Examples.entries) { item ->
             Btn(item, viewModel)
