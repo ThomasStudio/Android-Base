@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.examples
 
 import com.thomas.androidbase.Store
+import com.thomas.androidbase.ui.components.NavigationData
 import com.thomas.base.viewmodel.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +16,7 @@ class ExampleViewModel @Inject constructor() : BaseDataViewModel<ExampleData>(),
 
     override fun onViewInit() {
         // hide home navigation bar
-        Store.rootVM?.toggleNavigationBar(false)
+        Store.rootVM?.useChildNavigation(NavigationData("Examples", ::back, true))
     }
 
     override fun onVisible() {
@@ -28,7 +29,7 @@ class ExampleViewModel @Inject constructor() : BaseDataViewModel<ExampleData>(),
     }
 
     override fun onCleared() {
-        Store.rootVM?.toggleNavigationBar(true)
+        Store.rootVM?.clearChildNavigation()
         super.onCleared()
     }
 
@@ -41,8 +42,7 @@ class ExampleViewModel @Inject constructor() : BaseDataViewModel<ExampleData>(),
     }
 
     private fun updateTitle() {
-        currentData()?.currentExample?.let {
-            updateData { copy(title = it.info.name) }
-        } ?: updateData { copy(title = "Examples") }
+        val title = currentData()?.currentExample?.info?.name ?: "Examples"
+        Store.rootVM?.useChildNavigation(NavigationData(title, ::back, true))
     }
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.features.components.ButtonExample
 import com.thomas.androidbase.features.components.InputExample
-import com.thomas.androidbase.ui.components.NavigationBar
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.collectUIState
@@ -37,17 +35,11 @@ fun ExampleScreen(
 
     val data = uiState.data
 
-    Scaffold(
-        topBar = {
-            NavigationBar(viewModel::back, title = data?.title ?: "Examples")
+    data?.currentExample?.let {
+        Box(modifier = Modifier) {
+            Example(it)
         }
-    ) { paddingValues ->
-        data?.currentExample?.let {
-            Box(modifier = Modifier.padding(paddingValues)) {
-                Example(it)
-            }
-        } ?: ExampleList(data, viewModel, Modifier.padding(paddingValues))
-    }
+    } ?: ExampleList(data, viewModel, Modifier)
 }
 
 @Composable

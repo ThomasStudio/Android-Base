@@ -1,7 +1,6 @@
 package com.thomas.androidbase
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -21,7 +20,7 @@ import com.thomas.androidbase.features.webpage.WebScreen
 import com.thomas.androidbase.features.weibo.WeiboScreen
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.androidbase.ui.components.NavigationBar
-import com.thomas.base.navigation.DefaultNavigator
+import com.thomas.androidbase.ui.components.NavigationData
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.navigation.asNavigator
 import com.thomas.base.ui.HandleEvents
@@ -33,7 +32,8 @@ import com.thomas.base.ui.collectUIState
 
 @Composable
 fun MainScreen(
-    innerPadding: PaddingValues, navController: NavHostController,
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
     viewModel: RootContract = hiltViewModel<RootViewModel>()
 ) {
     val uiState = viewModel.collectUIState()
@@ -44,12 +44,16 @@ fun MainScreen(
     viewModel.HandleEvents(navigator)
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+        modifier = modifier.fillMaxSize(),
         topBar = {
-            if (data?.showNavigationBar == true) {
-                NavigationBar(viewModel::back, title = data.title)
+            data?.let {
+                NavigationBar(
+                    it.childNavigation ?: NavigationData(
+                        it.title,
+                        viewModel::back,
+                        navigator.canBack()
+                    )
+                )
             }
         }
     ) { innerPadding ->
@@ -97,5 +101,5 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
 @Preview(showBackground = true)
 @Composable
 fun NavigationBarPreview() {
-    NavigationBar({}, "Title")
+    NavigationBar(NavigationData("Title", {}, true))
 }
