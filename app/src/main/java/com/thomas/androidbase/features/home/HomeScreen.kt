@@ -3,6 +3,7 @@ package com.thomas.androidbase.features.home
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import com.thomas.base.ui.*
 
 @Composable
 fun HomeScreen(
@@ -51,7 +53,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (uiState.status) {
                 Status.LOADING -> CircularProgressIndicator(modifier = Modifier.size(50.dp))
@@ -71,9 +73,11 @@ fun HomeScreen(
 
 @Composable
 fun Btn(text: String, onClick: () -> Unit) {
+    Spacer(Modifier.size(5.dp))
     OutlinedButton(onClick = onClick, shape = RoundedCornerShape(0.dp)) {
-        Text(text)
+        Text(text, style = Style.t.red().f8().medium())
     }
+    Spacer(Modifier.size(5.dp))
 }
 
 @Preview(showBackground = true)
@@ -86,7 +90,12 @@ fun HomeScreenPreview() {
         override fun loadingEvent() {}
         override fun showMessage() {}
         override val uiState: StateFlow<UIState<HomeData>>
-            get() = MutableStateFlow(UIState(status = Status.SUCCESS, data = HomeData(content = "Preview Data")))
+            get() = MutableStateFlow(
+                UIState(
+                    status = Status.SUCCESS,
+                    data = HomeData(content = "Preview Data")
+                )
+            )
         override val event: SharedFlow<Event>
             get() = MutableSharedFlow()
 
