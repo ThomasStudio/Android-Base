@@ -11,7 +11,7 @@ interface ExampleContract : BaseDataContract<ExampleData> {
 }
 
 data class ExampleData(
-    val title: String = "Component examples",
+    val title: String = "Examples",
     val currentExample: Examples? = null,
 )
 

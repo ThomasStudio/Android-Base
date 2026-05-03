@@ -18,19 +18,20 @@ import androidx.compose.ui.unit.dp
 import com.thomas.base.navigation.Navigator
 
 @Composable
-fun NavigationBar(navigator: Navigator, title: String = "") {
+fun NavigationBar(onBack: () -> Unit, title: String = "") {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (navigator.canBack()) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                modifier = Modifier.clickable { navigator.back() }.padding(4.dp)
-            )
-        }
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = null,
+            modifier = Modifier
+                .clickable { onBack() }
+                .padding(4.dp)
+        )
+        
         Spacer(Modifier.width(2.dp))
         Text(text = title, maxLines = 1)
         Spacer(Modifier.weight(1f))

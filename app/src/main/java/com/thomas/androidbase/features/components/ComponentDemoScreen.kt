@@ -75,12 +75,6 @@ fun ComponentDemoScreen(
 
 @Composable
 fun ButtonExample() {
-    Text(
-        text = "Button Demo",
-        style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
-        modifier = Modifier.padding(horizontal = 16.dp)
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

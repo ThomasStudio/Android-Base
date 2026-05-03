@@ -24,6 +24,7 @@ import com.thomas.androidbase.ui.components.NavigationBar
 import com.thomas.base.navigation.DefaultNavigator
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.navigation.asNavigator
+import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.collectUIState
 
 /**
@@ -40,12 +41,16 @@ fun MainScreen(
     val navigator = navController.asNavigator()
     Store.rootVM = viewModel
 
+    viewModel.HandleEvents(navigator)
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding),
         topBar = {
-            NavigationBar(navigator, title = data?.title ?: "")
+            if (data?.showNavigationBar == true) {
+                NavigationBar(viewModel::back, title = data.title)
+            }
         }
     ) { innerPadding ->
         Box(
@@ -92,5 +97,5 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
 @Preview(showBackground = true)
 @Composable
 fun NavigationBarPreview() {
-    NavigationBar(DefaultNavigator())
+    NavigationBar({}, "Title")
 }

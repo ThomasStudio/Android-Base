@@ -1,5 +1,6 @@
 package com.thomas.androidbase.features.examples
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.thomas.androidbase.features.components.ButtonExample
 import com.thomas.androidbase.features.components.InputExample
+import com.thomas.androidbase.ui.components.NavigationBar
 import com.thomas.base.navigation.Navigator
 import com.thomas.base.ui.HandleEvents
 import com.thomas.base.ui.collectUIState
@@ -29,17 +31,22 @@ fun ExampleScreen(
     navigator: Navigator,
     viewModel: ExampleContract = hiltViewModel<ExampleViewModel>()
 ) {
+    BackHandler { viewModel.back() }
     val uiState = viewModel.collectUIState()
     viewModel.HandleEvents(navigator)
 
     val data = uiState.data
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        topBar = {
+            NavigationBar(viewModel::back, title = data?.title ?: "Examples")
+        }
+    ) { paddingValues ->
         data?.currentExample?.let {
             Box(modifier = Modifier.padding(paddingValues)) {
                 Example(it)
             }
-        } ?: ExampleList(data, Modifier.padding(paddingValues))
+        } ?: ExampleList(data, viewModel, Modifier.padding(paddingValues))
     }
 }
 
@@ -54,7 +61,7 @@ fun Example(example: Examples) {
 }
 
 @Composable
-fun ExampleList(data: ExampleData?, modifier: Modifier = Modifier) {
+fun ExampleList(data: ExampleData?, viewModel: ExampleContract, modifier: Modifier = Modifier) {
     if (data?.currentExample != null) return
 
     LazyColumn(
@@ -62,13 +69,13 @@ fun ExampleList(data: ExampleData?, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(Examples.entries) { item ->
-            Btn(item)
+            Btn(item, viewModel)
         }
     }
 }
 
 @Composable
-fun Btn(example: Examples, viewModel: ExampleContract = hiltViewModel<ExampleViewModel>()) {
+fun Btn(example: Examples, viewModel: ExampleContract) {
     OutlinedButton({ viewModel.onClickExample(example) }) {
         Text(example.name)
     }

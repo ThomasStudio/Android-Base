@@ -12,10 +12,12 @@ import javax.inject.Inject
 
 interface RootContract : BaseDataContract<RootData> {
     fun setTitle(title: String)
+    fun toggleNavigationBar(show: Boolean)
 }
 
 data class RootData(
     val title: String = "Home",
+    val showNavigationBar: Boolean = true
 )
 
 @HiltViewModel
@@ -25,5 +27,9 @@ class RootViewModel @Inject constructor(savedStateHandle: SavedStateHandle) :
 
     override fun setTitle(title: String) {
         updateData { copy(title = title) }
+    }
+
+    override fun toggleNavigationBar(show: Boolean) {
+        updateData { copy(showNavigationBar = show) }
     }
 }

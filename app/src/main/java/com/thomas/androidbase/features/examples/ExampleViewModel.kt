@@ -13,11 +13,36 @@ import javax.inject.Inject
 class ExampleViewModel @Inject constructor() : BaseDataViewModel<ExampleData>(), ExampleContract {
     override fun initialData() = ExampleData()
 
+    override fun onViewInit() {
+        // hide home navigation bar
+        Store.rootVM?.toggleNavigationBar(false)
+    }
+
     override fun onVisible() {
-        Store.rootVM?.setTitle(currentData()?.title ?: "")
+        updateTitle()
     }
 
     override fun onClickExample(example: Examples) {
         updateData { copy(currentExample = example) }
+        updateTitle()
+    }
+
+    override fun onCleared() {
+        Store.rootVM?.toggleNavigationBar(true)
+        super.onCleared()
+    }
+
+    override fun back() {
+        currentData()?.currentExample?.let {
+            updateData { copy(currentExample = null) }
+        } ?: super.back()
+
+        updateTitle()
+    }
+
+    private fun updateTitle() {
+        currentData()?.currentExample?.let {
+            updateData { copy(title = it.info.name) }
+        } ?: updateData { copy(title = "Examples") }
     }
 }
