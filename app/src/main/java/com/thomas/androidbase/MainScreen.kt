@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.thomas.androidbase.features.booking.BookingScreen
 import com.thomas.androidbase.features.components.ComponentDemoScreen
 import com.thomas.androidbase.features.components.ComponentsScreen
 import com.thomas.androidbase.features.examples.ExampleScreen
@@ -81,6 +82,9 @@ fun MainContent(navController: NavHostController, navigator: Navigator) {
         }
         composable(MainRoute.News.path) {
             NewsScreen(navigator = navigator)
+        }
+        composable(MainRoute.Booking.path) {
+            BookingScreen(navigator = navigator)
         }
         composable(MainRoute.Components.path) {
             ComponentsScreen(navigator = navigator)
