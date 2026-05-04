@@ -27,6 +27,7 @@ import com.thomas.base.ui.collectUIState
 import java.util.Calendar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import com.thomas.base.ui.HandleEvents
 
 /**
  * Booking screen showing a 4-step flow: LOCATION, DATETIME, ROOM, CONFIRM
@@ -39,6 +40,7 @@ fun BookingScreen(
 ) {
     // UI state
     val uiState = viewModel.collectUIState()
+    viewModel.HandleEvents(navigator)
     val data = uiState.data
 
     // observe current step from ViewModel's step flow

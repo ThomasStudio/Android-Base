@@ -10,8 +10,8 @@ import javax.inject.Inject
 interface BookingRepository {
     suspend fun getCountries(): Result<List<Country>>
     suspend fun getBuildings(countryId: String): Result<List<Building>>
-    suspend fun getFloors(countryId: String, buildingId: String): Result<List<Floor>>
-    suspend fun getRooms(countryId: String, buildingId: String, floorId: String): Result<List<Room>>
+    suspend fun getFloors(buildingId: String): Result<List<Floor>>
+    suspend fun getRooms(floorId: String): Result<List<Room>>
 }
 
 class BookingRepositoryImpl @Inject constructor() : BookingRepository {
@@ -25,11 +25,11 @@ class BookingRepositoryImpl @Inject constructor() : BookingRepository {
         return Result.Success(fakeData.buildings[countryId] ?: emptyList())
     }
 
-    override suspend fun getFloors(countryId: String, buildingId: String): Result<List<Floor>> {
+    override suspend fun getFloors(buildingId: String): Result<List<Floor>> {
         return Result.Success(fakeData.floors[buildingId] ?: emptyList())
     }
 
-    override suspend fun getRooms(countryId: String, buildingId: String, floorId: String): Result<List<Room>> {
+    override suspend fun getRooms(floorId: String): Result<List<Room>> {
         return Result.Success(fakeData.rooms[floorId] ?: emptyList())
     }
 

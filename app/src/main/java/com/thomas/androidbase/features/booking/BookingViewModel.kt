@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.booking
 
 import androidx.lifecycle.SavedStateHandle
+import com.thomas.androidbase.Store
 import com.thomas.androidbase.data.repositories.BookingRepository
 import com.thomas.base.domain.Result
 import com.thomas.base.viewmodel.BaseJourneyViewModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookingViewModel @Inject constructor(
-    private val bookingRepository: BookingRepository,
+    private val repo: BookingRepository,
     savedStateHandle: SavedStateHandle
 ) : BaseJourneyViewModel<BookingStep, BookingData>(
     savedStateHandle = savedStateHandle
@@ -27,6 +28,10 @@ class BookingViewModel @Inject constructor(
     init {
         // pre-load countries for the location step
         loadCountries()
+    }
+
+    override fun onVisible() {
+        Store.rootVM?.setTitle("Booking")
     }
 
     override fun initialStep(): BookingStep {
@@ -46,43 +51,50 @@ class BookingViewModel @Inject constructor(
         }
     }
 
-    override fun onJourneyStepChanged(index: Int, step: BookingStep) {
-        // Update UI state when step changes (mark success and keep data)
-        val data = currentData() ?: BookingData()
-        updateData { data }
-
-        // load lists as user navigates
-        when (step) {
-            BookingStep.LOCATION -> loadCountries()
-            BookingStep.DATETIME -> {
-                // ensure buildings/floors are present for selected country/building
-                data.countryId?.let { loadBuildings(it) }
-            }
-
-            BookingStep.ROOM -> data.floorId?.let {
-                loadRooms(
-                    data.countryId ?: "",
-                    data.buildingId ?: "",
-                    it
-                )
-            }
-
-            BookingStep.CONFIRM -> {
-                // nothing to load
+    override fun selectCountry(countryId: String) {
+        updateData {
+            copy(
+                countryId = countryId,
+                buildingId = null,
+                floorId = null,
+                buildings = emptyList(),
+                floors = emptyList()
+            )
+        }
+        scope.launch {
+            when (val buildings = repo.getBuildings(countryId)) {
+                is Result.Success -> updateData { copy(buildings = buildings.data) }
+                is Result.Error -> sendMessage("Failed to load buildings: ${buildings.message}")
             }
         }
     }
 
-    override fun selectCountry(countryId: String) {
-        updateData { copy(countryId = countryId) }
-    }
-
     override fun selectBuilding(buildingId: String) {
-        updateData { copy(buildingId = buildingId) }
+        updateData {
+            copy(
+                buildingId = buildingId,
+                floorId = null,
+                floors = emptyList()
+            )
+        }
+        scope.launch {
+            when (val floors = repo.getFloors(buildingId)) {
+                is Result.Success -> updateData { copy(floors = floors.data) }
+                is Result.Error -> sendMessage("Failed to load floors: ${floors.message}")
+            }
+        }
     }
 
     override fun selectFloor(floorId: String) {
-        updateData { copy(floorId = floorId) }
+        updateData { copy(floorId = floorId, roomId = null, rooms = emptyList()) }
+        scope.launch {
+            when (val rooms = repo.getRooms(floorId)) {
+                is Result.Success -> updateData { copy(rooms = rooms.data) }
+                is Result.Error -> sendMessage("Failed to load floors: ${rooms.message}")
+            }
+        }
+
+        next()
     }
 
     override fun selectDateTime(dateTime: String) {
@@ -98,36 +110,9 @@ class BookingViewModel @Inject constructor(
     // repository-backed loaders
     fun loadCountries() {
         scope.launch {
-            when (val r = bookingRepository.getCountries()) {
+            when (val r = repo.getCountries()) {
                 is Result.Success -> updateData { copy(countries = r.data) }
                 is Result.Error -> sendMessage("Failed to load countries: ${r.message}")
-            }
-        }
-    }
-
-    fun loadBuildings(countryId: String) {
-        scope.launch {
-            when (val r = bookingRepository.getBuildings(countryId)) {
-                is Result.Success -> updateData { copy(buildings = r.data) }
-                is Result.Error -> sendMessage("Failed to load buildings: ${r.message}")
-            }
-        }
-    }
-
-    fun loadFloors(countryId: String, buildingId: String) {
-        scope.launch {
-            when (val r = bookingRepository.getFloors(countryId, buildingId)) {
-                is Result.Success -> updateData { copy(floors = r.data) }
-                is Result.Error -> sendMessage("Failed to load floors: ${r.message}")
-            }
-        }
-    }
-
-    fun loadRooms(countryId: String, buildingId: String, floorId: String) {
-        scope.launch {
-            when (val r = bookingRepository.getRooms(countryId, buildingId, floorId)) {
-                is Result.Success -> updateData { copy(rooms = r.data) }
-                is Result.Error -> sendMessage("Failed to load rooms: ${r.message}")
             }
         }
     }
