@@ -47,9 +47,5 @@ abstract class BaseStepViewModel<S, DATA>(savedStateHandle: SavedStateHandle? = 
 
     protected fun transition(transform: (S) -> S): Boolean =
         transitionTo(transform(_step.value))
-
-    protected open fun completeSteps() {
-        sendMessage("State machine completed")
-    }
 }
 

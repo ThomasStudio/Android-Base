@@ -86,10 +86,8 @@ abstract class BaseJourneyViewModel<S, DATA>(
     }
 
     /**
-     * Mark the journey complete. Default implementation uses existing completeSteps() helper.
+     * Mark the journey complete.
      */
-    protected fun completeJourney() {
-        completeSteps()
-    }
+    protected fun completeJourney() {}
 }
 
