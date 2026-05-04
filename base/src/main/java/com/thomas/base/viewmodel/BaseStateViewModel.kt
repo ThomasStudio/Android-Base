@@ -26,7 +26,7 @@ abstract class BaseStateViewModel<S, DATA>(savedStateHandle: SavedStateHandle? =
     /**
      * Perform a state transition. Returns true if the state changed.
      */
-    override fun transitionTo(newState: S): Boolean {
+    protected fun transitionTo(newState: S): Boolean {
         val old = _state.value
         if (old == newState) return false
         if (!canTransition(old, newState)) return false
@@ -45,7 +45,7 @@ abstract class BaseStateViewModel<S, DATA>(savedStateHandle: SavedStateHandle? =
     protected open fun onExitState(from: S, to: S) {}
     protected open fun onStateChanged(newState: S, oldState: S) {}
 
-    override fun transition(transform: (S) -> S): Boolean =
+    protected fun transition(transform: (S) -> S): Boolean =
         transitionTo(transform(_state.value))
 }
 

@@ -38,10 +38,10 @@ open class DefaultContract<DATA> : BaseDataContract<DATA> {
 
     protected open fun initialData(): DATA? = null
     protected open fun initialStatus() = Status.SUCCESS
-    protected fun initialState() = UIState(status = initialStatus(), data = initialData())
+    protected fun initialUIState() = UIState(status = initialStatus(), data = initialData())
     override fun back() {}
 
-    private val _uiState by lazy { MutableStateFlow(initialState()) }
+    private val _uiState by lazy { MutableStateFlow(initialUIState()) }
     override val uiState: StateFlow<UIState<DATA>>
         get() = _uiState
 
@@ -49,15 +49,15 @@ open class DefaultContract<DATA> : BaseDataContract<DATA> {
     override val event: SharedFlow<Event> = _event.asSharedFlow()
 
     protected fun updateData(data: DATA) =
-        updateState { copy(status = Status.SUCCESS, data = data) }
+        updateUIState { copy(status = Status.SUCCESS, data = data) }
 
-    protected fun updateData(reducer: DATA.() -> DATA) = updateState { toData(reducer) }
+    protected fun updateData(reducer: DATA.() -> DATA) = updateUIState { toData(reducer) }
 
-    protected fun showLoading() = updateState { toLoading() }
+    protected fun showLoading() = updateUIState { toLoading() }
     protected fun showError(code: Int = -1, message: String = "") =
-        updateState { toError(code, message) }
+        updateUIState { toError(code, message) }
 
-    protected fun updateState(reducer: UIState<DATA>.() -> UIState<DATA>) {
+    protected fun updateUIState(reducer: UIState<DATA>.() -> UIState<DATA>) {
         _uiState.update(reducer)
     }
 

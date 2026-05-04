@@ -63,10 +63,10 @@ abstract class BaseJourneyViewModel<S, DATA>(savedStateHandle: SavedStateHandle?
      */
     protected open fun onJourneyStepChanged(index: Int, step: S) {}
 
-    override fun onStateChanged(newStep: S, oldStep: S) {
-        super.onStateChanged(newStep, oldStep)
-        val idx = steps.indexOf(newStep).let { if (it >= 0) it else 0 }
-        onJourneyStepChanged(idx, newStep)
+    override fun onStateChanged(newState: S, oldState: S) {
+        super.onStateChanged(newState, oldState)
+        val idx = steps.indexOf(newState).let { if (it >= 0) it else 0 }
+        onJourneyStepChanged(idx, newState)
     }
 
     /**
