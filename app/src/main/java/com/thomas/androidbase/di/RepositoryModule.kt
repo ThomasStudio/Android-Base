@@ -24,4 +24,8 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindZhihuRepository(impl: ZhihuRepositoryImpl): ZhihuRepository
+
+    @Binds
+    @Singleton
+    fun bindBookingRepository(impl: com.thomas.androidbase.data.repositories.BookingRepositoryImpl): com.thomas.androidbase.data.repositories.BookingRepository
 }
