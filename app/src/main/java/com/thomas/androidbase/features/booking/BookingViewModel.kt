@@ -45,9 +45,9 @@ class BookingViewModel @Inject constructor(
         updateTitle()
     }
 
-    override fun onStepChanged(newStep: BookingStep, oldStep: BookingStep) {
+    override fun onStateChanged(newStep: BookingStep, oldStep: BookingStep) {
         updateTitle()
-        super.onStepChanged(newStep, oldStep)
+        super.onStateChanged(newStep, oldStep)
     }
 
     override fun back() {
@@ -57,12 +57,12 @@ class BookingViewModel @Inject constructor(
             previous()
     }
 
-    private fun title() = "Booking ${currentIndex + 1}/${totalSteps} - ${currentStep.name} "
+    private fun title() = "Booking ${currentIndex + 1}/${totalSteps} - ${currentState.name} "
     private fun updateTitle() {
         Store.rootVM?.useChildNavigation(NavigationData(title(), ::back, true))
     }
 
-    override fun initialStep(): BookingStep {
+    override fun initialState(): BookingStep {
         return steps.first()
     }
 

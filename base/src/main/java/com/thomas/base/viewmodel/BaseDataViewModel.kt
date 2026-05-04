@@ -16,16 +16,16 @@ abstract class BaseDataViewModel<DATA>(val savedStateHandle: SavedStateHandle? =
     protected open fun initialStatus() = Status.LOADING
     protected open fun defaultData() = initialData()
 
-    override fun initialState() = UIState(status = initialStatus(), data = initialData())
+    override fun initialUIState() = UIState(status = initialStatus(), data = initialData())
 
     protected fun updateData(data: DATA) =
-        updateState { copy(status = Status.SUCCESS, data = data) }
+        updateUIState { copy(status = Status.SUCCESS, data = data) }
 
-    protected fun updateData(reducer: DATA.() -> DATA) = updateState { toData(reducer) }
+    protected fun updateData(reducer: DATA.() -> DATA) = updateUIState { toData(reducer) }
 
-    protected fun showLoading() = updateState { toLoading() }
+    protected fun showLoading() = updateUIState { toLoading() }
     protected fun showError(code: Int = -1, message: String = "") =
-        updateState { toError(code, message) }
+        updateUIState { toError(code, message) }
 
     protected fun currentData() = uiState.value.data ?: defaultData()
 

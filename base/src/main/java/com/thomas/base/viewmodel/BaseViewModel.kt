@@ -18,12 +18,12 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STATE> {
     override var initialized: Boolean = false
-    protected abstract fun initialState(): STATE
+    protected abstract fun initialUIState(): STATE
 
     protected open val scope: CoroutineScope
         get() = viewModelScope
 
-    private val _uiState by lazy { MutableStateFlow(initialState()) }
+    private val _uiState by lazy { MutableStateFlow(initialUIState()) }
     override val uiState: StateFlow<STATE>
         get() = _uiState
 
@@ -34,11 +34,11 @@ abstract class BaseViewModel<STATE : UIStateIF> : ViewModel(), BaseContract<STAT
         send(BackEvent)
     }
 
-    protected fun updateState(state: STATE) {
-        updateState { state }
+    protected fun updateUIState(state: STATE) {
+        updateUIState { state }
     }
 
-    protected fun updateState(reducer: STATE.() -> STATE) {
+    protected fun updateUIState(reducer: STATE.() -> STATE) {
         _uiState.update(reducer)
     }
 

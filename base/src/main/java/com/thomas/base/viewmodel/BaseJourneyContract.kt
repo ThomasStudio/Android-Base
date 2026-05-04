@@ -4,7 +4,7 @@ package com.thomas.base.viewmodel
  * Contract for journey-style ViewModels. Exposes minimal members the UI needs.
  * S - step type; DATA - UI data type
  */
-interface BaseJourneyContract<S, DATA> : BaseStepContract<S, DATA> {
+interface BaseJourneyContract<S, DATA> : BaseStateContract<S, DATA> {
     val totalSteps: Int
     val currentIndex: Int
     val isFirstStep: Boolean

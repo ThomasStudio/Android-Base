@@ -44,7 +44,7 @@ fun BookingScreen(
     val data = uiState.data
 
     // observe current step from ViewModel's step flow
-    val step by viewModel.step.collectAsStateWithLifecycle(initialValue = viewModel.currentStep)
+    val step by viewModel.state.collectAsStateWithLifecycle(initialValue = viewModel.currentState)
 
     val context = LocalContext.current
 

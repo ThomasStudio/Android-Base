@@ -9,7 +9,7 @@ import androidx.lifecycle.SavedStateHandle
  * DATA - UI data type handled by BaseDataViewModel
  */
 abstract class BaseJourneyViewModel<S, DATA>(savedStateHandle: SavedStateHandle?) :
-    BaseStepViewModel<S, DATA>(savedStateHandle), BaseJourneyContract<S, DATA> {
+    BaseStateViewModel<S, DATA>(savedStateHandle), BaseJourneyContract<S, DATA> {
     abstract val steps: List<S>
 
     init {
@@ -20,7 +20,7 @@ abstract class BaseJourneyViewModel<S, DATA>(savedStateHandle: SavedStateHandle?
         get() = steps.size
 
     override val currentIndex: Int
-        get() = steps.indexOf(currentStep).let { if (it >= 0) it else 0 }
+        get() = steps.indexOf(currentState).let { if (it >= 0) it else 0 }
 
     override val isFirstStep: Boolean
         get() = currentIndex == 0
@@ -31,7 +31,7 @@ abstract class BaseJourneyViewModel<S, DATA>(savedStateHandle: SavedStateHandle?
     override val progress: Float
         get() = if (totalSteps > 0) (currentIndex + 1).toFloat() / totalSteps.toFloat() else 0f
 
-    override fun initialStep(): S = steps.first()
+    override fun initialState(): S = steps.first()
 
     override fun next(): Boolean {
         if (isLastStep) return false
@@ -63,8 +63,8 @@ abstract class BaseJourneyViewModel<S, DATA>(savedStateHandle: SavedStateHandle?
      */
     protected open fun onJourneyStepChanged(index: Int, step: S) {}
 
-    override fun onStepChanged(newStep: S, oldStep: S) {
-        super.onStepChanged(newStep, oldStep)
+    override fun onStateChanged(newStep: S, oldStep: S) {
+        super.onStateChanged(newStep, oldStep)
         val idx = steps.indexOf(newStep).let { if (it >= 0) it else 0 }
         onJourneyStepChanged(idx, newStep)
     }

@@ -4,7 +4,6 @@ import com.thomas.androidbase.Store
 import com.thomas.androidbase.navigation.MainRoute
 import com.thomas.base.viewmodel.BaseDataViewModel
 import com.thomas.base.viewmodel.HideLoadingIndicatorEvent
-import com.thomas.base.viewmodel.MessageEvent
 import com.thomas.base.viewmodel.ShowLoadingIndicatorEvent
 import com.thomas.base.viewmodel.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,7 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
     init {
         scope.launch {
             delay(1000)
-            updateState {
+            updateUIState {
                 copy(
                     status = Status.SUCCESS,
                     data = HomeData()
