@@ -4,10 +4,10 @@ import com.thomas.androidbase.data.repositories.Building
 import com.thomas.androidbase.data.repositories.Country
 import com.thomas.androidbase.data.repositories.Floor
 import com.thomas.androidbase.data.repositories.Room
-import com.thomas.base.viewmodel.BaseDataContract
+import com.thomas.base.viewmodel.BaseJourneyContract
 
 /** UI contract exposed to Booking UI */
-interface BookingContract : BaseDataContract<BookingData> {
+interface BookingContract : BaseJourneyContract<BookingStep, BookingData> {
     // Minimal UI surface: selection actions and confirm.
     fun selectCountry(countryId: String)
     fun selectBuilding(buildingId: String)
