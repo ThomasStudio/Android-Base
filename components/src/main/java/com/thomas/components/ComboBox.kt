@@ -9,18 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -140,13 +138,14 @@ data class ComboBoxConfig(
 @Composable
 fun materialConfig() = ComboBoxConfig.material()
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Stable
 @Composable
 fun <T> ComboBox(
     modifier: Modifier = Modifier,
     selectedItem: T?,
     items: List<T>,
-    onItemSelected: (T) -> Unit,
+    onItemSelected: (T?) -> Unit,
     onItemSemantics: ((T) -> String)? = null,
     onSelectedItemSemantics: ((T) -> String)? = null,
     config: ComboBoxConfig = materialConfig(),
@@ -156,7 +155,7 @@ fun <T> ComboBox(
 
     val displayText = selectedItem?.toString() ?: config.placeholder
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         config.label?.let { labelText ->
             ComboBoxLabel(
                 text = labelText,
@@ -165,29 +164,59 @@ fun <T> ComboBox(
             )
         }
 
+        // Simple anchored dropdown: trigger + DropdownMenu
         ComboBoxTrigger(
             displayText = displayText,
             selectedItem = selectedItem,
             expanded = expanded,
-            onClearClick = { onItemSelected(null as T) },
+            onClearClick = { onItemSelected(null) },
             onTriggerClick = { expanded = true },
             modifier = Modifier.fillMaxWidth(),
             config = config,
             onSelectedItemSemantics = onSelectedItemSemantics,
         )
 
-        if (expanded) {
-            ComboBoxDropdown(
-                items = items,
-                onItemSelected = { item ->
-                    onItemSelected(item)
-                    expanded = false
-                },
-                onDismiss = { expanded = false },
-                config = config,
-                onItemSemantics = onItemSemantics,
-                itemContent = itemContent
-            )
+        DropdownMenu(
+            modifier = Modifier
+                .padding(horizontal = config.horizontalPadding, vertical = config.verticalPadding)
+                .fillMaxWidth(),
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            if (items.isEmpty()) {
+                DropdownMenuItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = {
+                        Text(
+                            config.noItemsFoundText,
+                            style = config.emptyStateTextStyle
+                        )
+                    }, onClick = { /* no-op */ })
+            } else {
+                for (item in items) {
+                    DropdownMenuItem(
+                        text = {
+                            if (itemContent != null) {
+                                itemContent(item)
+                            } else {
+                                Text(
+                                    text = item.toString(),
+                                    style = config.dropdownItemTextStyle,
+                                    modifier = Modifier.semantics {
+                                        contentDescription =
+                                            onItemSemantics?.invoke(item) ?: item.toString()
+                                    }
+                                )
+                            }
+                        },
+                        onClick = {
+                            onItemSelected(item)
+                            expanded = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }
@@ -287,74 +316,7 @@ private fun <T> ComboBoxTrigger(
     }
 }
 
-@Composable
-private fun <T> ComboBoxDropdown(
-    items: List<T>,
-    onItemSelected: (T) -> Unit,
-    onDismiss: () -> Unit,
-    config: ComboBoxConfig = materialConfig(),
-    onItemSemantics: ((T) -> String)? = null,
-    itemContent: (@Composable (T) -> Unit)?
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            val titleText = config.label ?: "Select an option"
-            Text(
-                text = titleText,
-                style = config.dialogTitleTextStyle,
-                modifier = Modifier.semantics {
-                    contentDescription =
-                        config.onDialogTitleSemantics?.invoke(titleText) ?: titleText
-                }
-            )
-        },
-        text = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(config.maxDropdownHeight)
-            ) {
-                LazyColumn {
-                    if (items.isEmpty()) {
-                        item {
-                            Text(
-                                text = config.noItemsFoundText,
-                                style = config.emptyStateTextStyle,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            )
-                        }
-                    } else {
-                        items(items, key = { it.hashCode() }) { item ->
-                            DropdownMenuItem(
-                                text = {
-                                    if (itemContent != null) {
-                                        itemContent(item)
-                                    } else {
-                                        Text(
-                                            text = item.toString(),
-                                            style = config.dropdownItemTextStyle,
-                                            modifier = Modifier.semantics {
-                                                contentDescription =
-                                                    onItemSemantics?.invoke(item)
-                                                        ?: item.toString()
-                                            }
-                                        )
-                                    }
-                                },
-                                onClick = { onItemSelected(item) },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {}
-    )
-}
+// Dialog-based dropdown helper removed; the ComboBox now uses an anchored DropdownMenu.
 
 @Composable
 fun ComboBox(

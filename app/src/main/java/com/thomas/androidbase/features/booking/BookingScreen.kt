@@ -79,7 +79,7 @@ private fun LocationStep(viewModel: BookingContract, data: BookingData?) {
             items = data?.countries ?: emptyList(),
             selectedItem = data?.countries?.firstOrNull { it.id == data.countryId },
             onItemSelected = { item ->
-                item.id.let { viewModel.selectCountry(it) }
+                item?.id?.let { viewModel.selectCountry(it) }
             },
             config = materialConfig().copy(
                 placeholder = "Select a country"
@@ -90,7 +90,7 @@ private fun LocationStep(viewModel: BookingContract, data: BookingData?) {
             items = data?.buildings ?: emptyList(),
             selectedItem = data?.buildings?.firstOrNull { it.id == data.buildingId },
             onItemSelected = { item ->
-                item.id.let { viewModel.selectBuilding(it) }
+                item?.id?.let { viewModel.selectBuilding(it) }
             },
             config = materialConfig().copy(
                 placeholder = "Select a building"
@@ -101,7 +101,7 @@ private fun LocationStep(viewModel: BookingContract, data: BookingData?) {
             items = data?.floors ?: emptyList(),
             selectedItem = data?.floors?.firstOrNull { it.id == data.floorId },
             onItemSelected = { item ->
-                item.id.let { viewModel.selectFloor(it) }
+                item?.id?.let { viewModel.selectFloor(it) }
             },
             config = materialConfig().copy(
                 placeholder = "Select a floor"
@@ -137,7 +137,7 @@ private fun RoomStep(viewModel: BookingContract, data: BookingData?) {
         items = data?.rooms ?: emptyList(),
         selectedItem = data?.rooms?.firstOrNull { it.id == data.roomId },
         onItemSelected = { item ->
-            item.id.let { viewModel.selectRoom(it) }
+            item?.id?.let { viewModel.selectRoom(it) }
         },
         config = materialConfig().copy(
             placeholder = "Select a room"
