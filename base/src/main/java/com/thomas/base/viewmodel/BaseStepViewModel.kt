@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.StateFlow
  * DATA - the UI data type used by BaseDataViewModel.
  */
 abstract class BaseStepViewModel<S, DATA>(savedStateHandle: SavedStateHandle? = null) :
-    BaseDataViewModel<DATA>(savedStateHandle) {
+    BaseDataViewModel<DATA>(savedStateHandle), BaseStepContract<S, DATA> {
     abstract fun initialStep(): S
 
     private val _step: MutableStateFlow<S> = MutableStateFlow(initialStep())
-    val step: StateFlow<S>
+    override val step: StateFlow<S>
         get() = _step
 
-    val currentStep: S
+    override val currentStep: S
         get() = _step.value
 
     protected open fun canTransition(from: S, to: S): Boolean = true
@@ -26,7 +26,7 @@ abstract class BaseStepViewModel<S, DATA>(savedStateHandle: SavedStateHandle? = 
     /**
      * Perform a state transition. Returns true if the state changed.
      */
-    fun transitionTo(newStep: S): Boolean {
+    override fun transitionTo(newStep: S): Boolean {
         val old = _step.value
         if (old == newStep) return false
         if (!canTransition(old, newStep)) return false
@@ -45,7 +45,7 @@ abstract class BaseStepViewModel<S, DATA>(savedStateHandle: SavedStateHandle? = 
     protected open fun onExitStep(from: S, to: S) {}
     protected open fun onStepChanged(newStep: S, oldStep: S) {}
 
-    protected fun transition(transform: (S) -> S): Boolean =
+    override fun transition(transform: (S) -> S): Boolean =
         transitionTo(transform(_step.value))
 }
 
