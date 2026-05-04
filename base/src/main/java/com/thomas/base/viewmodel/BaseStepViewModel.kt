@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
  * S - the state type (enum, sealed class, or any value type with proper equals/hashCode).
  * DATA - the UI data type used by BaseDataViewModel.
  */
-abstract class BaseStepViewModel<S, DATA>(savedStateHandle: SavedStateHandle) :
+abstract class BaseStepViewModel<S, DATA>(savedStateHandle: SavedStateHandle? = null) :
     BaseDataViewModel<DATA>(savedStateHandle) {
     abstract fun initialStep(): S
 
