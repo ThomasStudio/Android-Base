@@ -1,6 +1,7 @@
 package com.thomas.androidbase.features.booking
 
 import android.app.DatePickerDialog
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ fun BookingScreen(
     navigator: Navigator,
     viewModel: BookingContract = hiltViewModel<BookingViewModel>()
 ) {
+    BackHandler { viewModel.back() }
     // UI state
     val uiState = viewModel.collectUIState()
     viewModel.HandleEvents(navigator)
@@ -55,8 +57,6 @@ fun BookingScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Booking - ${step.name}")
-
         when (step) {
             BookingStep.LOCATION -> LocationStep(viewModel = viewModel, data = data)
             BookingStep.DATETIME -> DateTimeStep(

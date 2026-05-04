@@ -31,7 +31,24 @@ class BookingViewModel @Inject constructor(
     }
 
     override fun onVisible() {
-        Store.rootVM?.setTitle("Booking")
+        updateTitle()
+    }
+
+    override fun onStepChanged(newStep: BookingStep, oldStep: BookingStep) {
+        updateTitle()
+        super.onStepChanged(newStep, oldStep)
+    }
+
+    override fun back() {
+        if (isLastStep || isFirstStep)
+            super.back()
+        else
+            previous()
+    }
+
+    private fun title() = "Booking ${currentIndex + 1}/${totalSteps} - ${currentStep.name} "
+    private fun updateTitle() {
+        Store.rootVM?.setTitle(title())
     }
 
     override fun initialStep(): BookingStep {
