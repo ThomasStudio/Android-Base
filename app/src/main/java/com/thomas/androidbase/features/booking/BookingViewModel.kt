@@ -12,24 +12,26 @@ import javax.inject.Inject
 @HiltViewModel
 class BookingViewModel @Inject constructor(
     private val bookingRepository: BookingRepository,
-    savedStateHandle: SavedStateHandle? = null
+    savedStateHandle: SavedStateHandle
 ) : BaseJourneyViewModel<BookingStep, BookingData>(
-    steps = listOf(
-        BookingStep.LOCATION,
-        BookingStep.DATETIME,
-        BookingStep.ROOM,
-        BookingStep.CONFIRM
-    ),
     savedStateHandle = savedStateHandle
-
 ), BookingContract {
+    override val steps
+        get() = listOf(
+            BookingStep.LOCATION,
+            BookingStep.DATETIME,
+            BookingStep.ROOM,
+            BookingStep.CONFIRM
+        )
 
     init {
         // pre-load countries for the location step
         loadCountries()
     }
 
-    override fun initialStep(): BookingStep = steps.first()
+    override fun initialStep(): BookingStep {
+        return steps.first()
+    }
 
     override fun initialData(): BookingData = BookingData()
 

@@ -8,10 +8,9 @@ import androidx.lifecycle.SavedStateHandle
  * S - step type (enum, sealed class, data class, etc.)
  * DATA - UI data type handled by BaseDataViewModel
  */
-abstract class BaseJourneyViewModel<S, DATA>(
-    protected val steps: List<S>,
-    savedStateHandle: SavedStateHandle? = null
-) : BaseStepViewModel<S, DATA>(savedStateHandle), BaseJourneyContract<S, DATA> {
+abstract class BaseJourneyViewModel<S, DATA>(savedStateHandle: SavedStateHandle?) :
+    BaseStepViewModel<S, DATA>(savedStateHandle), BaseJourneyContract<S, DATA> {
+    abstract val steps: List<S>
 
     init {
         require(steps.isNotEmpty()) { "Journey must contain at least one step" }

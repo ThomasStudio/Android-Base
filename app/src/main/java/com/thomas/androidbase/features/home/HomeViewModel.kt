@@ -57,4 +57,8 @@ class HomeViewModel @Inject constructor() : BaseDataViewModel<HomeData>(), HomeC
     override fun onClickExamples() {
         navigate(MainRoute.Examples)
     }
+
+    override fun onClickBooking() {
+        navigate(MainRoute.Booking)
+    }
 }

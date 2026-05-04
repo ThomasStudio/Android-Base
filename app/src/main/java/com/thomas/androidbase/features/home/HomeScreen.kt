@@ -63,6 +63,7 @@ fun HomeScreen(
                     Text(uiState.data?.content ?: "", style = Style.t.blue().f10().medium())
                     Btn("Weibo", viewModel::onClickWeibo)
                     Btn("Zhihu", viewModel::onClickNews)
+                    Btn("Booking", viewModel::onClickBooking)
                     Btn("Examples", viewModel::onClickExamples)
                     Btn("Components", viewModel::onClickComponents)
                     Btn("loadingEvent", viewModel::loadingEvent)

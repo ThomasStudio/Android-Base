@@ -10,6 +10,7 @@ interface HomeContract : BaseDataContract<HomeData> {
     fun loadingEvent()
     fun showMessage()
     fun onClickExamples()
+    fun onClickBooking()
 }
 
 data class HomeData(
@@ -25,4 +26,5 @@ class FakeHomeContract() : DefaultContract<HomeData>(), HomeContract {
     override fun loadingEvent() {}
     override fun showMessage() {}
     override fun onClickExamples() {}
+    override fun onClickBooking() {}
 }
