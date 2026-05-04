@@ -14,9 +14,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,11 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thomas.base.navigation.Navigator
-import com.thomas.base.ui.collectUIState
-import java.util.Calendar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import com.thomas.base.ui.HandleEvents
+import com.thomas.base.ui.collectUIState
+import com.thomas.components.ComboBox
+import com.thomas.components.materialConfig
+import java.util.Calendar
+
 
 /**
  * Booking screen showing a 4-step flow: LOCATION, DATETIME, ROOM, CONFIRM
@@ -68,8 +66,7 @@ fun BookingScreen(
             BookingStep.ROOM -> RoomStep(viewModel = viewModel, data = data)
             BookingStep.CONFIRM -> ConfirmStep(
                 viewModel = viewModel,
-                data = data,
-                navigator = navigator
+                data = data
             )
         }
     }
@@ -77,66 +74,39 @@ fun BookingScreen(
 
 @Composable
 private fun LocationStep(viewModel: BookingContract, data: BookingData?) {
-    var countryExpanded by remember { mutableStateOf(false) }
-    var selectedCountry by remember { mutableStateOf<String?>(data?.countryId) }
-
-    OutlinedButton(onClick = { countryExpanded = true }, modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = data?.countries?.firstOrNull { it.id == selectedCountry }?.name
-                ?: "Select country"
+    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        ComboBox(
+            items = data?.countries ?: emptyList(),
+            selectedItem = data?.countries?.firstOrNull { it.id == data.countryId },
+            onItemSelected = { item ->
+                item.id.let { viewModel.selectCountry(it) }
+            },
+            config = materialConfig().copy(
+                placeholder = "Select a country"
+            ),
         )
-    }
-    DropdownMenu(expanded = countryExpanded, onDismissRequest = { countryExpanded = false }) {
-        data?.countries?.forEach { c ->
-            DropdownMenuItem(text = { Text(c.name) }, onClick = {
-                countryExpanded = false
-                selectedCountry = c.id
-                viewModel.selectCountry(c.id)
-            })
-        }
-    }
 
-    var buildingExpanded by remember { mutableStateOf(false) }
-    var selectedBuilding by remember { mutableStateOf<String?>(data?.buildingId) }
-    OutlinedButton(
-        onClick = { buildingExpanded = true },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
-    ) {
-        Text(
-            text = data?.buildings?.firstOrNull { it.id == selectedBuilding }?.name
-                ?: "Select building"
+        ComboBox(
+            items = data?.buildings ?: emptyList(),
+            selectedItem = data?.buildings?.firstOrNull { it.id == data.buildingId },
+            onItemSelected = { item ->
+                item.id.let { viewModel.selectBuilding(it) }
+            },
+            config = materialConfig().copy(
+                placeholder = "Select a building"
+            ),
         )
-    }
-    DropdownMenu(expanded = buildingExpanded, onDismissRequest = { buildingExpanded = false }) {
-        data?.buildings?.forEach { b ->
-            DropdownMenuItem(text = { Text(b.name) }, onClick = {
-                buildingExpanded = false
-                selectedBuilding = b.id
-                viewModel.selectBuilding(b.id)
-            })
-        }
-    }
 
-    var floorExpanded by remember { mutableStateOf(false) }
-    var selectedFloor by remember { mutableStateOf<String?>(data?.floorId) }
-    OutlinedButton(
-        onClick = { floorExpanded = true },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
-    ) {
-        Text(text = data?.floors?.firstOrNull { it.id == selectedFloor }?.name ?: "Select floor")
-    }
-    DropdownMenu(expanded = floorExpanded, onDismissRequest = { floorExpanded = false }) {
-        data?.floors?.forEach { f ->
-            DropdownMenuItem(text = { Text(f.name) }, onClick = {
-                floorExpanded = false
-                selectedFloor = f.id
-                viewModel.selectFloor(f.id)
-            })
-        }
+        ComboBox(
+            items = data?.floors ?: emptyList(),
+            selectedItem = data?.floors?.firstOrNull { it.id == data.floorId },
+            onItemSelected = { item ->
+                item.id.let { viewModel.selectFloor(it) }
+            },
+            config = materialConfig().copy(
+                placeholder = "Select a floor"
+            ),
+        )
     }
 }
 
@@ -163,24 +133,20 @@ private fun DateTimeStep(
 
 @Composable
 private fun RoomStep(viewModel: BookingContract, data: BookingData?) {
-    var roomExpanded by remember { mutableStateOf(false) }
-    var selectedRoom by remember { mutableStateOf<String?>(data?.roomId) }
-    OutlinedButton(onClick = { roomExpanded = true }, modifier = Modifier.fillMaxWidth()) {
-        Text(text = data?.rooms?.firstOrNull { it.id == selectedRoom }?.name ?: "Select room")
-    }
-    DropdownMenu(expanded = roomExpanded, onDismissRequest = { roomExpanded = false }) {
-        data?.rooms?.forEach { r ->
-            DropdownMenuItem(text = { Text(r.name) }, onClick = {
-                roomExpanded = false
-                selectedRoom = r.id
-                viewModel.selectRoom(r.id)
-            })
-        }
-    }
+    ComboBox(
+        items = data?.rooms ?: emptyList(),
+        selectedItem = data?.rooms?.firstOrNull { it.id == data.roomId },
+        onItemSelected = { item ->
+            item.id.let { viewModel.selectRoom(it) }
+        },
+        config = materialConfig().copy(
+            placeholder = "Select a room"
+        ),
+    )
 }
 
 @Composable
-private fun ConfirmStep(viewModel: BookingContract, data: BookingData?, navigator: Navigator) {
+private fun ConfirmStep(viewModel: BookingContract, data: BookingData?) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "Country: ${data?.countries?.firstOrNull { it.id == data.countryId }?.name ?: data?.countryId ?: "-"}")
         Text(text = "Building: ${data?.buildings?.firstOrNull { it.id == data.buildingId }?.name ?: data?.buildingId ?: "-"}")
@@ -189,7 +155,7 @@ private fun ConfirmStep(viewModel: BookingContract, data: BookingData?, navigato
         Text(text = "Room: ${data?.rooms?.firstOrNull { it.id == data.roomId }?.name ?: data?.roomId ?: "-"}")
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            OutlinedButton(onClick = { navigator.back() }) {
+            OutlinedButton(onClick = { viewModel.back() }) {
                 Text("Cancel")
             }
 

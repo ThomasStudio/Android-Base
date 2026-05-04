@@ -3,6 +3,7 @@ package com.thomas.androidbase.features.booking
 import androidx.lifecycle.SavedStateHandle
 import com.thomas.androidbase.Store
 import com.thomas.androidbase.data.repositories.BookingRepository
+import com.thomas.androidbase.ui.components.NavigationData
 import com.thomas.base.domain.Result
 import com.thomas.base.viewmodel.BaseJourneyViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,16 @@ class BookingViewModel @Inject constructor(
         loadCountries()
     }
 
+    override fun onViewInit() {
+        Store.rootVM?.useChildNavigation(NavigationData(title(), ::back, true))
+    }
+
+    override fun onCleared() {
+        Store.rootVM?.clearChildNavigation()
+        super.onCleared()
+    }
+
+
     override fun onVisible() {
         updateTitle()
     }
@@ -48,7 +59,7 @@ class BookingViewModel @Inject constructor(
 
     private fun title() = "Booking ${currentIndex + 1}/${totalSteps} - ${currentStep.name} "
     private fun updateTitle() {
-        Store.rootVM?.setTitle(title())
+        Store.rootVM?.useChildNavigation(NavigationData(title(), ::back, true))
     }
 
     override fun initialStep(): BookingStep {
