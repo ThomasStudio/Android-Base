@@ -18,6 +18,9 @@ interface BaseJourneyContract<S, DATA> : BaseStateContract<S, DATA> {
 abstract class DefaultJourneyContract<S, DATA> : DefaultStateContract<S, DATA>(),
     BaseJourneyContract<S, DATA> {
     abstract val steps: List<S>
+    override fun initialState(): S {
+        return steps.first()
+    }
 
     override val totalSteps: Int
         get() = steps.size
@@ -34,7 +37,6 @@ abstract class DefaultJourneyContract<S, DATA> : DefaultStateContract<S, DATA>()
     override val progress: Float
         get() = if (totalSteps > 0) (currentIndex + 1).toFloat() / totalSteps.toFloat() else 0f
 
-    override fun initialState(): S = steps.first()
 
     override fun next(): Boolean {
         if (isLastStep) return false

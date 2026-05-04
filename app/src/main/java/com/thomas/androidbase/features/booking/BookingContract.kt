@@ -5,6 +5,9 @@ import com.thomas.androidbase.data.repositories.Country
 import com.thomas.androidbase.data.repositories.Floor
 import com.thomas.androidbase.data.repositories.Room
 import com.thomas.base.viewmodel.BaseJourneyContract
+import com.thomas.base.viewmodel.DefaultJourneyContract
+import com.thomas.base.viewmodel.Status
+import kotlin.String
 
 /** UI contract exposed to Booking UI */
 interface BookingContract : BaseJourneyContract<BookingStep, BookingData> {
@@ -40,4 +43,49 @@ data class BookingData(
     val rooms: List<Room> = emptyList()
 )
 
+class FakeBookingContract : DefaultJourneyContract<BookingStep, BookingData>(), BookingContract {
+    override val steps: List<BookingStep>
+        get() = BookingStep.entries.toList()
 
+    override fun initialStatus() = Status.SUCCESS
+    override fun initialData() = BookingData(
+        countryId = "1",
+        buildingId = "1",
+        floorId = "1",
+        dateTime = "2026-05-06",
+        roomId = "1",
+        countries = listOf(Country("1", "France"), Country("2", "Germany")),
+        buildings = (0..10).map { Building(it.toString(), "Building $it") },
+        floors = (0..10).map { Floor(it.toString(), "Floor $it") },
+        rooms = (0..10).map { Room(it.toString(), "Room $it", 20) }
+    )
+
+    override fun selectCountry(countryId: String) {
+        updateData { copy(countryId = countryId) }
+    }
+
+    override fun selectBuilding(buildingId: String) {
+        updateData { copy(buildingId = buildingId) }
+    }
+
+    override fun selectFloor(floorId: String) {
+        updateData { copy(floorId = floorId) }
+        next()
+    }
+
+    override fun selectDateTime(dateTime: String) {
+        updateData { copy(dateTime = dateTime) }
+        next()
+    }
+
+    override fun selectRoom(roomId: String) {
+        updateData { copy(roomId = roomId) }
+        next()
+    }
+
+    override fun confirm() {}
+
+    override fun back() {
+        previous()
+    }
+}
